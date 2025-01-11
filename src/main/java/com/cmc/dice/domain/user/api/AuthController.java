@@ -30,6 +30,54 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthService authService;
 
+    @PostMapping("/validate/email")
+    @Operation(summary = "이메일 중복 확인", description = """
+            # 이메일 중복 확인
+                        
+            사용자의 이메일 중복을 확인합니다.
+                        
+            ## 응답
+                        
+            - 중복된 이메일이 있을 경우 `409` 에러를 반환합니다.
+            - 중복된 이메일이 없을 경우 `200` 코드를 반환합니다.
+            """)
+    @ApiResponse(
+            responseCode = "409",
+            description = "입력한 이메일이 이미 존재합니다.",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    examples = @ExampleObject(value = "{\n  \"status\": \"CONFLICT\",\n  \"message\": \"입력한 이메일이 이미 존재합니다.\"\n}")
+            )
+    )
+    public void validateDuplicateEmail(@Valid @RequestBody EmailValidateDto email) {
+        authService.validateDuplicateEmail(email);
+    }
+
+    @PostMapping("/validate/phone")
+    @Operation(summary = "휴대폰 번호 중복 확인", description = """
+            # 휴대폰 번호 중복 확인
+                        
+            사용자의 휴대폰 번호 중복을 확인합니다.
+                        
+            ## 응답
+                        
+            - 중복된 휴대폰 번호가 있을 경우 `409` 에러를 반환합니다.
+            - 중복된 휴대폰 번호가 없을 경우 `200` 코드를 반환합니다.
+            """)
+    @ApiResponse(
+            responseCode = "409",
+            description = "입력한 휴대폰 번호가 이미 존재합니다.",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    examples = @ExampleObject(value = "{\n  \"status\": \"CONFLICT\",\n  \"message\": \"입력한 휴대폰 번호가 이미 존재합니다.\"\n}")
+            )
+    )
+    public void validateDuplicatePhone(@Valid @RequestBody PhoneValidateDto phone) {
+        authService.validateDuplicatePhone(phone);
+    }
+
     @PostMapping("/signup")
     @Operation(summary = "회원 가입", description = """
             # 회원가입
@@ -42,8 +90,9 @@ public class AuthController {
             | email | 사용자의 이메일 | 이메일 형식 | Y | email01@email.com |
             | name | 사용자의 이름 | 2~20자 | N | name01 |
             | password | 사용자의 비밀번호 | 영문(대소문자), 숫자, 특수문자를 포함한 8~32자 | N | password01! |
-            | passwordCheck | 사용자의 비밀번호 확인 | password와 동일한 입력 | N | password01! |
-             
+            | phone | 사용자의 휴대폰 번호 | 숫자 11자 | Y | 01012345678 |
+            
+                         
             ## 응답
                         
             - 회원 가입 성공 시 `200` 코드와 함께 회원 기본 정보를 반환합니다.
@@ -107,7 +156,63 @@ public class AuthController {
         return authService.login(loginRequest);
     }
 
-    @PostMapping("reissue")
+    @PostMapping("/password-reset/request")
+    @Operation(summary = "비밀번호 재설정 이메일 전송", description = """
+            # 비밀번호 재설정 이메일 전송
+                        
+            사용자의 이메일로 비밀번호 재설정 이메일을 전송합니다.
+                        
+            ## 응답
+                        
+            - 이메일 전송 성공 시 `200` 코드를 반환합니다.
+            """)
+    @ApiResponse(
+            responseCode = "404",
+            description = "해당 유저 정보를 찾을 수 없습니다.",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    examples = @ExampleObject(value = """
+                            {
+                                "status": "NOT_FOUND",
+                                "message": "해당 유저 정보를 찾을 수 없습니다."
+                            }
+                            """)
+            )
+    )
+    public void sendPasswordResetEmail(@Valid @RequestBody PasswrodResetValidateDto passwrodResetValidateDto) {
+        authService.sendPasswordResetEmail(passwrodResetValidateDto);
+    }
+
+    @PostMapping("/password-reset/reset")
+    @Operation(summary = "비밀번호 재설정", description = """
+            # 비밀번호 재설정
+                        
+            사용자의 비밀번호를 재설정합니다.
+                        
+            ## 응답
+                        
+            - 비밀번호 재설정 성공 시 `200` 코드를 반환합니다.
+            """)
+    @ApiResponse(
+            responseCode = "404",
+            description = "해당 유저 정보를 찾을 수 없습니다.",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    examples = @ExampleObject(value = """
+                            {
+                                "status": "NOT_FOUND",
+                                "message": "해당 유저 정보를 찾을 수 없습니다."
+                            }
+                            """)
+            )
+    )
+    public void resetPassword(@Valid @RequestBody PasswordResetRequest passwordResetRequest) {
+        authService.resetPassword(passwordResetRequest);
+    }
+
+    @PostMapping("/reissue")
     @Operation(summary = "토큰 재발급", description = """
             # 토큰 재발급
                         

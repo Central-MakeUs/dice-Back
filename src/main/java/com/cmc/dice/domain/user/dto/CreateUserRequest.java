@@ -27,6 +27,7 @@ public class CreateUserRequest {
     private String password;
 
     @NotBlank
-    @Schema(description = "비밀번호 확인", example = "password123")
-    private String passwordCheck;
+    @Size(min = 11, max = 11)
+    @Pattern(regexp = "^[0-9]{11}$", message = "휴대폰 번호는 숫자 11자리여야 합니다.")
+    private String phone;
 }

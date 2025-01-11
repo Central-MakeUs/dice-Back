@@ -30,15 +30,18 @@ public class User extends BaseEntity {
     private UserRole userRole;
 
     @Column(nullable = false)
-    @Convert(converter = OAuthProviderConverter.class)
-    private OAuthProvider oAuthProvider;
+    private String phone;
 
     // 이메일로 회원가입
     public User(CreateUserRequest dto, String encodedPassword) {
         this.email = dto.getEmail();
         this.name = dto.getName();
         this.password = encodedPassword;
+        this.phone = dto.getPhone();
         this.userRole = UserRole.USER;
-        this.oAuthProvider = OAuthProvider.LOCAL;
+    }
+
+    public void updatePassword(String encode) {
+        this.password = encode;
     }
 }

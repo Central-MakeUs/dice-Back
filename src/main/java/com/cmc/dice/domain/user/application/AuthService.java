@@ -3,11 +3,7 @@ package com.cmc.dice.domain.user.application;
 import com.cmc.dice.domain.user.dao.UserRepository;
 import com.cmc.dice.domain.user.domain.User;
 import com.cmc.dice.domain.user.dto.*;
-import com.cmc.dice.domain.user.dto.*;
-import com.cmc.dice.domain.user.exception.InvalidRefreshTokenException;
-import com.cmc.dice.domain.user.exception.LoginFailException;
-import com.cmc.dice.domain.user.exception.PasswordCheckNotMatchException;
-import com.cmc.dice.domain.user.exception.UserCreateValidationException;
+import com.cmc.dice.domain.user.exception.*;
 import com.cmc.dice.global.jwt.TokenService;
 import com.cmc.dice.global.jwt.dto.TokenDto;
 import com.cmc.dice.global.jwt.refreshtoken.RefreshToken;
@@ -44,10 +40,6 @@ public class AuthService {
 
     @Transactional
     public UserInfoDto createUser(CreateUserRequest createUserRequest) {
-        if (!createUserRequest.getPassword().equals(createUserRequest.getPasswordCheck())) {
-            throw new PasswordCheckNotMatchException();
-        }
-
         try {
             User createdUser = userRepository.save(
                     new User(createUserRequest, passwordEncoder.encode(createUserRequest.getPassword()))
@@ -86,5 +78,34 @@ public class AuthService {
     @Transactional
     public void logout(User user) {
         refreshTokenRepository.deleteByEmail(user.getEmail());
+    }
+
+    public void validateDuplicateEmail(EmailValidateDto email) {
+        if (userRepository.existsByEmail(email.getEmail())) {
+            throw new DuplicatePhoneException();
+        }
+    }
+
+    public void validateDuplicatePhone(PhoneValidateDto phone) {
+        if (userRepository.existsByPhone(phone.getPhone())) {
+            throw new DuplicateEmailException();
+        }
+    }
+
+    public void sendPasswordResetEmail(PasswrodResetValidateDto passwrodResetValidateDto) {
+        userRepository.findByEmailAndName(
+                passwrodResetValidateDto.getEmail(),
+                passwrodResetValidateDto.getName()
+        ).orElseThrow(NotFoundUserInfoException::new);
+
+        // 이메일로 비밀번호 재설정 링크 전송
+    }
+
+    public void resetPassword(PasswordResetRequest passwordResetRequest) {
+        //비밀번호 재설정 시 token 유효성 검사 추가
+        User user = userRepository.findByEmail(passwordResetRequest.getEmail())
+                .orElseThrow(NotFoundUserInfoException::new);
+
+        user.updatePassword(passwordEncoder.encode(passwordResetRequest.getPassword()));
     }
 }
