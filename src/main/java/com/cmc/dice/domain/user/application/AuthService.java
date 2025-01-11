@@ -3,7 +3,6 @@ package com.cmc.dice.domain.user.application;
 import com.cmc.dice.domain.user.dao.UserRepository;
 import com.cmc.dice.domain.user.domain.User;
 import com.cmc.dice.domain.user.dto.*;
-import com.cmc.dice.domain.user.dto.*;
 import com.cmc.dice.domain.user.exception.*;
 import com.cmc.dice.global.jwt.TokenService;
 import com.cmc.dice.global.jwt.dto.TokenDto;
@@ -91,5 +90,22 @@ public class AuthService {
         if (userRepository.existsByPhone(phone.getPhone())) {
             throw new DuplicateEmailException();
         }
+    }
+
+    public void sendPasswordResetEmail(PasswrodResetValidateDto passwrodResetValidateDto) {
+        userRepository.findByEmailAndName(
+                passwrodResetValidateDto.getEmail(),
+                passwrodResetValidateDto.getName()
+        ).orElseThrow(NotFoundUserInfoException::new);
+
+        // 이메일로 비밀번호 재설정 링크 전송
+    }
+
+    public void resetPassword(PasswordResetRequest passwordResetRequest) {
+        //비밀번호 재설정 시 token 유효성 검사 추가
+        User user = userRepository.findByEmail(passwordResetRequest.getEmail())
+                .orElseThrow(NotFoundUserInfoException::new);
+
+        user.updatePassword(passwordEncoder.encode(passwordResetRequest.getPassword()));
     }
 }

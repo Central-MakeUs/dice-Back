@@ -40,4 +40,8 @@ public class User extends BaseEntity {
         this.phone = dto.getPhone();
         this.userRole = UserRole.USER;
     }
+
+    public void updatePassword(String encode) {
+        this.password = encode;
+    }
 }
