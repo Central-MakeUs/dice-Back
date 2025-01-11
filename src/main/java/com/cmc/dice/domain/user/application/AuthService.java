@@ -83,4 +83,16 @@ public class AuthService {
     public void logout(User user) {
         refreshTokenRepository.deleteByEmail(user.getEmail());
     }
+
+    public void validateDuplicateEmail(EmailValidateDto email) {
+        if (userRepository.existsByEmail(email.getEmail())) {
+            throw new DataIntegrityViolationException("Duplicate email");
+        }
+    }
+
+    public void validateDuplicatePhone(PhoneValidateDto phone) {
+        if (userRepository.existsByPhone(phone.getPhone())) {
+            throw new DataIntegrityViolationException("Duplicate phone");
+        }
+    }
 }

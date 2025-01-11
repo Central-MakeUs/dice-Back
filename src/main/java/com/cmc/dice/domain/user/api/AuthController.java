@@ -30,6 +30,36 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthService authService;
 
+    @PostMapping("/validate/email")
+    @Operation(summary = "이메일 중복 확인", description = """
+            # 이메일 중복 확인
+                        
+            사용자의 이메일 중복을 확인합니다.
+                        
+            ## 응답
+                        
+            - 중복된 이메일이 있을 경우 `409` 에러를 반환합니다.
+            - 중복된 이메일이 없을 경우 `200` 코드를 반환합니다.
+            """)
+    public void validateDuplicateEmail(@Valid @RequestBody EmailValidateDto email) {
+        authService.validateDuplicateEmail(email);
+    }
+
+    @PostMapping("/validate/phone")
+    @Operation(summary = "휴대폰 번호 중복 확인", description = """
+            # 휴대폰 번호 중복 확인
+                        
+            사용자의 휴대폰 번호 중복을 확인합니다.
+                        
+            ## 응답
+                        
+            - 중복된 휴대폰 번호가 있을 경우 `409` 에러를 반환합니다.
+            - 중복된 휴대폰 번호가 없을 경우 `200` 코드를 반환합니다.
+            """)
+    public void validateDuplicatePhone(@Valid @RequestBody PhoneValidateDto phone) {
+        authService.validateDuplicatePhone(phone);
+    }
+
     @PostMapping("/signup")
     @Operation(summary = "회원 가입", description = """
             # 회원가입
