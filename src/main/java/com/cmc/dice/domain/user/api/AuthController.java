@@ -41,6 +41,15 @@ public class AuthController {
             - 중복된 이메일이 있을 경우 `409` 에러를 반환합니다.
             - 중복된 이메일이 없을 경우 `200` 코드를 반환합니다.
             """)
+    @ApiResponse(
+            responseCode = "409",
+            description = "입력한 이메일이 이미 존재합니다.",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    examples = @ExampleObject(value = "{\n  \"status\": \"CONFLICT\",\n  \"message\": \"입력한 이메일이 이미 존재합니다.\"\n}")
+            )
+    )
     public void validateDuplicateEmail(@Valid @RequestBody EmailValidateDto email) {
         authService.validateDuplicateEmail(email);
     }
@@ -56,6 +65,15 @@ public class AuthController {
             - 중복된 휴대폰 번호가 있을 경우 `409` 에러를 반환합니다.
             - 중복된 휴대폰 번호가 없을 경우 `200` 코드를 반환합니다.
             """)
+    @ApiResponse(
+            responseCode = "409",
+            description = "입력한 휴대폰 번호가 이미 존재합니다.",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    examples = @ExampleObject(value = "{\n  \"status\": \"CONFLICT\",\n  \"message\": \"입력한 휴대폰 번호가 이미 존재합니다.\"\n}")
+            )
+    )
     public void validateDuplicatePhone(@Valid @RequestBody PhoneValidateDto phone) {
         authService.validateDuplicatePhone(phone);
     }
