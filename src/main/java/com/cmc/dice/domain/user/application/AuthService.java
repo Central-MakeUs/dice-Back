@@ -44,10 +44,6 @@ public class AuthService {
 
     @Transactional
     public UserInfoDto createUser(CreateUserRequest createUserRequest) {
-        if (!createUserRequest.getPassword().equals(createUserRequest.getPasswordCheck())) {
-            throw new PasswordCheckNotMatchException();
-        }
-
         try {
             User createdUser = userRepository.save(
                     new User(createUserRequest, passwordEncoder.encode(createUserRequest.getPassword()))

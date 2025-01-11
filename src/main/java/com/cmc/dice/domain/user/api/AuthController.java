@@ -42,8 +42,9 @@ public class AuthController {
             | email | 사용자의 이메일 | 이메일 형식 | Y | email01@email.com |
             | name | 사용자의 이름 | 2~20자 | N | name01 |
             | password | 사용자의 비밀번호 | 영문(대소문자), 숫자, 특수문자를 포함한 8~32자 | N | password01! |
-            | passwordCheck | 사용자의 비밀번호 확인 | password와 동일한 입력 | N | password01! |
-             
+            | phone | 사용자의 휴대폰 번호 | 숫자 11자 | Y | 01012345678 |
+            
+                         
             ## 응답
                         
             - 회원 가입 성공 시 `200` 코드와 함께 회원 기본 정보를 반환합니다.
