@@ -4,10 +4,7 @@ import com.cmc.dice.domain.user.dao.UserRepository;
 import com.cmc.dice.domain.user.domain.User;
 import com.cmc.dice.domain.user.dto.*;
 import com.cmc.dice.domain.user.dto.*;
-import com.cmc.dice.domain.user.exception.InvalidRefreshTokenException;
-import com.cmc.dice.domain.user.exception.LoginFailException;
-import com.cmc.dice.domain.user.exception.PasswordCheckNotMatchException;
-import com.cmc.dice.domain.user.exception.UserCreateValidationException;
+import com.cmc.dice.domain.user.exception.*;
 import com.cmc.dice.global.jwt.TokenService;
 import com.cmc.dice.global.jwt.dto.TokenDto;
 import com.cmc.dice.global.jwt.refreshtoken.RefreshToken;
@@ -86,13 +83,13 @@ public class AuthService {
 
     public void validateDuplicateEmail(EmailValidateDto email) {
         if (userRepository.existsByEmail(email.getEmail())) {
-            throw new DataIntegrityViolationException("Duplicate email");
+            throw new DuplicatePhoneException();
         }
     }
 
     public void validateDuplicatePhone(PhoneValidateDto phone) {
         if (userRepository.existsByPhone(phone.getPhone())) {
-            throw new DataIntegrityViolationException("Duplicate phone");
+            throw new DuplicateEmailException();
         }
     }
 }
