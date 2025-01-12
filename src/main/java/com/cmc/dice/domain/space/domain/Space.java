@@ -1,6 +1,8 @@
 package com.cmc.dice.domain.space.domain;
 
 
+import com.cmc.dice.domain.space.dto.CreateSpaceRequest;
+import com.cmc.dice.domain.user.domain.User;
 import com.cmc.dice.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,6 +28,9 @@ public class Space extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User admin; // 공간 소유자
+
     @Column(nullable = false)
     private String name; // 공간 이름
 
@@ -42,6 +47,17 @@ public class Space extends BaseEntity {
 
     private LocalTime openingTime; // 공간 운영 시작 시간
     private LocalTime closingTime; // 공간 운영 마감 시간
+
+    @Column(nullable = false)
+    private int capacity; // 수용 인원
+
+    @ManyToMany
+    @JoinTable(
+            name = "space_tag",
+            joinColumns = @JoinColumn(name = "space_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private List<Tag> tags; // 공간 태그
 
     // 공간 대여 가격 작성
     @Column(nullable = false)
@@ -65,4 +81,25 @@ public class Space extends BaseEntity {
     private String facilityInfo; // 시설 이용 안내
     @Lob
     private String notice; // 공지사항
+
+    public Space(User user, CreateSpaceRequest request) {
+        this.admin = user;
+        this.name = request.getName();
+        this.description = request.getDescription();
+        this.imageUrls = request.getImageUrls();
+        this.category = request.getCategory();
+        this.openingTime = request.getOpeningTime();
+        this.closingTime = request.getClosingTime();
+        this.capacity = request.getCapacity();
+        this.tags = request.getTags();
+        this.pricePerDay = request.getPricePerDay();
+        this.discountRate = request.getDiscountRate();
+        this.details = request.getDetails();
+        this.location = request.getLocation();
+        this.websiteUrl = request.getWebsiteUrl();
+        this.contactNumber = request.getContactNumber();
+        this.facilityInfo = request.getFacilityInfo();
+        this.notice = request.getNotice();
+    }
+
 }
