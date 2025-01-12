@@ -1,6 +1,7 @@
 package com.cmc.dice.domain.space.api;
 
 import com.cmc.dice.domain.space.application.SpaceService;
+import com.cmc.dice.domain.space.domain.Space;
 import com.cmc.dice.domain.space.dto.CreateSpaceRequest;
 import com.cmc.dice.domain.user.domain.User;
 import com.cmc.dice.global.jwt.CurrentUser;
@@ -8,11 +9,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/space")
@@ -50,5 +51,21 @@ public class SpaceController {
 			@CurrentUser User user,
 			@RequestBody CreateSpaceRequest request) {
 		spaceService.createSpace(user, request);
+	}
+
+
+	@GetMapping("/latest")
+	@Operation(summary = "최신 공간 조회", description = """
+			# 최신 공간 조회
+			최신 등록된 공간을 조회합니다.
+			
+			## 요청
+			- `page`: 페이지 번호
+			- `size`: 페이지 크기
+			""")
+	public Page<Space> getSpacesByLatest(
+			@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "size", defaultValue = "10") int size) {
+		return spaceService.getSpacesByLatest(PageRequest.of(page, size));
 	}
 }

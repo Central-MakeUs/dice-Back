@@ -5,6 +5,8 @@ import com.cmc.dice.domain.space.domain.Space;
 import com.cmc.dice.domain.space.dto.CreateSpaceRequest;
 import com.cmc.dice.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,5 +21,10 @@ public class SpaceService {
 		Space space = new Space(user, request);
 
 		return spaceRepository.save(space);
+	}
+
+	@Transactional(readOnly = true)
+	public Page<Space> getSpacesByLatest(Pageable pageable) {
+		return spaceRepository.findAllByOrderByCreatedAtDesc(pageable);
 	}
 }
