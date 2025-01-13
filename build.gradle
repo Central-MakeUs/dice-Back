@@ -26,6 +26,9 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
+	// 공간 검색
+	implementation 'org.hibernate:hibernate-spatial'
+
 	// aop
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 
