@@ -68,4 +68,36 @@ public class SpaceController {
 			@RequestParam(value = "size", defaultValue = "10") int size) {
 		return spaceService.getSpacesByLatest(PageRequest.of(page, size));
 	}
+
+	@PutMapping("/{id}")
+	@Operation(summary = "공간 수정", description = """
+            # 공간 수정
+            공간 정보를 수정합니다.
+            
+            ## 요청
+            - `name`: 공간 이름
+            - `description`: 공간 설명
+            - `imageUrls`: 이미지 URL 리스트
+            - `category`: 공간 카테고리
+            - `openingTime`: 오픈 시간
+            - `closingTime`: 마감 시간
+            - `capacity`: 수용 인원
+            - `tags`: 태그 리스트
+            - `pricePerDay`: 일일 가격
+            - `discountRate`: 할인율
+            - `details`: 상세 정보
+            - `location`: 위치 정보
+            - `websiteUrl`: 웹사이트 URL
+            - `contactNumber`: 연락처
+            - `facilityInfo`: 시설 정보
+            - `notice`: 공지사항
+            """)
+	@PreAuthorize("isAuthenticated()")
+	@SecurityRequirement(name = "access-token")
+	public Space updateSpace(
+			@CurrentUser User user,
+			@PathVariable Long id,
+			@RequestBody CreateSpaceRequest request) {
+		return spaceService.updateSpaceInfo(user, id, request);
+	}
 }
