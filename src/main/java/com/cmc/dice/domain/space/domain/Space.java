@@ -102,4 +102,26 @@ public class Space extends BaseEntity {
         this.notice = request.getNotice();
     }
 
+    public boolean isOwner(User user) {
+        return this.admin.equals(user);
+    }
+
+    public void update(CreateSpaceRequest request) {
+        this.name = request.getName();
+        this.description = request.getDescription();
+        this.imageUrls = request.getImageUrls();
+        this.category = request.getCategory();
+        this.openingTime = request.getOpeningTime();
+        this.closingTime = request.getClosingTime();
+        this.capacity = request.getCapacity();
+        this.tags = request.getTags();
+        this.pricePerDay = request.getPricePerDay();
+        this.discountRate = request.getDiscountRate();
+        this.details = request.getDetails();
+        this.location = request.getLocation();
+        this.websiteUrl = request.getWebsiteUrl();
+        this.contactNumber = request.getContactNumber();
+        this.facilityInfo = request.getFacilityInfo();
+        this.notice = request.getNotice();
+    }
 }

@@ -3,6 +3,8 @@ package com.cmc.dice.domain.space.application;
 import com.cmc.dice.domain.space.dao.SpaceRepository;
 import com.cmc.dice.domain.space.domain.Space;
 import com.cmc.dice.domain.space.dto.CreateSpaceRequest;
+import com.cmc.dice.domain.space.exception.SpaceNotFoundException;
+import com.cmc.dice.domain.space.exception.SpaceNotOwnerException;
 import com.cmc.dice.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,14 +19,24 @@ public class SpaceService {
 
 	@Transactional
 	public Space createSpace(User user, CreateSpaceRequest request) {
-
 		Space space = new Space(user, request);
-
 		return spaceRepository.save(space);
 	}
 
 	@Transactional(readOnly = true)
 	public Page<Space> getSpacesByLatest(Pageable pageable) {
 		return spaceRepository.findAllByOrderByCreatedAtDesc(pageable);
+	}
+
+	public Space updateSpaceInfo(User user, Long id, CreateSpaceRequest request) {
+		Space space = spaceRepository.findById(id)
+				.orElseThrow(SpaceNotFoundException::new);
+
+		if (!space.isOwner(user)) {
+			throw new SpaceNotOwnerException();
+		}
+
+		space.update(request);
+		return space;
 	}
 }
