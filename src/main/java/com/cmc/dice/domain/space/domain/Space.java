@@ -51,13 +51,8 @@ public class Space extends BaseEntity {
     @Column(nullable = false)
     private int capacity; // 수용 인원
 
-    @ManyToMany
-    @JoinTable(
-            name = "space_tag",
-            joinColumns = @JoinColumn(name = "space_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    private List<Tag> tags; // 공간 태그
+    @OneToMany(mappedBy = "space")
+    private List<SpaceTag> tags;
 
     // 공간 대여 가격 작성
     @Column(nullable = false)

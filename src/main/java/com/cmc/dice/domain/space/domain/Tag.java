@@ -3,6 +3,8 @@ package com.cmc.dice.domain.space.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "spaces")
 @Getter
@@ -16,4 +18,7 @@ public class Tag {
 
 	@Column(nullable = false)
 	private String name;
+
+	@OneToMany(mappedBy = "tag")
+	private List<SpaceTag> spaceTags;
 }
