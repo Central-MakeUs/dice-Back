@@ -1,6 +1,7 @@
 package com.cmc.dice.domain.space.dto;
 
 import com.cmc.dice.domain.space.domain.SpaceCategory;
+import com.cmc.dice.domain.space.domain.SpaceTag;
 import com.cmc.dice.domain.space.domain.Tag;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -41,7 +42,7 @@ public class CreateSpaceRequest {
 	@PositiveOrZero
 	private int capacity;
 
-	private List<Tag> tags;
+	private List<SpaceTag> tags;
 
 	@Positive
 	private int pricePerDay;
