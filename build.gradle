@@ -1,3 +1,9 @@
+buildscript {
+	ext {
+		queryDslVersion = "5.0.0"
+	}
+}
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.5'
@@ -26,8 +32,13 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
+	// querydsl 설정
+	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+	annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
+
 	// 공간 검색
-	implementation 'org.hibernate:hibernate-spatial'
+	implementation 'org.hibernate.orm:hibernate-spatial:6.4.4.Final'
+	implementation 'com.querydsl:querydsl-spatial'
 
 	// aop
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
