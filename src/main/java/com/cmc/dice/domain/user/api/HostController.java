@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/admin")
+@RequestMapping("/api/v1/host")
 @RequiredArgsConstructor
-@Tag(name = "Admin")
-public class AdminController {
+@Tag(name = "Host")
+public class HostController {
 }
