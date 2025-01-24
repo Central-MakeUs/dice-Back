@@ -1,0 +1,36 @@
+package com.cmc.dice.domain.space.dto;
+
+import com.cmc.dice.domain.space.domain.Space;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.geo.Point;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class SpaceSimpleInfoDto {
+	private Long id;
+	private String name;
+	private Point address;
+	private String imageUrl;
+
+	private int pricePerDay;
+	private int discountRate;
+	private int capacity;
+
+	private int likeCount;
+
+	public static SpaceSimpleInfoDto of(Space space) {
+		return new SpaceSimpleInfoDto(
+				space.getId(),
+				space.getName(),
+				space.getLocation(),
+				space.getImageUrls().get(0),
+				space.getPricePerDay(),
+				space.getDiscountRate(),
+				space.getCapacity(),
+				space.getLikeCount()
+		);
+	}
+}

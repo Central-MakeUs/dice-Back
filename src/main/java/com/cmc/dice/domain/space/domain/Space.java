@@ -77,6 +77,8 @@ public class Space extends BaseEntity {
     @Lob
     private String notice; // 공지사항
 
+    private int likeCount = 0; // 좋아요 수
+
     public Space(User user, CreateSpaceRequest request) {
         this.admin = user;
         this.name = request.getName();

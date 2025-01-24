@@ -3,6 +3,7 @@ package com.cmc.dice.domain.space.api;
 import com.cmc.dice.domain.space.application.SpaceService;
 import com.cmc.dice.domain.space.domain.Space;
 import com.cmc.dice.domain.space.dto.CreateSpaceRequest;
+import com.cmc.dice.domain.space.dto.SpaceSimpleInfoDto;
 import com.cmc.dice.domain.user.domain.User;
 import com.cmc.dice.global.jwt.CurrentUser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,6 +49,7 @@ public class SpaceController {
 			""")
 	@PreAuthorize("isAuthenticated()")
 	@SecurityRequirement(name = "access-token")
+	@ResponseStatus(HttpStatus.CREATED)
 	public void createSpace(
 			@CurrentUser User user,
 			@RequestBody CreateSpaceRequest request) {
@@ -63,7 +66,7 @@ public class SpaceController {
 			- `page`: 페이지 번호
 			- `size`: 페이지 크기
 			""")
-	public Page<Space> getSpacesByLatest(
+	public Page<SpaceSimpleInfoDto> getSpacesByLatest(
 			@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "size", defaultValue = "10") int size) {
 		return spaceService.getSpacesByLatest(PageRequest.of(page, size));
