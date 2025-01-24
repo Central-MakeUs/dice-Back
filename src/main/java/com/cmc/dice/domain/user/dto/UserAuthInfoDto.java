@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserInfoDto {
+public class UserAuthInfoDto {
     @Schema(description = "사용자 이메일", example = "user01@email.com")
     private String email;
     @Schema(description = "사용자 이름", example = "name01")
@@ -20,8 +20,8 @@ public class UserInfoDto {
     @Schema(description = "권한", example = "ROLE_USER")
     private UserRole userRole;
 
-    public static UserInfoDto fromEntity(User user) {
-        return UserInfoDto.builder()
+    public static UserAuthInfoDto fromEntity(User user) {
+        return UserAuthInfoDto.builder()
                 .email(user.getEmail())
                 .name(user.getName())
                 .build();
