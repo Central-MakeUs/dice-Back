@@ -1,5 +1,6 @@
 package com.cmc.dice.domain.brand.domain;
 
+import com.cmc.dice.domain.brand.dto.CreateBrandRequest;
 import com.cmc.dice.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,4 +29,11 @@ public class Brand {
 	private String logoUrl;
 
 	private String homepageUrl;
+
+	public void update(CreateBrandRequest request) {
+		this.name = request.getName();
+		this.description = request.getDescription();
+		this.logoUrl = request.getLogoUrl();
+		this.homepageUrl = request.getHomepageUrl();
+	}
 }
