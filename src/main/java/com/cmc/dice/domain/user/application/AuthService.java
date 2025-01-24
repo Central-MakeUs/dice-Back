@@ -33,19 +33,19 @@ public class AuthService {
         }
 
         return LoginResponseDto.builder()
-                .user(UserInfoDto.fromEntity(user))
+                .user(UserAuthInfoDto.fromEntity(user))
                 .token(tokenService.generateToken(user.getEmail()))
                 .build();
     }
 
     @Transactional
-    public UserInfoDto createUser(CreateUserRequest createUserRequest) {
+    public UserAuthInfoDto createUser(CreateUserRequest createUserRequest) {
         try {
             User createdUser = userRepository.save(
                     new User(createUserRequest, passwordEncoder.encode(createUserRequest.getPassword()))
             );
 
-            return UserInfoDto.builder()
+            return UserAuthInfoDto.builder()
                     .email(createdUser.getEmail())
                     .name(createdUser.getName())
                     .userRole(createdUser.getUserRole())

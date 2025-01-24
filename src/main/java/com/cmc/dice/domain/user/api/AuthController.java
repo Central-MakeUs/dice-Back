@@ -114,7 +114,7 @@ public class AuthController {
                     examples = @ExampleObject(value = "{\n  \"status\": \"CONFLICT\",\n  \"message\": \"데이터 중복\"\n}")
             )
     )
-    public UserInfoDto createUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
+    public UserAuthInfoDto createUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
         return authService.createUser(createUserRequest);
     }
 
