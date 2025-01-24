@@ -2,6 +2,7 @@ package com.cmc.dice.domain.user.domain;
 
 import com.cmc.dice.domain.user.dto.CreateUserRequest;
 import com.cmc.dice.domain.user.dto.UpdateGuestInfoRequest;
+import com.cmc.dice.domain.user.dto.UpdateHostInfoRequest;
 import com.cmc.dice.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -50,7 +51,13 @@ public class User extends BaseEntity {
         this.password = encode;
     }
 
-    public void update(UpdateGuestInfoRequest request) {
+    public void updateGuestInfo(UpdateGuestInfoRequest request) {
+        this.name = request.getName();
+        this.phone = request.getPhone();
+        this.password = request.getPassword();
+    }
+
+    public void updateHostInfo(UpdateHostInfoRequest request) {
         this.name = request.getName();
         this.phone = request.getPhone();
         this.bankName = request.getBankName();
