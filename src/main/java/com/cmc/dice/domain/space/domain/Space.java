@@ -6,12 +6,8 @@ import com.cmc.dice.domain.user.domain.User;
 import com.cmc.dice.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.geo.Point;
+import org.locationtech.jts.geom.Point;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +35,7 @@ public class Space extends BaseEntity {
 
     @Convert(converter = ImageUrlListConverter.class)
     @Column(columnDefinition = "TEXT") // MySQL에서 JSON 타입 또는 TEXT 타입으로 저장
+    @Builder.Default
     private List<String> imageUrls = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
@@ -65,7 +62,7 @@ public class Space extends BaseEntity {
     private String details; // 공간 상세 소개
 
     // 위치 안내 작성
-    @Column(nullable = false)
+    @Column(columnDefinition = "POINT SRID 4326", nullable = false)
     private Point location;
 
     private String websiteUrl; // 웹사이트 URL
@@ -77,6 +74,7 @@ public class Space extends BaseEntity {
     @Lob
     private String notice; // 공지사항
 
+    @Builder.Default
     private int likeCount = 0; // 좋아요 수
 
     public Space(User user, CreateSpaceRequest request) {

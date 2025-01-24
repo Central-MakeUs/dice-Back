@@ -4,7 +4,7 @@ import com.cmc.dice.domain.space.domain.Space;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.geo.Point;
+import org.locationtech.jts.geom.Point;
 
 @Data
 @AllArgsConstructor
