@@ -9,10 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SimpleBrandInfoDto {
+	private Long id;
 	private String name;
 	private String logoUrl;
 
 	public static SimpleBrandInfoDto of(Brand brand) {
-		return new SimpleBrandInfoDto(brand.getName(), brand.getLogoUrl());
+		return new SimpleBrandInfoDto(brand.getId(), brand.getName(), brand.getLogoUrl());
 	}
 }
