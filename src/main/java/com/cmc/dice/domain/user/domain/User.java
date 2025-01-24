@@ -32,6 +32,10 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String phone;
 
+    private String bankName;
+
+    private String accountNumber;
+
     // 이메일로 회원가입
     public User(CreateUserRequest dto, String encodedPassword) {
         this.email = dto.getEmail();
