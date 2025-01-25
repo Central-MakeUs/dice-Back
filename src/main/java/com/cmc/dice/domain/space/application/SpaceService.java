@@ -3,6 +3,7 @@ package com.cmc.dice.domain.space.application;
 import com.cmc.dice.domain.space.dao.SpaceRepository;
 import com.cmc.dice.domain.space.domain.Space;
 import com.cmc.dice.domain.space.dto.CreateSpaceRequest;
+import com.cmc.dice.domain.space.dto.SpaceFilterDto;
 import com.cmc.dice.domain.space.dto.SpaceSimpleInfoDto;
 import com.cmc.dice.domain.space.exception.SpaceNotFoundException;
 import com.cmc.dice.domain.space.exception.SpaceNotOwnerException;
@@ -41,4 +42,13 @@ public class SpaceService {
 		space.update(request);
 		return space;
 	}
+
+	/**
+	 * 공간 필터링 조회
+	 */
+	public Page<SpaceSimpleInfoDto> getSpacesByFilter(SpaceFilterDto spaceFilterDto, Pageable pageable) {
+		Page<Space> spaces = spaceRepository.findSpaces(spaceFilterDto, pageable);
+		return spaces.map(SpaceSimpleInfoDto::of);
+	}
+
 }

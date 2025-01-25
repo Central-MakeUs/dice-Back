@@ -1,6 +1,8 @@
 package com.cmc.dice.domain.space.dao;
 
 import com.cmc.dice.domain.space.domain.Space;
+import com.cmc.dice.domain.space.dto.SpaceFilterDto;
+import com.cmc.dice.domain.space.dto.SpaceSimpleInfoDto;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.BooleanTemplate;
 import com.querydsl.core.types.dsl.Expressions;
@@ -62,20 +64,20 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 	}
 
 	@Override
-	public Page<Space> findSpaces(String city, String district, Integer minCapacity, String sortBy, Pageable pageable) {
+	public Page<Space> findSpaces(SpaceFilterDto filter, Pageable pageable) {
 		// 기본 쿼리 작성
 		var query = queryFactory.selectFrom(space)
 				.where(
-						space.capacity.goe(minCapacity), // 수용 인원 조건
-						getCitiesAndDistrictsBooleanExpression(city, district) // 도시, 구 조건
+						space.capacity.loe(filter.getMaxCapacity()), // 수용 인원 조건
+						getCitiesAndDistrictsBooleanExpression(filter) // 도시, 구 조건
 				);
 
 		// 정렬 옵션 추가
-		if ("likeCount".equals(sortBy)) {
+		if ("likeCount".equals(filter.getSortBy())) {
 			query.orderBy(space.likeCount.desc());
-		} else if ("latest".equals(sortBy)) {
+		} else if ("latest".equals(filter.getSortBy())) {
 			query.orderBy(space.createdAt.desc());
-		} else if ("price".equals(sortBy)) {
+		} else if ("price".equals(filter.getSortBy())) {
 			query.orderBy(space.pricePerDay.asc());
 		}
 
@@ -86,16 +88,19 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 		// 데이터 페치
 		List<Space> content = query.fetch();
 
-		return null;
+		return new PageImpl<>(content, pageable, query.fetchCount());
 	}
 
-	// 도시, 구를 받아 공간을 조회하는 메서드. 만약 구가 all 로 들어온다면 도시 조건만 체크
-	private BooleanExpression getCitiesAndDistrictsBooleanExpression(String city, String district) {
-		if ("all".equals(district)) {
+	// 도시, 구를 받아 공간을 조회하는 메서드. 만약 구가 null 로 들어온다면 도시 조건만 체크
+	private BooleanExpression getCitiesAndDistrictsBooleanExpression(SpaceFilterDto filter) {
+		String city = filter.getCity();
+		String district = filter.getDistrict();
+
+		if (district == null) {
 			return space.city.eq(city);
-		} else {
-			return space.city.eq(city).and(space.district.eq(district));
 		}
+
+		return space.city.eq(city).and(space.district.eq(district));
 	}
 
 

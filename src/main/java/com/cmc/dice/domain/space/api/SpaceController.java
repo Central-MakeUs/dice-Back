@@ -3,6 +3,7 @@ package com.cmc.dice.domain.space.api;
 import com.cmc.dice.domain.space.application.SpaceService;
 import com.cmc.dice.domain.space.domain.Space;
 import com.cmc.dice.domain.space.dto.CreateSpaceRequest;
+import com.cmc.dice.domain.space.dto.SpaceFilterDto;
 import com.cmc.dice.domain.space.dto.SpaceSimpleInfoDto;
 import com.cmc.dice.domain.user.domain.User;
 import com.cmc.dice.global.jwt.CurrentUser;
@@ -102,5 +103,22 @@ public class SpaceController {
 			@PathVariable Long id,
 			@RequestBody CreateSpaceRequest request) {
 		return spaceService.updateSpaceInfo(user, id, request);
+	}
+
+	@PostMapping("/list")
+	@Operation(summary = "공간 필터링 조회", description = """
+			# 공간 필터링 조회
+			공간을 필터링하여 조회합니다.
+			
+			## 요청
+			- `spaceFilterDto`: 공간 필터 DTO
+			- `page`: 페이지 번호
+			- `size`: 페이지 크기
+			""")
+	public Page<SpaceSimpleInfoDto> getSpacesByFilter(
+			@RequestBody SpaceFilterDto spaceFilterDto,
+			@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "size", defaultValue = "10") int size) {
+		return spaceService.getSpacesByFilter(spaceFilterDto, PageRequest.of(page, size));
 	}
 }

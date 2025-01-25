@@ -5,6 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SpaceRepository extends JpaRepository<Space, Long> {
+public interface SpaceRepository extends JpaRepository<Space, Long>, SpaceRepositoryCustom {
 	Page<Space> findAllByOrderByCreatedAtDesc(Pageable pageable);
 }

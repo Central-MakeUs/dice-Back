@@ -12,7 +12,7 @@ import org.locationtech.jts.geom.Point;
 public class SpaceSimpleInfoDto {
 	private Long id;
 	private String name;
-	private Point address;
+	private String address;
 	private String imageUrl;
 
 	private int pricePerDay;
@@ -25,7 +25,7 @@ public class SpaceSimpleInfoDto {
 		return new SpaceSimpleInfoDto(
 				space.getId(),
 				space.getName(),
-				space.getLocation(),
+				space.getCity() + " " + space.getDistrict() + " " + space.getAddress(),
 				space.getImageUrls().get(0),
 				space.getPricePerDay(),
 				space.getDiscountRate(),
