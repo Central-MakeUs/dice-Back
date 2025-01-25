@@ -1,6 +1,7 @@
 package com.cmc.dice.domain.space.dao;
 
 import com.cmc.dice.domain.space.domain.Space;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.BooleanTemplate;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -59,6 +60,44 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 		// Page 객체 생성
 		return new PageImpl<>(content, pageable, total);
 	}
+
+	@Override
+	public Page<Space> findSpaces(String city, String district, Integer minCapacity, String sortBy, Pageable pageable) {
+		// 기본 쿼리 작성
+		var query = queryFactory.selectFrom(space)
+				.where(
+						space.capacity.goe(minCapacity), // 수용 인원 조건
+						getCitiesAndDistrictsBooleanExpression(city, district) // 도시, 구 조건
+				);
+
+		// 정렬 옵션 추가
+		if ("likeCount".equals(sortBy)) {
+			query.orderBy(space.likeCount.desc());
+		} else if ("latest".equals(sortBy)) {
+			query.orderBy(space.createdAt.desc());
+		} else if ("price".equals(sortBy)) {
+			query.orderBy(space.pricePerDay.asc());
+		}
+
+		// 페이지네이션 추가
+		query.offset(pageable.getOffset())
+				.limit(pageable.getPageSize());
+
+		// 데이터 페치
+		List<Space> content = query.fetch();
+
+		return null;
+	}
+
+	// 도시, 구를 받아 공간을 조회하는 메서드. 만약 구가 all 로 들어온다면 도시 조건만 체크
+	private BooleanExpression getCitiesAndDistrictsBooleanExpression(String city, String district) {
+		if ("all".equals(district)) {
+			return space.city.eq(city);
+		} else {
+			return space.city.eq(city).and(space.district.eq(district));
+		}
+	}
+
 
 	private BooleanTemplate getContainsBooleanExpression(Double latitude, Double longitude, Integer radius) {
 		String target = "Point(%f %f)".formatted(latitude, longitude);

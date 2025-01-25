@@ -10,4 +10,5 @@ import java.util.List;
 public interface SpaceRepositoryCustom {
 	Page<Space> findSpaces(Point location, Integer radius, Integer minCapacity, String sortBy, Pageable pageable);
 
+	Page<Space> findSpaces(String city, String district, Integer minCapacity, String sortBy, Pageable pageable);
 }

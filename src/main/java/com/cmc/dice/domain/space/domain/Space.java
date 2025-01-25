@@ -61,9 +61,14 @@ public class Space extends BaseEntity {
     @Lob
     private String details; // 공간 상세 소개
 
-    // 위치 안내 작성
+    // 공간 위치 정보
     @Column(columnDefinition = "POINT SRID 4326", nullable = false)
     private Point location;
+
+    // 주소
+    private String city;
+    private String district;
+    private String address;
 
     private String websiteUrl; // 웹사이트 URL
     private String contactNumber; // 연락처
