@@ -1,7 +1,9 @@
 package com.cmc.dice.domain.announcement.dto;
 
+import com.cmc.dice.domain.announcement.domain.Announcement;
 import com.cmc.dice.domain.announcement.domain.AnnouncementStatus;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class AnnouncementSimpleInfoDto {
 	private Long id;
 
@@ -28,4 +31,19 @@ public class AnnouncementSimpleInfoDto {
 	private Integer likeCount;
 
 	private AnnouncementStatus status;
+
+	public static AnnouncementSimpleInfoDto fromEntity(Announcement announcement) {
+		return AnnouncementSimpleInfoDto.builder()
+			.id(announcement.getId())
+			.title(announcement.getName())
+			.city(announcement.getCity())
+			.district(announcement.getDistrict())
+			.hostName(announcement.getHostName())
+			.target(announcement.getTarget())
+			.recruitmentStartAt(announcement.getRecruitmentStartAt())
+			.recruitmentEndAt(announcement.getRecruitmentEndAt())
+			.likeCount(announcement.getLikeCount())
+			.status(announcement.getStatus())
+			.build();
+	}
 }

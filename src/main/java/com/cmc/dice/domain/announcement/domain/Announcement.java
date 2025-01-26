@@ -66,5 +66,6 @@ public class Announcement extends BaseEntity {
     private AnnouncementStatus status;
 
     // 좋아요 수
+    @Builder.Default
     private int likeCount = 0;
 }
