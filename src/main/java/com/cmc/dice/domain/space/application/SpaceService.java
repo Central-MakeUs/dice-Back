@@ -3,6 +3,9 @@ package com.cmc.dice.domain.space.application;
 import com.cmc.dice.domain.space.dao.SpaceRepository;
 import com.cmc.dice.domain.space.domain.Space;
 import com.cmc.dice.domain.space.dto.CreateSpaceRequest;
+import com.cmc.dice.domain.space.dto.SpaceFilterDto;
+import com.cmc.dice.domain.space.dto.SpaceInfoDto;
+import com.cmc.dice.domain.space.dto.SpaceSimpleInfoDto;
 import com.cmc.dice.domain.space.exception.SpaceNotFoundException;
 import com.cmc.dice.domain.space.exception.SpaceNotOwnerException;
 import com.cmc.dice.domain.user.domain.User;
@@ -18,14 +21,15 @@ public class SpaceService {
 	private final SpaceRepository spaceRepository;
 
 	@Transactional
-	public Space createSpace(User user, CreateSpaceRequest request) {
+	public void createSpace(User user, CreateSpaceRequest request) {
 		Space space = new Space(user, request);
-		return spaceRepository.save(space);
+		spaceRepository.save(space);
 	}
 
 	@Transactional(readOnly = true)
-	public Page<Space> getSpacesByLatest(Pageable pageable) {
-		return spaceRepository.findAllByOrderByCreatedAtDesc(pageable);
+	public Page<SpaceSimpleInfoDto> getSpacesByLatest(Pageable pageable) {
+		return spaceRepository.findAllByOrderByCreatedAtDesc(pageable)
+				.map(SpaceSimpleInfoDto::of);
 	}
 
 	public Space updateSpaceInfo(User user, Long id, CreateSpaceRequest request) {
@@ -38,5 +42,22 @@ public class SpaceService {
 
 		space.update(request);
 		return space;
+	}
+
+	/**
+	 * 공간 필터링 조회
+	 */
+	public Page<SpaceSimpleInfoDto> getSpacesByFilter(SpaceFilterDto spaceFilterDto, Pageable pageable) {
+		Page<Space> spaces = spaceRepository.findSpaces(spaceFilterDto, pageable);
+		return spaces.map(SpaceSimpleInfoDto::of);
+	}
+
+	/**
+	 * 공간 상세 조회
+	 */
+	public SpaceInfoDto getSpaceInfo(Long id) {
+		Space space = spaceRepository.findById(id)
+				.orElseThrow(SpaceNotFoundException::new);
+		return SpaceInfoDto.of(space);
 	}
 }

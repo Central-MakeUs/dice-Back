@@ -2,7 +2,6 @@ package com.cmc.dice.domain.space.dto;
 
 import com.cmc.dice.domain.space.domain.SpaceCategory;
 import com.cmc.dice.domain.space.domain.SpaceTag;
-import com.cmc.dice.domain.space.domain.Tag;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -11,7 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.geo.Point;
+import org.locationtech.jts.geom.Point;
 
 import java.time.LocalTime;
 import java.util.List;

@@ -31,6 +31,7 @@ public class Announcement extends BaseEntity {
 
     @Convert(converter = ImageUrlListConverter.class)
     @Column(columnDefinition = "TEXT")
+    @Builder.Default
     private List<String> imageUrls = new ArrayList<>();
 
 }

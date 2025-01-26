@@ -6,12 +6,8 @@ import com.cmc.dice.domain.user.domain.User;
 import com.cmc.dice.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.geo.Point;
+import org.locationtech.jts.geom.Point;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +35,7 @@ public class Space extends BaseEntity {
 
     @Convert(converter = ImageUrlListConverter.class)
     @Column(columnDefinition = "TEXT") // MySQL에서 JSON 타입 또는 TEXT 타입으로 저장
+    @Builder.Default
     private List<String> imageUrls = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
@@ -60,13 +57,20 @@ public class Space extends BaseEntity {
 
     private int discountRate; // 할인율 (%)
 
+    private int discountPrice; // 할인된 가격
+
     // 공간 상세 소개 작성
     @Lob
     private String details; // 공간 상세 소개
 
-    // 위치 안내 작성
-    @Column(nullable = false)
+    // 공간 위치 정보
+    @Column(columnDefinition = "POINT SRID 4326", nullable = false)
     private Point location;
+
+    // 주소
+    private String city;
+    private String district;
+    private String address;
 
     private String websiteUrl; // 웹사이트 URL
     private String contactNumber; // 연락처
@@ -76,6 +80,9 @@ public class Space extends BaseEntity {
     private String facilityInfo; // 시설 이용 안내
     @Lob
     private String notice; // 공지사항
+
+    @Builder.Default
+    private int likeCount = 0; // 좋아요 수
 
     public Space(User user, CreateSpaceRequest request) {
         this.admin = user;
@@ -89,6 +96,7 @@ public class Space extends BaseEntity {
         this.tags = request.getTags();
         this.pricePerDay = request.getPricePerDay();
         this.discountRate = request.getDiscountRate();
+        this.discountPrice = this.pricePerDay * (100 - this.discountRate) / 100;
         this.details = request.getDetails();
         this.location = request.getLocation();
         this.websiteUrl = request.getWebsiteUrl();
@@ -112,6 +120,7 @@ public class Space extends BaseEntity {
         this.tags = request.getTags();
         this.pricePerDay = request.getPricePerDay();
         this.discountRate = request.getDiscountRate();
+        this.discountPrice = this.pricePerDay * (100 - this.discountRate) / 100;
         this.details = request.getDetails();
         this.location = request.getLocation();
         this.websiteUrl = request.getWebsiteUrl();
