@@ -19,6 +19,6 @@ public class Tag {
 	@Column(nullable = false)
 	private String name;
 
-	@OneToMany(mappedBy = "tag")
+	@OneToMany(mappedBy = "tag", fetch = FetchType.LAZY)
 	private List<SpaceTag> spaceTags;
 }

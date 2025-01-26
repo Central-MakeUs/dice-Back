@@ -57,6 +57,8 @@ public class Space extends BaseEntity {
 
     private int discountRate; // 할인율 (%)
 
+    private int discountPrice; // 할인된 가격
+
     // 공간 상세 소개 작성
     @Lob
     private String details; // 공간 상세 소개
@@ -94,6 +96,7 @@ public class Space extends BaseEntity {
         this.tags = request.getTags();
         this.pricePerDay = request.getPricePerDay();
         this.discountRate = request.getDiscountRate();
+        this.discountPrice = this.pricePerDay * (100 - this.discountRate) / 100;
         this.details = request.getDetails();
         this.location = request.getLocation();
         this.websiteUrl = request.getWebsiteUrl();
@@ -117,6 +120,7 @@ public class Space extends BaseEntity {
         this.tags = request.getTags();
         this.pricePerDay = request.getPricePerDay();
         this.discountRate = request.getDiscountRate();
+        this.discountPrice = this.pricePerDay * (100 - this.discountRate) / 100;
         this.details = request.getDetails();
         this.location = request.getLocation();
         this.websiteUrl = request.getWebsiteUrl();

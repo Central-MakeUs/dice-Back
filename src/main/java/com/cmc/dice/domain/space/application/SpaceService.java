@@ -4,6 +4,7 @@ import com.cmc.dice.domain.space.dao.SpaceRepository;
 import com.cmc.dice.domain.space.domain.Space;
 import com.cmc.dice.domain.space.dto.CreateSpaceRequest;
 import com.cmc.dice.domain.space.dto.SpaceFilterDto;
+import com.cmc.dice.domain.space.dto.SpaceInfoDto;
 import com.cmc.dice.domain.space.dto.SpaceSimpleInfoDto;
 import com.cmc.dice.domain.space.exception.SpaceNotFoundException;
 import com.cmc.dice.domain.space.exception.SpaceNotOwnerException;
@@ -51,4 +52,12 @@ public class SpaceService {
 		return spaces.map(SpaceSimpleInfoDto::of);
 	}
 
+	/**
+	 * 공간 상세 조회
+	 */
+	public SpaceInfoDto getSpaceInfo(Long id) {
+		Space space = spaceRepository.findById(id)
+				.orElseThrow(SpaceNotFoundException::new);
+		return SpaceInfoDto.of(space);
+	}
 }

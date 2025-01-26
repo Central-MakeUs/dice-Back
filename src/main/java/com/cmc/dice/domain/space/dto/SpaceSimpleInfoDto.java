@@ -17,6 +17,7 @@ public class SpaceSimpleInfoDto {
 
 	private int pricePerDay;
 	private int discountRate;
+	private int discountPrice;
 	private int capacity;
 
 	private int likeCount;
@@ -29,6 +30,7 @@ public class SpaceSimpleInfoDto {
 				space.getImageUrls().get(0),
 				space.getPricePerDay(),
 				space.getDiscountRate(),
+				space.getDiscountPrice(),
 				space.getCapacity(),
 				space.getLikeCount()
 		);
