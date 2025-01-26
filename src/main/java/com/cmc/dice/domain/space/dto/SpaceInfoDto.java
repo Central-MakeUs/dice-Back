@@ -28,7 +28,7 @@ public class SpaceInfoDto {
 
 	private int capacity; // 수용 인원
 
-	private List<Tag> tags;
+	private List<String> tags;
 
 	private int pricePerDay; // 1일 대여 비용
 
@@ -56,8 +56,10 @@ public class SpaceInfoDto {
 	private int likeCount = 0; // 좋아요 수
 
 	public static SpaceInfoDto of(Space space) {
-		List<Tag> tags = new ArrayList<>();
-		space.getTags().forEach(spaceTag -> tags.add(spaceTag.getTag()));
+		List<String> tags = new ArrayList<>();
+		for (SpaceTag spaceTag : space.getTags()) {
+			tags.add(spaceTag.getTag().getName());
+		}
 
 		return new SpaceInfoDto(
 				space.getId(),

@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Table(name = "spaces")
+@Table(name = "tags")
 @Getter
 @Builder
 @AllArgsConstructor
