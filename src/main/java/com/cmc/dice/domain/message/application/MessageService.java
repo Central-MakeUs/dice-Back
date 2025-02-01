@@ -31,4 +31,24 @@ public class MessageService {
                 .map(MessageRoomDto::of)
                 .toList();
     }
+
+    // 메시지 방 조회
+    public Page<MessageDto> getMessageList(User user, Long roomId, Pageable pageable) {
+        if (pageable.getPageNumber() == 0) {
+            MessageRoom room = messageRoomRepository.findById(roomId)
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 메시지 방입니다."));
+
+            if (!room.getLastMessageSender().equals(user.getName())){
+                room.updateByRead();
+                messageRoomRepository.save(room);
+            }
+        }
+
+        Page<Message> messagePage = messageRepository.findByRoomId(roomId, pageable);
+        List<MessageDto> messages = messagePage.stream()
+                .map(MessageDto::of)
+                .toList();
+
+        return new PageImpl<>(messages, pageable, messagePage.getTotalElements());
+    }
 }

@@ -40,4 +40,9 @@ public class MessageRoom {
     private LocalDateTime lastMessageAt;
     private boolean isRead;
     private int unreadCount;
+
+    public void updateByRead() {
+        this.isRead = true;
+        this.unreadCount = 0;
+    }
 }
