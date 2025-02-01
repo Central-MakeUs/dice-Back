@@ -144,3 +144,45 @@ VALUES
         '음향 테스트는 사전 예약 필수',
         200
     );
+
+-- announcements 테이블에 데이터 삽입
+INSERT INTO announcements (
+    host_id, host_name, name, image_urls, city, district, address, contact_number, website_url,
+    details, recruitment_start_at, recruitment_end_at, target, status, like_count
+)
+VALUES
+    (
+        1,
+        '서울시 창업 지원센터',
+        '강남 창업 지원 공고',
+        '["https://example.com/announcement1.jpg", "https://example.com/announcement2.jpg"]',
+        '서울특별시',
+        '강남구',
+        '강남대로 123',
+        '02-111-2222',
+        'https://startup-support.com',
+        '스타트업을 위한 특별 지원 프로그램입니다.',
+        '2025-02-01 09:00:00',
+        '2025-02-28 23:59:59',
+        '스타트업',
+        'RECRUITING',
+        50
+    ),
+    (
+        2,
+        '문화체육관광부',
+        '서초 예술가 지원 공고',
+        '["https://example.com/announcement3.jpg", "https://example.com/announcement4.jpg"]',
+        '서울특별시',
+        '서초구',
+        '서초대로 456',
+        '02-333-4444',
+        'https://art-support.com',
+        '예술가들을 위한 창작 공간 지원 프로그램입니다.',
+        '2025-03-01 10:00:00',
+        '2025-03-31 23:59:59',
+        '예술가',
+        'CLOSED',
+        30
+    );
+
