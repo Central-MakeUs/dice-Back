@@ -37,7 +37,7 @@ public class MessageRoom {
 
     private String lastMessage;
     private String lastMessageSender;
-    private LocalDateTime lastMessageTime;
+    private LocalDateTime lastMessageAt;
     private boolean isRead;
     private int unreadCount;
 }
