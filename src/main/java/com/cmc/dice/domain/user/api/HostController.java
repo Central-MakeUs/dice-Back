@@ -68,4 +68,5 @@ public class HostController {
 			@Valid @RequestBody UpdateHostInfoRequest request) {
 		return hostService.updateHostInfo(user, request);
 	}
+
 }
