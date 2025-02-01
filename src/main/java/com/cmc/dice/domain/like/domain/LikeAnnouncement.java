@@ -13,11 +13,13 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LikeAnnouncement {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "announcement_id")
     private Announcement announcement;
