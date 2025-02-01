@@ -23,7 +23,7 @@ public class MessageService {
     private final MessageRoomRepository messageRoomRepository;
     
     // 메시지 방 목록 조회 (게스트)
-    public List<MessageRoomDto> getMessageRoomList(User user) {
+    public List<MessageRoomDto> getMessageRoomListByGuest(User user) {
         List<MessageRoom> rooms = messageRoomRepository.findByGuestId(user.getId());
         return rooms.stream()
                 .map(MessageRoomDto::of)
@@ -61,7 +61,7 @@ public class MessageService {
     // 메시지 전송
     public MessageDto sendMessage(User user, Long roomId, MessageSendRequest request) {
         Message message = Message.builder()
-                .messageRoom(messageRoomRepository.getReferenceById(roomId))
+                .room(messageRoomRepository.getReferenceById(roomId))
                 .sender(user)
                 .content(request.getContent())
                 .type(request.getType())

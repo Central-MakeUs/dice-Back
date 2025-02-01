@@ -21,18 +21,18 @@ public class MessageRoom {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "host_id")
     private User host;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "guest_id")
     private User guest;
 
     @ManyToOne
     @JoinColumn(name = "space_id")
     private Space space;
 
-    @OneToMany(mappedBy = "messageRoom", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
     private List<Message> messages;
 
     private String lastMessage;
