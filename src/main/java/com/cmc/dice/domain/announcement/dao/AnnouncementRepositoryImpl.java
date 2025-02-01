@@ -34,7 +34,8 @@ public class AnnouncementRepositoryImpl implements AnnouncementRepositoryCustom 
 		var query = queryFactory.selectFrom(announcement)
 				.where(
 						getCitiesAndDistrictsBooleanExpression(request), // 도시, 구 조건
-						announcement.status.eq(request.getStatus())
+						getStatus(request),
+						getTarget(request)
 				);
 
 		// 페이지네이션 추가
@@ -46,6 +47,21 @@ public class AnnouncementRepositoryImpl implements AnnouncementRepositoryCustom 
 		List<Announcement> content = query.fetch();
 
 		return new PageImpl<>(content, pageable, query.fetchCount());
+	}
+
+	private static BooleanExpression getTarget(AnnouncementFilterRequest request) {
+		if (request.getTargets() == null) {
+			return null;
+		}
+
+		return announcement.target.in(request.getTargets());
+	}
+
+	private static BooleanExpression getStatus(AnnouncementFilterRequest request) {
+		if (request.getStatus() == null) {
+			return null;
+		}
+		return announcement.status.eq(request.getStatus());
 	}
 
 	// 도시, 구를 받아 공간을 조회하는 메서드. 만약 구가 null 로 들어온다면 도시 조건만 체크
