@@ -22,6 +22,7 @@ public class SpaceSimpleInfoDto {
 
 	private int likeCount;
 
+
 	public static SpaceSimpleInfoDto of(Space space) {
 		return new SpaceSimpleInfoDto(
 				space.getId(),

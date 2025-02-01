@@ -1,4 +1,4 @@
-package com.cmc.dice.domain.favorite.domain;
+package com.cmc.dice.domain.like.domain;
 
 import com.cmc.dice.domain.space.domain.Space;
 import com.cmc.dice.domain.user.domain.User;
@@ -6,18 +6,20 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "favorite_spaces")
+@Table(name = "like_spaces")
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FavoriteSpace {
+public class LikeSpace {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "space_id")
     private Space space;

@@ -1,5 +1,8 @@
 package com.cmc.dice.domain.user.api;
 
+import com.cmc.dice.domain.announcement.dto.AnnouncementSimpleInfoDto;
+import com.cmc.dice.domain.like.application.LikeService;
+import com.cmc.dice.domain.space.dto.SpaceSimpleInfoDto;
 import com.cmc.dice.domain.user.application.AuthService;
 import com.cmc.dice.domain.user.application.GuestService;
 import com.cmc.dice.domain.user.domain.User;
@@ -19,6 +22,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +35,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Guest")
 public class GuestController {
 	private final GuestService guestService;
+	private final LikeService likeService;
 
 	@GetMapping("/info")
 	@Operation(summary = "게스트 정보 조회", description = """
@@ -73,4 +80,56 @@ public class GuestController {
 			@Valid @RequestBody UpdateGuestInfoRequest request) {
 		return guestService.updateGuestInfo(user, request);
 	}
+
+	@GetMapping("/like/space")
+	@Operation(summary = "공간 좋아요 목록 조회", description = """
+			# 공간 좋아요 목록 조회
+						
+			- 게스트가 좋아요한 공간 목록을 조회합니다.
+						
+			## 응답
+						
+			- 조회 성공 시 200 코드와 호스트가 좋아요한 공간 목록으로 응답합니다.
+			""")
+	@ApiResponse(
+			responseCode = "200",
+			description = "조회 성공",
+			useReturnTypeSchema = true
+	)
+	@PreAuthorize("isAuthenticated()")
+	@SecurityRequirement(name = "access-token")
+	public Page<SpaceSimpleInfoDto> getLikeSpaces(
+			@CurrentUser User user,
+			@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "size", defaultValue = "10") int size
+	) {
+		return likeService.getLikeSpaceList(user, PageRequest.of(page, size));
+	}
+
+	@GetMapping("/like/announcement")
+	@Operation(summary = "공고 좋아요 목록 조회", description = """
+			# 공고 좋아요 목록 조회
+						
+			- 게스트가 좋아요한 공고 목록을 조회합니다.
+						
+			## 응답
+						
+			- 조회 성공 시 200 코드와 호스트가 좋아요한 공고 목록으로 응답합니다.
+			""")
+	@ApiResponse(
+			responseCode = "200",
+			description = "조회 성공",
+			useReturnTypeSchema = true
+	)
+	@PreAuthorize("isAuthenticated()")
+	@SecurityRequirement(name = "access-token")
+	public Page<AnnouncementSimpleInfoDto> getLikeAnnouncements(
+			@CurrentUser User user,
+			@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "size", defaultValue = "10") int size
+	) {
+		return likeService.getLikeAnnouncementList(user, PageRequest.of(page, size));
+	}
+
+
 }
