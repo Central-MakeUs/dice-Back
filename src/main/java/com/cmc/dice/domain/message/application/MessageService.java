@@ -2,10 +2,16 @@ package com.cmc.dice.domain.message.application;
 
 import com.cmc.dice.domain.message.dao.MessageRepository;
 import com.cmc.dice.domain.message.dao.MessageRoomRepository;
+import com.cmc.dice.domain.message.domain.Message;
 import com.cmc.dice.domain.message.domain.MessageRoom;
+import com.cmc.dice.domain.message.dto.MessageDto;
 import com.cmc.dice.domain.message.dto.MessageRoomDto;
+import com.cmc.dice.domain.message.dto.MessageSendRequest;
 import com.cmc.dice.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,5 +56,25 @@ public class MessageService {
                 .toList();
 
         return new PageImpl<>(messages, pageable, messagePage.getTotalElements());
+    }
+
+    // 메시지 전송
+    public MessageDto sendMessage(User user, Long roomId, MessageSendRequest request) {
+        Message message = Message.builder()
+                .messageRoom(messageRoomRepository.getReferenceById(roomId))
+                .sender(user)
+                .content(request.getContent())
+                .type(request.getType())
+                .build();
+
+        messageRoomRepository.findById(roomId)
+                .ifPresent(room -> {
+                    room.updateLastMessage(message);
+                    messageRoomRepository.save(room);
+                }
+        );
+
+        messageRepository.save(message);
+        return MessageDto.of(message);
     }
 }

@@ -45,4 +45,12 @@ public class MessageRoom {
         this.isRead = true;
         this.unreadCount = 0;
     }
+
+    public void updateLastMessage(Message message) {
+        this.lastMessage = message.getContent();
+        this.lastMessageSender = message.getSender().getName();
+        this.lastMessageAt = message.getCreatedAt();
+        this.isRead = false;
+        this.unreadCount++;
+    }
 }
