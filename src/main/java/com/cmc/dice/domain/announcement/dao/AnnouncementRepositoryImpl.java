@@ -54,10 +54,10 @@ public class AnnouncementRepositoryImpl implements AnnouncementRepositoryCustom 
 		String district = filter.getDistrict();
 
 		if (district == null) {
-			return space.city.eq(city);
+			return announcement.city.eq(city);
 		}
 
-		return space.city.eq(city).and(space.district.eq(district));
+		return announcement.city.eq(city).and(announcement.district.eq(district));
 	}
 
 

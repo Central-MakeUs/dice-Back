@@ -5,6 +5,7 @@ import com.cmc.dice.domain.announcement.dto.AnnouncementFilterRequest;
 import com.cmc.dice.domain.announcement.dto.AnnouncementInfoDto;
 import com.cmc.dice.domain.announcement.dto.AnnouncementSimpleInfoDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +18,9 @@ public class AnnouncementService {
 	private final AnnouncementRepository announcementRepository;
 
 	// 모집 공고 리스트 조회
-	public List<AnnouncementSimpleInfoDto> getAnnouncements(AnnouncementFilterRequest request, Pageable pageable) {
+	public Page<AnnouncementSimpleInfoDto> getAnnouncements(AnnouncementFilterRequest request, Pageable pageable) {
 		return announcementRepository.findAnnouncements(request, pageable)
-			.map(AnnouncementSimpleInfoDto::fromEntity)
-			.getContent();
+				.map(AnnouncementSimpleInfoDto::fromEntity);
 	}
 
 
