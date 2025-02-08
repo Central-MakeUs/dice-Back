@@ -54,9 +54,8 @@ public class SpaceService {
 	/**
 	 * 공간 필터링 조회
 	 */
-	public Page<SpaceSimpleInfoDto> getSpacesByFilter(SpaceFilterDto spaceFilterDto, Pageable pageable) {
-		Page<Space> spaces = spaceRepository.findSpaces(spaceFilterDto, pageable);
-		return spaces.map(SpaceSimpleInfoDto::of);
+	public Page<SpaceSimpleInfoDto> getSpacesByFilter(SpaceFilterDto spaceFilterDto,User user, Pageable pageable) {
+		return spaceRepository.findSpaces(spaceFilterDto, user, pageable);
 	}
 
 	/**

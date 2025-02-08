@@ -1,8 +1,12 @@
 package com.cmc.dice.domain.space.dao;
 
+import com.cmc.dice.domain.announcement.dto.AnnouncementFilterRequest;
 import com.cmc.dice.domain.space.domain.Space;
 import com.cmc.dice.domain.space.dto.SpaceFilterDto;
 import com.cmc.dice.domain.space.dto.SpaceSimpleInfoDto;
+import com.cmc.dice.domain.user.domain.User;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.BooleanTemplate;
 import com.querydsl.core.types.dsl.Expressions;
@@ -17,7 +21,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.cmc.dice.domain.announcement.domain.QAnnouncement.announcement;
 import static com.cmc.dice.domain.space.domain.QSpace.space;
+import static com.cmc.dice.domain.like.domain.QLikeSpace.likeSpace;
 
 
 @Repository
@@ -27,50 +33,28 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public Page<Space> findSpaces(Point location, Integer radius, Integer minCapacity, String sortBy, Pageable pageable) {
+	public Page<SpaceSimpleInfoDto> findSpaces(SpaceFilterDto filter, User user, Pageable pageable) {
 		// 기본 쿼리 작성
-		var query = queryFactory.selectFrom(space)
-				.where(
-						space.capacity.goe(minCapacity), // 수용 인원 조건
-						getContainsBooleanExpression(location.getX(), location.getY(), radius) // 반경 조건
-				);
+		var query = queryFactory
+				.select(Projections.constructor(SpaceSimpleInfoDto.class,
+						space,
+						user != null ? likeSpace.id.isNotNull() : Expressions.constant(false) // isLiked 여부
+				))
+				.from(space);
 
-		// 정렬 옵션 추가
-		if ("likeCount".equals(sortBy)) {
-			query.orderBy(space.likeCount.desc());
-		} else if ("latest".equals(sortBy)) {
-			query.orderBy(space.createdAt.desc());
-		} else if ("price".equals(sortBy)) {
-			query.orderBy(space.pricePerDay.asc());
+		if (filter != null) {
+				query.where(
+					getMaxCapacity(filter.getMaxCapacity()), // 수용 인원 조건
+					getPricePerDayBetween(filter.getMinPrice(), filter.getMaxPrice()), // 가격 조건
+					getCitiesAndDistrictsBooleanExpression(filter) // 도시, 구 조건
+			);
 		}
 
-		// 페이지네이션 추가
-		query.offset(pageable.getOffset())
-				.limit(pageable.getPageSize());
-
-		// 데이터 페치
-		List<Space> content = query.fetch();
-
-		// 전체 데이터 개수
-		long total = queryFactory.selectFrom(space)
-				.where(
-						space.capacity.goe(minCapacity), // 수용 인원 조건
-						getContainsBooleanExpression(location.getX(), location.getY(), radius) // 반경 조건
-				)
-				.fetchCount();
-
-		// Page 객체 생성
-		return new PageImpl<>(content, pageable, total);
-	}
-
-	@Override
-	public Page<Space> findSpaces(SpaceFilterDto filter, Pageable pageable) {
-		// 기본 쿼리 작성
-		var query = queryFactory.selectFrom(space)
-				.where(
-						space.capacity.loe(filter.getMaxCapacity()), // 수용 인원 조건
-						getCitiesAndDistrictsBooleanExpression(filter) // 도시, 구 조건
-				);
+		if (user != null) {
+			query.leftJoin(likeSpace)
+					.on(likeSpace.space.id.eq(space.id)
+							.and(likeSpace.user.id.eq(user.getId())));
+		}
 
 		// 정렬 옵션 추가
 		if ("likeCount".equals(filter.getSortBy())) {
@@ -86,9 +70,24 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 				.limit(pageable.getPageSize());
 
 		// 데이터 페치
-		List<Space> content = query.fetch();
+		List<SpaceSimpleInfoDto> content = query.fetch();
 
 		return new PageImpl<>(content, pageable, query.fetchCount());
+	}
+
+	private static BooleanExpression getPricePerDayBetween(Integer minPrice, Integer maxPrice) {
+		if (maxPrice == null) {
+			return space.pricePerDay.goe(minPrice);
+		}
+		return space.pricePerDay.between(minPrice, maxPrice);
+	}
+
+	private static BooleanExpression getMaxCapacity(Integer maxCapacity) {
+		if (maxCapacity == null) {
+			return null;
+		}
+
+		return space.capacity.loe(maxCapacity);
 	}
 
 	// 도시, 구를 받아 공간을 조회하는 메서드. 만약 구가 null 로 들어온다면 도시 조건만 체크

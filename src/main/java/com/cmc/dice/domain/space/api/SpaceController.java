@@ -120,11 +120,14 @@ public class SpaceController {
 			- `page`: 페이지 번호
 			- `size`: 페이지 크기
 			""")
+	@PreAuthorize("isAuthenticated()")
+	@SecurityRequirement(name = "access-token")
 	public Page<SpaceSimpleInfoDto> getSpacesByFilter(
-			@RequestBody SpaceFilterDto spaceFilterDto,
+			@CurrentUser User user,
+			@RequestBody(required = false) SpaceFilterDto spaceFilterDto,
 			@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "size", defaultValue = "10") int size) {
-		return spaceService.getSpacesByFilter(spaceFilterDto, PageRequest.of(page, size));
+		return spaceService.getSpacesByFilter(spaceFilterDto, user, PageRequest.of(page, size));
 	}
 
 	@GetMapping("/{id}")

@@ -1,6 +1,7 @@
 package com.cmc.dice.domain.space.dto;
 
 import com.cmc.dice.domain.space.domain.Space;
+import com.cmc.dice.domain.space.domain.SpaceTag;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -50,6 +51,37 @@ public class SpaceSimpleInfoDto {
 	@Schema(description = "채팅방 ID", example = "1")
 	@Builder.Default
 	private Long chatRoomId = null;
+
+	public SpaceSimpleInfoDto(Space space, Boolean isLiked, Long chatRoomId){
+		this.id = space.getId();
+		this.name = space.getName();
+		this.address = space.getAddress();
+		this.imageUrl = space.getImageUrls().get(0);
+		this.pricePerDay = space.getPricePerDay();
+		this.discountRate = space.getDiscountRate();
+		this.discountPrice = space.getDiscountPrice();
+		this.capacity = space.getCapacity();
+		this.size = space.getSize();
+		this.likeCount = space.getLikeCount();
+
+		this.isLiked = isLiked;
+		this.chatRoomId = chatRoomId;
+	}
+
+	public SpaceSimpleInfoDto(Space space, Boolean isLiked){
+		this.id = space.getId();
+		this.name = space.getName();
+		this.address = space.getAddress();
+		this.imageUrl = space.getImageUrls().get(0);
+		this.pricePerDay = space.getPricePerDay();
+		this.discountRate = space.getDiscountRate();
+		this.discountPrice = space.getDiscountPrice();
+		this.capacity = space.getCapacity();
+		this.size = space.getSize();
+		this.likeCount = space.getLikeCount();
+
+		this.isLiked = isLiked;
+	}
 
 	public static SpaceSimpleInfoDto of(Space space) {
 		return SpaceSimpleInfoDto.builder()
