@@ -44,6 +44,8 @@ public class SpaceController {
 			- `discountRate`: 할인율
 			- `details`: 상세 정보
 			- `location`: 위치 정보
+			- `city`: 도시
+			- `district`: 구
 			- `websiteUrl`: 웹사이트 URL
 			- `contactNumber`: 연락처
 			- `facilityInfo`: 시설 정보
@@ -92,6 +94,8 @@ public class SpaceController {
             - `discountRate`: 할인율
             - `details`: 상세 정보
             - `location`: 위치 정보
+            - `city`: 도시
+            - `district`: 구
             - `websiteUrl`: 웹사이트 URL
             - `contactNumber`: 연락처
             - `facilityInfo`: 시설 정보
