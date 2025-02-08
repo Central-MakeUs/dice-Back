@@ -70,7 +70,7 @@ public class LikeService {
                 .collect(Collectors.toList());
 
         List<SpaceSimpleInfoDto> spaceDtoList = spaceRepository.findByIdIn(spaceIdList).stream()
-                .map(SpaceSimpleInfoDto::of)
+                .map(spaceSimpleInfoDto -> new SpaceSimpleInfoDto(spaceSimpleInfoDto, true))
                 .collect(Collectors.toList());
 
         return new PageImpl<>(spaceDtoList, pageable, likeSpacePage.getTotalElements());
@@ -84,7 +84,7 @@ public class LikeService {
                 .collect(Collectors.toList());
 
         List<AnnouncementSimpleInfoDto> announcementDtoList = announcementRepository.findByIdIn(announcementIdList).stream()
-                .map(AnnouncementSimpleInfoDto::fromEntity)
+                .map(announcementSimpleInfoDto -> new AnnouncementSimpleInfoDto(announcementSimpleInfoDto, true))
                 .collect(Collectors.toList());
 
         return new PageImpl<>(announcementDtoList, pageable, likeAnnouncementPage.getTotalElements());
