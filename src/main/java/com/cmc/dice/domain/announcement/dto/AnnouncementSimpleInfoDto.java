@@ -30,7 +30,8 @@ public class AnnouncementSimpleInfoDto {
 
 	private Integer likeCount;
 
-	private Boolean isLiked;
+	@Builder.Default
+	private Boolean isLiked = false;
 
 	private AnnouncementStatus status;
 
@@ -60,5 +61,7 @@ public class AnnouncementSimpleInfoDto {
 		this.recruitmentEndAt = announcement.getRecruitmentEndAt();
 		this.likeCount = announcement.getLikeCount();
 		this.status = announcement.getStatus();
+
+		this.isLiked = isLiked;
 	}
 }

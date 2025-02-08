@@ -4,6 +4,7 @@ import com.cmc.dice.domain.announcement.dao.AnnouncementRepository;
 import com.cmc.dice.domain.announcement.dto.AnnouncementFilterRequest;
 import com.cmc.dice.domain.announcement.dto.AnnouncementInfoDto;
 import com.cmc.dice.domain.announcement.dto.AnnouncementSimpleInfoDto;
+import com.cmc.dice.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,9 +19,8 @@ public class AnnouncementService {
 	private final AnnouncementRepository announcementRepository;
 
 	// 모집 공고 리스트 조회
-	public Page<AnnouncementSimpleInfoDto> getAnnouncements(AnnouncementFilterRequest request, Pageable pageable) {
-		return announcementRepository.findAnnouncements(request, pageable)
-				.map(AnnouncementSimpleInfoDto::fromEntity);
+	public Page<AnnouncementSimpleInfoDto> getAnnouncements(AnnouncementFilterRequest request, User user, Pageable pageable) {
+		return announcementRepository.findAnnouncements(request, user, pageable);
 	}
 
 

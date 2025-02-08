@@ -2,8 +2,12 @@ package com.cmc.dice.domain.announcement.dao;
 
 import com.cmc.dice.domain.announcement.domain.Announcement;
 import com.cmc.dice.domain.announcement.dto.AnnouncementFilterRequest;
+import com.cmc.dice.domain.announcement.dto.AnnouncementSimpleInfoDto;
 import com.cmc.dice.domain.space.domain.Space;
 import com.cmc.dice.domain.space.dto.SpaceFilterDto;
+import com.cmc.dice.domain.space.dto.SpaceSimpleInfoDto;
+import com.cmc.dice.domain.user.domain.User;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.BooleanTemplate;
 import com.querydsl.core.types.dsl.Expressions;
@@ -19,6 +23,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.cmc.dice.domain.announcement.domain.QAnnouncement.announcement;
+import static com.cmc.dice.domain.like.domain.QLikeAnnouncement.likeAnnouncement;
 import static com.cmc.dice.domain.space.domain.QSpace.space;
 
 
@@ -29,9 +34,14 @@ public class AnnouncementRepositoryImpl implements AnnouncementRepositoryCustom 
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public Page<Announcement> findAnnouncements(AnnouncementFilterRequest request, Pageable pageable) {
+	public Page<AnnouncementSimpleInfoDto> findAnnouncements(AnnouncementFilterRequest request, User user, Pageable pageable) {
 		// 기본 쿼리 작성
-		var query = queryFactory.selectFrom(announcement);
+		var query = queryFactory
+				.select(Projections.constructor(AnnouncementSimpleInfoDto.class,
+						announcement,
+						user != null ? likeAnnouncement.id.isNotNull() : Expressions.constant(false) // isLiked 여부
+				))
+				.from(announcement);
 
 		if (request != null) {
 			query.where(
@@ -41,13 +51,19 @@ public class AnnouncementRepositoryImpl implements AnnouncementRepositoryCustom 
 			);
 		}
 
+		if (user != null) {
+			query.leftJoin(likeAnnouncement)
+					.on(likeAnnouncement.id.eq(announcement.id)
+							.and(likeAnnouncement.user.id.eq(user.getId())));
+		}
+
 		// 페이지네이션 추가
 		query.offset(pageable.getOffset())
 				.limit(pageable.getPageSize());
 
 
 		// 데이터 페치
-		List<Announcement> content = query.fetch();
+		List<AnnouncementSimpleInfoDto> content = query.fetch();
 
 		return new PageImpl<>(content, pageable, query.fetchCount());
 	}
