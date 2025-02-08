@@ -32,7 +32,7 @@ public class AnnouncementController {
         - `size`: 페이지 크기
         """)
     public Page<AnnouncementSimpleInfoDto> getAnnouncements(
-            @RequestBody AnnouncementFilterRequest request,
+            @RequestBody(required = false) AnnouncementFilterRequest request,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
         return announcementService.getAnnouncements(request, PageRequest.of(page, size));

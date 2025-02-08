@@ -31,12 +31,15 @@ public class AnnouncementRepositoryImpl implements AnnouncementRepositoryCustom 
 	@Override
 	public Page<Announcement> findAnnouncements(AnnouncementFilterRequest request, Pageable pageable) {
 		// 기본 쿼리 작성
-		var query = queryFactory.selectFrom(announcement)
-				.where(
-						getCitiesAndDistrictsBooleanExpression(request), // 도시, 구 조건
-						getStatus(request),
-						getTarget(request)
-				);
+		var query = queryFactory.selectFrom(announcement);
+
+		if (request != null) {
+			query.where(
+					getCitiesAndDistrictsBooleanExpression(request), // 도시, 구 조건
+					getStatus(request),
+					getTarget(request)
+			);
+		}
 
 		// 페이지네이션 추가
 		query.offset(pageable.getOffset())
