@@ -4,9 +4,12 @@ import com.cmc.dice.domain.message.dao.MessageRepository;
 import com.cmc.dice.domain.message.dao.MessageRoomRepository;
 import com.cmc.dice.domain.message.domain.Message;
 import com.cmc.dice.domain.message.domain.MessageRoom;
+import com.cmc.dice.domain.message.dto.MessageCreateRequest;
 import com.cmc.dice.domain.message.dto.MessageDto;
 import com.cmc.dice.domain.message.dto.MessageRoomDto;
 import com.cmc.dice.domain.message.dto.MessageSendRequest;
+import com.cmc.dice.domain.space.dao.SpaceRepository;
+import com.cmc.dice.domain.user.dao.UserRepository;
 import com.cmc.dice.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,7 +24,9 @@ import java.util.List;
 public class MessageService {
     private final MessageRepository messageRepository;
     private final MessageRoomRepository messageRoomRepository;
-    
+    private final UserRepository userRepository;
+    private final SpaceRepository spaceRepository;
+
     // 메시지 방 목록 조회 (게스트)
     public List<MessageRoomDto> getMessageRoomListByGuest(User user) {
         List<MessageRoom> rooms = messageRoomRepository.findByGuestId(user.getId());
@@ -77,4 +82,20 @@ public class MessageService {
         messageRepository.save(message);
         return MessageDto.of(message);
     }
+
+	public MessageRoomDto createMessageRoom(User user, MessageCreateRequest request) {
+        MessageRoom room = MessageRoom.builder()
+                .guest(user)
+                .host(userRepository.getReferenceById(request.getHostId()))
+                .space(spaceRepository.getReferenceById(request.getSpaceId()))
+                .lastMessage("")
+                .lastMessageSender("")
+                .lastMessageAt(null)
+                .isRead(false)
+                .unreadCount(0)
+                .build();
+
+        messageRoomRepository.save(room);
+        return MessageRoomDto.of(room);
+	}
 }
