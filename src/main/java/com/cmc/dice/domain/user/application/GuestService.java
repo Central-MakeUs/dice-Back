@@ -7,6 +7,7 @@ import com.cmc.dice.domain.user.domain.User;
 import com.cmc.dice.domain.user.dto.GuestInfoDto;
 import com.cmc.dice.domain.user.dto.UpdateGuestInfoRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class GuestService {
+	private final PasswordEncoder passwordEncoder;
+
 	private final UserRepository userRepository;
 
 	private final BrandService brandService;
@@ -30,6 +33,7 @@ public class GuestService {
 	 * 게스트 마이페이지 수정
 	 */
 	public GuestInfoDto updateGuestInfo(User user, UpdateGuestInfoRequest request) {
+		request.setPassword(passwordEncoder.encode(request.getPassword()));
 		user.updateGuestInfo(request);
 		userRepository.save(user);
 

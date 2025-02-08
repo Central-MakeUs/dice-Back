@@ -82,13 +82,13 @@ public class AuthService {
 
     public void validateDuplicateEmail(EmailValidateDto email) {
         if (userRepository.existsByEmail(email.getEmail())) {
-            throw new DuplicatePhoneException();
+            throw new DuplicateEmailException();
         }
     }
 
     public void validateDuplicatePhone(PhoneValidateDto phone) {
         if (userRepository.existsByPhone(phone.getPhone())) {
-            throw new DuplicateEmailException();
+            throw new DuplicatePhoneException();
         }
     }
 
@@ -107,5 +107,6 @@ public class AuthService {
                 .orElseThrow(NotFoundUserInfoException::new);
 
         user.updatePassword(passwordEncoder.encode(passwordResetRequest.getPassword()));
+        userRepository.save(user);
     }
 }
