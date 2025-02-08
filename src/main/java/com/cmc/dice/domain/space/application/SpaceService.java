@@ -10,6 +10,9 @@ import com.cmc.dice.domain.space.exception.SpaceNotFoundException;
 import com.cmc.dice.domain.space.exception.SpaceNotOwnerException;
 import com.cmc.dice.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,11 +22,15 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class SpaceService {
 	private final SpaceRepository spaceRepository;
+	private static final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
 
 	@Transactional
 	public void createSpace(User user, CreateSpaceRequest request) {
 		Space space = new Space(user, request);
-		spaceRepository.save(space);
+		space.updateLocation(geometryFactory.createPoint(new Coordinate(request.getLongitude(), request.getLatitude())));
+
+		Space space2 = spaceRepository.save(space);
+
 	}
 
 	@Transactional(readOnly = true)
