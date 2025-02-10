@@ -53,7 +53,7 @@ public class AnnouncementRepositoryImpl implements AnnouncementRepositoryCustom 
 
 		if (user != null) {
 			query.leftJoin(likeAnnouncement)
-					.on(likeAnnouncement.id.eq(announcement.id)
+					.on(likeAnnouncement.announcement.id.eq(announcement.id)
 							.and(likeAnnouncement.user.id.eq(user.getId())));
 		}
 
@@ -87,6 +87,10 @@ public class AnnouncementRepositoryImpl implements AnnouncementRepositoryCustom 
 	private BooleanExpression getCitiesAndDistrictsBooleanExpression(AnnouncementFilterRequest filter) {
 		String city = filter.getCity();
 		String district = filter.getDistrict();
+
+		if (city == null) {
+			return null;
+		}
 
 		if (district == null) {
 			return announcement.city.eq(city);
