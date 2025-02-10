@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,8 +18,10 @@ public class SimpleBrandInfoDto {
 	private String name;
 	@Schema(description = "로고 URL", example = "https://example.com/logo.jpg")
 	private String logoUrl;
+	@Schema(description = "이미지 URL 목록", example = "[\"https://example.com/image1.jpg\", \"https://example.com/image2.jpg\"]")
+	private List<String> imageUrls;
 
 	public static SimpleBrandInfoDto of(Brand brand) {
-		return new SimpleBrandInfoDto(brand.getId(), brand.getName(), brand.getLogoUrl());
+		return new SimpleBrandInfoDto(brand.getId(), brand.getName(), brand.getLogoUrl(), brand.getImageUrls());
 	}
 }
