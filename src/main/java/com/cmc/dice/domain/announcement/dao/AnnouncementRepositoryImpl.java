@@ -2,6 +2,7 @@ package com.cmc.dice.domain.announcement.dao;
 
 import com.cmc.dice.domain.announcement.domain.Announcement;
 import com.cmc.dice.domain.announcement.dto.AnnouncementFilterRequest;
+import com.cmc.dice.domain.announcement.dto.AnnouncementInfoDto;
 import com.cmc.dice.domain.announcement.dto.AnnouncementSimpleInfoDto;
 import com.cmc.dice.domain.space.domain.Space;
 import com.cmc.dice.domain.space.dto.SpaceFilterDto;
@@ -11,6 +12,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.BooleanTemplate;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.cmc.dice.domain.announcement.domain.QAnnouncement.announcement;
 import static com.cmc.dice.domain.like.domain.QLikeAnnouncement.likeAnnouncement;
@@ -66,6 +69,25 @@ public class AnnouncementRepositoryImpl implements AnnouncementRepositoryCustom 
 		List<AnnouncementSimpleInfoDto> content = query.fetch();
 
 		return new PageImpl<>(content, pageable, query.fetchCount());
+	}
+
+	@Override
+	public Optional<AnnouncementInfoDto> findAnnouncementDetail(User user, Long id) {
+		var query = queryFactory
+				.select(Projections.constructor(AnnouncementInfoDto.class,
+						announcement,
+						user != null
+								? JPAExpressions
+								.select(Expressions.booleanTemplate("COALESCE({0}, false)", likeAnnouncement.id.isNotNull()))
+								.from(likeAnnouncement)
+								.where(likeAnnouncement.announcement.id.eq(id)
+										.and(likeAnnouncement.user.id.eq(user.getId())))
+								: Expressions.constant(false) // 로그인하지 않은 경우 false
+				))
+				.from(announcement)
+				.where(announcement.id.eq(id));
+
+		return Optional.ofNullable(query.fetchOne());
 	}
 
 	private static BooleanExpression getTarget(AnnouncementFilterRequest request) {

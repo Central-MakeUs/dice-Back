@@ -25,9 +25,8 @@ public class AnnouncementService {
 
 
 	// 모집 공고 상세 조회
-	public AnnouncementInfoDto getAnnouncement(Long id) {
-		return announcementRepository.findById(id)
-			.map(AnnouncementInfoDto::fromEntity)
-			.orElseThrow(() -> new IllegalArgumentException("해당 모집 공고가 존재하지 않습니다."));
+	public AnnouncementInfoDto getAnnouncement(User user, Long id) {
+		return announcementRepository.findAnnouncementDetail(user, id)
+				.orElseThrow(() -> new IllegalArgumentException("모집 공고를 찾을 수 없습니다."));
 	}
 }

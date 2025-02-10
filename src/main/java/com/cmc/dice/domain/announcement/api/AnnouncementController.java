@@ -55,7 +55,11 @@ public class AnnouncementController {
         
         - `id`: 모집 공고 ID
         """)
-    public AnnouncementInfoDto getAnnouncement(@PathVariable Long id) {
-        return announcementService.getAnnouncement(id);
+    @PreAuthorize("isAuthenticated()")
+    @SecurityRequirement(name = "access-token")
+    public AnnouncementInfoDto getAnnouncement(
+            @CurrentUser User user,
+            @PathVariable Long id) {
+        return announcementService.getAnnouncement(user, id);
     }
 }
