@@ -16,6 +16,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class SpaceInfoDto {
 	@Schema(description = "공간 ID", example = "1")
 	private Long id;
@@ -85,35 +86,76 @@ public class SpaceInfoDto {
 	@Schema(description = "좋아요 수", example = "10")
 	private int likeCount = 0; // 좋아요 수
 
+	@Builder.Default
+	@Schema(description = "좋아요 여부", example = "false")
+	private Boolean isLiked = false;
+
+	@Schema(description = "메시지방 ID", example = "1")
+	private Long messageRoomId;
+
+	public SpaceInfoDto(Space space, Boolean isLiked, Object messageRoomId) {
+		this.id = space.getId();
+		this.name = space.getName();
+		this.description = space.getDescription();
+		this.imageUrls = space.getImageUrls();
+		this.category = space.getCategory();
+		this.openingTime = space.getOpeningTime();
+		this.closingTime = space.getClosingTime();
+		this.capacity = space.getCapacity();
+
+		List<String> tags = new ArrayList<>();
+		for (SpaceTag spaceTag : space.getTags()) {
+			tags.add(spaceTag.getTag().getName());
+		}
+		this.tags = tags;
+
+		this.pricePerDay = space.getPricePerDay();
+		this.discountRate = space.getDiscountRate();
+		this.details = space.getDetails();
+		this.latitude = space.getLocation().getX();
+		this.longitude = space.getLocation().getY();
+		this.city = space.getCity();
+		this.district = space.getDistrict();
+		this.address = space.getAddress();
+		this.websiteUrl = space.getWebsiteUrl();
+		this.contactNumber = space.getContactNumber();
+		this.facilityInfo = space.getFacilityInfo();
+		this.notice = space.getNotice();
+		this.likeCount = space.getLikeCount();
+
+		this.isLiked = isLiked != null ? isLiked : false;
+		this.messageRoomId = (Long) messageRoomId;
+	}
+
 	public static SpaceInfoDto of(Space space) {
 		List<String> tags = new ArrayList<>();
 		for (SpaceTag spaceTag : space.getTags()) {
 			tags.add(spaceTag.getTag().getName());
 		}
 
-		return new SpaceInfoDto(
-				space.getId(),
-				space.getName(),
-				space.getDescription(),
-				space.getImageUrls(),
-				space.getCategory(),
-				space.getOpeningTime(),
-				space.getClosingTime(),
-				space.getCapacity(),
-				tags,
-				space.getPricePerDay(),
-				space.getDiscountRate(),
-				space.getDetails(),
-				space.getLocation().getX(),
-				space.getLocation().getY(),
-				space.getCity(),
-				space.getDistrict(),
-				space.getAddress(),
-				space.getWebsiteUrl(),
-				space.getContactNumber(),
-				space.getFacilityInfo(),
-				space.getNotice(),
-				space.getLikeCount()
-		);
+		return SpaceInfoDto.builder()
+				.id(space.getId())
+				.name(space.getName())
+				.description(space.getDescription())
+				.imageUrls(space.getImageUrls())
+				.category(space.getCategory())
+				.openingTime(space.getOpeningTime())
+				.closingTime(space.getClosingTime())
+				.capacity(space.getCapacity())
+				.tags(tags)
+				.pricePerDay(space.getPricePerDay())
+				.discountRate(space.getDiscountRate())
+				.details(space.getDetails())
+				.latitude(space.getLocation().getX())
+				.longitude(space.getLocation().getY())
+				.city(space.getCity())
+				.district(space.getDistrict())
+				.address(space.getAddress())
+				.websiteUrl(space.getWebsiteUrl())
+				.contactNumber(space.getContactNumber())
+				.facilityInfo(space.getFacilityInfo())
+				.notice(space.getNotice())
+				.likeCount(space.getLikeCount())
+				.build();
 	}
 }

@@ -138,7 +138,11 @@ public class SpaceController {
 			## 요청
 			- `id`: 공간 ID
 			""")
-	public SpaceInfoDto getSpaceInfo(@PathVariable Long id) {
-		return spaceService.getSpaceInfo(id);
+	@PreAuthorize("isAuthenticated()")
+	@SecurityRequirement(name = "access-token")
+	public SpaceInfoDto getSpaceInfo(
+			@CurrentUser User user,
+			@PathVariable Long id) {
+		return spaceService.getSpaceInfo(user, id);
 	}
 }

@@ -61,9 +61,8 @@ public class SpaceService {
 	/**
 	 * 공간 상세 조회
 	 */
-	public SpaceInfoDto getSpaceInfo(Long id) {
-		Space space = spaceRepository.findById(id)
+	public SpaceInfoDto getSpaceInfo(User user, Long id) {
+		return spaceRepository.findSpaceDetail(user, id)
 				.orElseThrow(SpaceNotFoundException::new);
-		return SpaceInfoDto.of(space);
 	}
 }
