@@ -48,21 +48,23 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 					getPricePerDayBetween(filter.getMinPrice(), filter.getMaxPrice()), // 가격 조건
 					getCitiesAndDistrictsBooleanExpression(filter) // 도시, 구 조건
 			);
+
+			// 정렬 옵션 추가
+			if ("likeCount".equals(filter.getSortBy())) {
+				query.orderBy(space.likeCount.desc());
+			} else if ("latest".equals(filter.getSortBy())) {
+				query.orderBy(space.createdAt.desc());
+			} else if ("price".equals(filter.getSortBy())) {
+				query.orderBy(space.pricePerDay.asc());
+			}
+		} else {
+			query.orderBy(space.createdAt.desc());
 		}
 
 		if (user != null) {
 			query.leftJoin(likeSpace)
 					.on(likeSpace.space.id.eq(space.id)
 							.and(likeSpace.user.id.eq(user.getId())));
-		}
-
-		// 정렬 옵션 추가
-		if ("likeCount".equals(filter.getSortBy())) {
-			query.orderBy(space.likeCount.desc());
-		} else if ("latest".equals(filter.getSortBy())) {
-			query.orderBy(space.createdAt.desc());
-		} else if ("price".equals(filter.getSortBy())) {
-			query.orderBy(space.pricePerDay.asc());
 		}
 
 		// 페이지네이션 추가
