@@ -33,7 +33,6 @@ public class GuestService {
 	 * 게스트 마이페이지 수정
 	 */
 	public GuestInfoDto updateGuestInfo(User user, UpdateGuestInfoRequest request) {
-		request.setPassword(passwordEncoder.encode(request.getPassword()));
 		user.updateGuestInfo(request);
 		userRepository.save(user);
 

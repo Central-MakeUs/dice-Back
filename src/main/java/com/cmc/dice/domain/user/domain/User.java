@@ -54,7 +54,7 @@ public class User extends BaseEntity {
     public void updateGuestInfo(UpdateGuestInfoRequest request) {
         this.name = request.getName();
         this.phone = request.getPhone();
-        this.password = request.getPassword();
+        this.email = request.getEmail();
     }
 
     public void updateHostInfo(UpdateHostInfoRequest request) {
