@@ -149,4 +149,12 @@ public class Space extends BaseEntity {
     public void updateLocation(Point point) {
         this.location = point;
     }
+
+    public void decreaseLikeCount() {
+        this.likeCount--;
+    }
+
+    public void increaseLikeCount() {
+        this.likeCount++;
+    }
 }
