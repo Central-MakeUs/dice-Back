@@ -12,7 +12,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateGuestInfoRequest implements Serializable {
-	@Schema(description = "사용자 이름", example = "홍길동")ork
+	@Schema(description = "사용자 이름", example = "홍길동")
 	String name;
 
 	@Schema(description = "사용자 이메일", example = "user01@email.com")
