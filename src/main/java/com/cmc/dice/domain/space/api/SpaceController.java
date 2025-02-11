@@ -44,6 +44,8 @@ public class SpaceController {
 			- `discountRate`: 할인율
 			- `details`: 상세 정보
 			- `location`: 위치 정보
+			- `city`: 도시
+			- `district`: 구
 			- `websiteUrl`: 웹사이트 URL
 			- `contactNumber`: 연락처
 			- `facilityInfo`: 시설 정보
@@ -92,6 +94,8 @@ public class SpaceController {
             - `discountRate`: 할인율
             - `details`: 상세 정보
             - `location`: 위치 정보
+            - `city`: 도시
+            - `district`: 구
             - `websiteUrl`: 웹사이트 URL
             - `contactNumber`: 연락처
             - `facilityInfo`: 시설 정보
@@ -116,11 +120,14 @@ public class SpaceController {
 			- `page`: 페이지 번호
 			- `size`: 페이지 크기
 			""")
+	@PreAuthorize("isAuthenticated()")
+	@SecurityRequirement(name = "access-token")
 	public Page<SpaceSimpleInfoDto> getSpacesByFilter(
-			@RequestBody SpaceFilterDto spaceFilterDto,
+			@CurrentUser User user,
+			@RequestBody(required = false) SpaceFilterDto spaceFilterDto,
 			@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "size", defaultValue = "10") int size) {
-		return spaceService.getSpacesByFilter(spaceFilterDto, PageRequest.of(page, size));
+		return spaceService.getSpacesByFilter(spaceFilterDto, user, PageRequest.of(page, size));
 	}
 
 	@GetMapping("/{id}")
@@ -131,7 +138,11 @@ public class SpaceController {
 			## 요청
 			- `id`: 공간 ID
 			""")
-	public SpaceInfoDto getSpaceInfo(@PathVariable Long id) {
-		return spaceService.getSpaceInfo(id);
+	@PreAuthorize("isAuthenticated()")
+	@SecurityRequirement(name = "access-token")
+	public SpaceInfoDto getSpaceInfo(
+			@CurrentUser User user,
+			@PathVariable Long id) {
+		return spaceService.getSpaceInfo(user, id);
 	}
 }

@@ -68,4 +68,12 @@ public class Announcement extends BaseEntity {
     // 좋아요 수
     @Builder.Default
     private int likeCount = 0;
+
+    public void decreaseLikeCount() {
+        this.likeCount--;
+    }
+
+    public void increaseLikeCount() {
+        this.likeCount++;
+    }
 }

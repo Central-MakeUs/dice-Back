@@ -1,9 +1,12 @@
 package com.cmc.dice.domain.brand.domain;
 
 import com.cmc.dice.domain.brand.dto.CreateBrandRequest;
+import com.cmc.dice.domain.space.domain.ImageUrlListConverter;
 import com.cmc.dice.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "brands")
@@ -27,6 +30,10 @@ public class Brand {
 
 	@Column(nullable = false)
 	private String logoUrl;
+
+	@Convert(converter = ImageUrlListConverter.class)
+	@Column(columnDefinition = "TEXT")
+	private List<String> imageUrls;
 
 	private String homepageUrl;
 

@@ -40,6 +40,8 @@ public class AnnouncementInfoDto {
 
 	private AnnouncementStatus status;
 
+	private Boolean isLiked;
+
 	public static AnnouncementInfoDto fromEntity(Announcement announcement) {
 		return AnnouncementInfoDto.builder()
 				.id(announcement.getId())
@@ -58,5 +60,24 @@ public class AnnouncementInfoDto {
 				.likeCount(announcement.getLikeCount())
 				.status(announcement.getStatus())
 				.build();
+	}
+
+	public AnnouncementInfoDto(Announcement announcement, Boolean isLiked) {
+		this.id = announcement.getId();
+		this.title = announcement.getName();
+		this.city = announcement.getCity();
+		this.district = announcement.getDistrict();
+		this.address = announcement.getAddress();
+		this.hostName = announcement.getHostName();
+		this.target = announcement.getTarget();
+		this.imageUrls = announcement.getImageUrls();
+		this.recruitmentStartAt = announcement.getRecruitmentStartAt();
+		this.recruitmentEndAt = announcement.getRecruitmentEndAt();
+		this.details = announcement.getDetails();
+		this.contactNumber = announcement.getContactNumber();
+		this.websiteUrl = announcement.getWebsiteUrl();
+		this.likeCount = announcement.getLikeCount();
+		this.status = announcement.getStatus();
+		this.isLiked = isLiked != null && isLiked;
 	}
 }

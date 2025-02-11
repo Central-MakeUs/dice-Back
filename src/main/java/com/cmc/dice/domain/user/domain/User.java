@@ -31,7 +31,7 @@ public class User extends BaseEntity {
     @Convert(converter = UserRoleConverter.class)
     private UserRole userRole;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String phone;
 
     private String bankName;
@@ -54,7 +54,7 @@ public class User extends BaseEntity {
     public void updateGuestInfo(UpdateGuestInfoRequest request) {
         this.name = request.getName();
         this.phone = request.getPhone();
-        this.password = request.getPassword();
+        this.email = request.getEmail();
     }
 
     public void updateHostInfo(UpdateHostInfoRequest request) {

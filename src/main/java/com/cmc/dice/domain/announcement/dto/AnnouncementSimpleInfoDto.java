@@ -30,6 +30,9 @@ public class AnnouncementSimpleInfoDto {
 
 	private Integer likeCount;
 
+	@Builder.Default
+	private Boolean isLiked = false;
+
 	private AnnouncementStatus status;
 
 	public static AnnouncementSimpleInfoDto fromEntity(Announcement announcement) {
@@ -45,5 +48,20 @@ public class AnnouncementSimpleInfoDto {
 			.likeCount(announcement.getLikeCount())
 			.status(announcement.getStatus())
 			.build();
+	}
+
+	public AnnouncementSimpleInfoDto(Announcement announcement, Boolean isLiked) {
+		this.id = announcement.getId();
+		this.title = announcement.getName();
+		this.city = announcement.getCity();
+		this.district = announcement.getDistrict();
+		this.hostName = announcement.getHostName();
+		this.target = announcement.getTarget();
+		this.recruitmentStartAt = announcement.getRecruitmentStartAt();
+		this.recruitmentEndAt = announcement.getRecruitmentEndAt();
+		this.likeCount = announcement.getLikeCount();
+		this.status = announcement.getStatus();
+
+		this.isLiked = isLiked;
 	}
 }

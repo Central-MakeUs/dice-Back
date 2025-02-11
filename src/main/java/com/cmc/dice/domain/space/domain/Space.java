@@ -9,6 +9,7 @@ import lombok.*;
 import org.locationtech.jts.geom.Point;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +48,9 @@ public class Space extends BaseEntity {
 
     @Column(nullable = false)
     private int capacity; // 수용 인원
+
+    @Column(nullable = false)
+    private int size; //공간 크기
 
     @OneToMany(mappedBy = "space")
     private List<SpaceTag> tags;
@@ -90,15 +94,21 @@ public class Space extends BaseEntity {
         this.description = request.getDescription();
         this.imageUrls = request.getImageUrls();
         this.category = request.getCategory();
-        this.openingTime = request.getOpeningTime();
-        this.closingTime = request.getClosingTime();
+        this.openingTime = LocalTime.parse(request.getOpeningTime(), DateTimeFormatter.ofPattern("HH:mm"));
+        this.closingTime = LocalTime.parse(request.getClosingTime(), DateTimeFormatter.ofPattern("HH:mm"));
+
         this.capacity = request.getCapacity();
-        this.tags = request.getTags();
+        this.size = request.getSize();
+
         this.pricePerDay = request.getPricePerDay();
         this.discountRate = request.getDiscountRate();
         this.discountPrice = this.pricePerDay * (100 - this.discountRate) / 100;
         this.details = request.getDetails();
-        this.location = request.getLocation();
+
+        this.city = request.getCity();
+        this.district = request.getDistrict();
+        this.address = request.getAddress();
+
         this.websiteUrl = request.getWebsiteUrl();
         this.contactNumber = request.getContactNumber();
         this.facilityInfo = request.getFacilityInfo();
@@ -114,18 +124,37 @@ public class Space extends BaseEntity {
         this.description = request.getDescription();
         this.imageUrls = request.getImageUrls();
         this.category = request.getCategory();
-        this.openingTime = request.getOpeningTime();
-        this.closingTime = request.getClosingTime();
+
+        this.openingTime = LocalTime.parse(request.getOpeningTime(), DateTimeFormatter.ofPattern("HH:mm"));
+        this.closingTime = LocalTime.parse(request.getClosingTime(), DateTimeFormatter.ofPattern("HH:mm"));
+
         this.capacity = request.getCapacity();
-        this.tags = request.getTags();
+        this.size = request.getSize();
+
         this.pricePerDay = request.getPricePerDay();
         this.discountRate = request.getDiscountRate();
         this.discountPrice = this.pricePerDay * (100 - this.discountRate) / 100;
         this.details = request.getDetails();
-        this.location = request.getLocation();
+
+        this.city = request.getCity();
+        this.district = request.getDistrict();
+        this.address = request.getAddress();
+
         this.websiteUrl = request.getWebsiteUrl();
         this.contactNumber = request.getContactNumber();
         this.facilityInfo = request.getFacilityInfo();
         this.notice = request.getNotice();
+    }
+
+    public void updateLocation(Point point) {
+        this.location = point;
+    }
+
+    public void decreaseLikeCount() {
+        this.likeCount--;
+    }
+
+    public void increaseLikeCount() {
+        this.likeCount++;
     }
 }
