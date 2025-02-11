@@ -114,6 +114,12 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 
 
 	private static BooleanExpression getPricePerDayBetween(Integer minPrice, Integer maxPrice) {
+		if (minPrice == null) {
+			if (maxPrice == null) {
+				return null;
+			}
+			return space.pricePerDay.loe(maxPrice);
+		}
 		if (maxPrice == null) {
 			return space.pricePerDay.goe(minPrice);
 		}
@@ -132,6 +138,10 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 	private BooleanExpression getCitiesAndDistrictsBooleanExpression(SpaceFilterDto filter) {
 		String city = filter.getCity();
 		String district = filter.getDistrict();
+
+		if (city == null) {
+			return null;
+		}
 
 		if (district == null) {
 			return space.city.eq(city);
