@@ -21,6 +21,9 @@ public class SpaceFilterDto {
 	@Schema(description = "최대 가격", example = "1000000")
 	private Integer maxPrice;
 
+	@Schema(description = "최소 수용 인원", example = "1")
+	private Integer minCapacity;
+
 	@Schema(description = "최대 수용 인원", example = "10")
 	private Integer maxCapacity;
 

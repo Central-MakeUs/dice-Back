@@ -53,7 +53,7 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 
 		if (filter != null) {
 				query.where(
-					getMaxCapacity(filter.getMaxCapacity()), // 수용 인원 조건
+					getCapacity(filter.getMinCapacity()), filter.getMaxCapacity()), // 수용 인원 조건
 					getPricePerDayBetween(filter.getMinPrice(), filter.getMaxPrice()), // 가격 조건
 					getCitiesAndDistrictsBooleanExpression(filter) // 도시, 구 조건
 			);
@@ -126,12 +126,19 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 		return space.pricePerDay.between(minPrice, maxPrice);
 	}
 
-	private static BooleanExpression getMaxCapacity(Integer maxCapacity) {
+	private static BooleanExpression getCapacity(Integer minCapacity, Integer maxCapacity) {
+		if (minCapacity == null) {
+			if (maxCapacity == null) {
+				return null;
+			}
+			return space.capacity.loe(maxCapacity);
+		}
+		
 		if (maxCapacity == null) {
-			return null;
+			return space.capacity.goe(minCapacity);
 		}
 
-		return space.capacity.loe(maxCapacity);
+		return space.capacity.between(minCapacity, maxCapacity);
 	}
 
 	// 도시, 구를 받아 공간을 조회하는 메서드. 만약 구가 null 로 들어온다면 도시 조건만 체크
