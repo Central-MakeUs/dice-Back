@@ -104,13 +104,10 @@ public class AuthService {
     }
 
     public PasswordResetDto resetPassword(PasswordResetRequest passwordResetRequest) {
-        //비밀번호 재설정 시 token 유효성 검사 추가
-        User user = userRepository.findByEmail(passwordResetRequest.getEmail())
-                .orElseThrow(NotFoundUserInfoException::new);
-
-        if (!user.getName().equals(passwordResetRequest.getName())) {
-            throw new NotFoundUserInfoException();
-        }
+        User user = userRepository.findByEmailAndName(
+                passwordResetRequest.getEmail(),
+                passwordResetRequest.getName()
+        ).orElseThrow(NotFoundUserInfoException::new);
 
         String tempPassword = UUID.randomUUID().toString();
 

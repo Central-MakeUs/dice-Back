@@ -156,34 +156,6 @@ public class AuthController {
         return authService.login(loginRequest);
     }
 
-    @PostMapping("/password-reset/request")
-    @Operation(summary = "비밀번호 재설정 이메일 전송", description = """
-            # 비밀번호 재설정 이메일 전송
-                        
-            사용자의 이메일로 비밀번호 재설정 이메일을 전송합니다.
-                        
-            ## 응답
-                        
-            - 이메일 전송 성공 시 `200` 코드를 반환합니다.
-            """)
-    @ApiResponse(
-            responseCode = "404",
-            description = "해당 유저 정보를 찾을 수 없습니다.",
-            content = @Content(
-                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    schema = @Schema(implementation = ApiErrorResponse.class),
-                    examples = @ExampleObject(value = """
-                            {
-                                "status": "NOT_FOUND",
-                                "message": "해당 유저 정보를 찾을 수 없습니다."
-                            }
-                            """)
-            )
-    )
-    public void sendPasswordResetEmail(@Valid @RequestBody PasswrodResetValidateDto passwrodResetValidateDto) {
-        authService.sendPasswordResetEmail(passwrodResetValidateDto);
-    }
-
     @PostMapping("/password-reset/reset")
     @Operation(summary = "비밀번호 재설정", description = """
             # 비밀번호 재설정
