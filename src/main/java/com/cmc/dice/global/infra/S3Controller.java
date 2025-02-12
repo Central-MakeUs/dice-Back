@@ -10,6 +10,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/s3")
 @RequiredArgsConstructor
@@ -25,5 +28,16 @@ public class S3Controller {
             @RequestBody MultipartFile file) {
         String imageUrl = s3Uploader.saveFile(user, file);
         return new ImageUrlDto(imageUrl);
+    }
+
+    @PostMapping(value = "/uploads", consumes = {"multipart/form-data"})
+    @PreAuthorize("isAuthenticated()")
+    @SecurityRequirement(name = "access-token")
+    public ImageUrlDtos uploadImages(
+            @CurrentUser User user,
+            @RequestBody MultipartFile[] files) {
+
+        List<String> urls = s3Uploader.saveFiles(user, Arrays.stream(files).toList());
+        return new ImageUrlDtos(urls);
     }
 }
