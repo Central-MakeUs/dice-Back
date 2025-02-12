@@ -189,6 +189,7 @@ public class AuthController {
             # 비밀번호 재설정
                         
             사용자의 비밀번호를 재설정합니다.
+            사용자의 이름과 이메일을 검사해 일치하는 사용자의 임시 비밀번호를 설정합니다.
                         
             ## 응답
                         
@@ -208,8 +209,8 @@ public class AuthController {
                             """)
             )
     )
-    public void resetPassword(@Valid @RequestBody PasswordResetRequest passwordResetRequest) {
-        authService.resetPassword(passwordResetRequest);
+    public PasswordResetDto resetPassword(@Valid @RequestBody PasswordResetRequest passwordResetRequest) {
+        return authService.resetPassword(passwordResetRequest);
     }
 
     @PostMapping("/reissue")

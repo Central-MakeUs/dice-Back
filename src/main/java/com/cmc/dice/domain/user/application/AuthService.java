@@ -14,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 
 @Service
 @RequiredArgsConstructor
@@ -101,12 +103,20 @@ public class AuthService {
         // 이메일로 비밀번호 재설정 링크 전송
     }
 
-    public void resetPassword(PasswordResetRequest passwordResetRequest) {
+    public PasswordResetDto resetPassword(PasswordResetRequest passwordResetRequest) {
         //비밀번호 재설정 시 token 유효성 검사 추가
         User user = userRepository.findByEmail(passwordResetRequest.getEmail())
                 .orElseThrow(NotFoundUserInfoException::new);
 
-        user.updatePassword(passwordEncoder.encode(passwordResetRequest.getPassword()));
+        if (!user.getName().equals(passwordResetRequest.getName())) {
+            throw new NotFoundUserInfoException();
+        }
+
+        String tempPassword = UUID.randomUUID().toString();
+
+        user.updatePassword(passwordEncoder.encode(tempPassword));
         userRepository.save(user);
+
+        return new PasswordResetDto(tempPassword);
     }
 }
