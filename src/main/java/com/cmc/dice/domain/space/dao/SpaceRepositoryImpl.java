@@ -53,7 +53,7 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 
 		if (filter != null) {
 				query.where(
-					getCapacity(filter.getMinCapacity()), filter.getMaxCapacity()), // 수용 인원 조건
+					getCapacity(filter.getMinCapacity(), filter.getMaxCapacity()), // 수용 인원 조건
 					getPricePerDayBetween(filter.getMinPrice(), filter.getMaxPrice()), // 가격 조건
 					getCitiesAndDistrictsBooleanExpression(filter) // 도시, 구 조건
 			);
