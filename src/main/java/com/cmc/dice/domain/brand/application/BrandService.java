@@ -28,7 +28,7 @@ public class BrandService {
 	 * 브랜드 생성
 	 */
 	public SimpleBrandInfoDto createBrand(User user, CreateBrandRequest request) {
-		return SimpleBrandInfoDto.of(brandRepository.save(CreateBrandRequest.toEntity(request)));
+		return SimpleBrandInfoDto.of(brandRepository.save(CreateBrandRequest.toEntity(user, request)));
 	}
 
 	/**
