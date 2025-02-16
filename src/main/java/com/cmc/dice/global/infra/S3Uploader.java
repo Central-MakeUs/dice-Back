@@ -130,11 +130,11 @@ public class S3Uploader {
     // 파일 확장자 체크
     private String validateFileExtension(String originalFilename) {
         String fileExtension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1).toLowerCase();
-        List<String> allowedExtensions = Arrays.asList("jpg", "png", "gif", "jpeg");
+        List<String> allowedExtensions = Arrays.asList("jpg", "png", "gif", "jpeg", "svg");
 
-        if (!allowedExtensions.contains(fileExtension)) {
-            throw new IllegalArgumentException("Invalid file extension");
-        }
+//        if (!allowedExtensions.contains(fileExtension)) {
+//            throw new IllegalArgumentException("Invalid file extension");
+//        }
         return fileExtension;
     }
 }

@@ -25,8 +25,13 @@ public class S3Controller {
     @SecurityRequirement(name = "access-token")
     public ImageUrlDto uploadImage(
             @CurrentUser User user,
-            @RequestBody MultipartFile file) {
-        String imageUrl = s3Uploader.saveFile(user, file);
+            @RequestBody MultipartFile images) {
+
+        if (images == null) {
+            throw new NullFileException();
+        }
+
+        String imageUrl = s3Uploader.saveFile(user, images);
         return new ImageUrlDto(imageUrl);
     }
 
@@ -35,9 +40,13 @@ public class S3Controller {
     @SecurityRequirement(name = "access-token")
     public ImageUrlDtos uploadImages(
             @CurrentUser User user,
-            @RequestBody MultipartFile[] files) {
+            @RequestBody MultipartFile[] images) {
 
-        List<String> urls = s3Uploader.saveFiles(user, Arrays.stream(files).toList());
+        if (images == null || images.length == 0) {
+            throw new NullFileException();
+        }
+
+        List<String> urls = s3Uploader.saveFiles(user, Arrays.stream(images).toList());
         return new ImageUrlDtos(urls);
     }
 }
