@@ -109,4 +109,8 @@ public class AuthService {
         user.updatePassword(passwordEncoder.encode(passwordResetRequest.getPassword()));
         userRepository.save(user);
     }
+
+    public void withdraw(User user) {
+        userRepository.delete(user);
+    }
 }

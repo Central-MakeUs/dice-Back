@@ -17,10 +17,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -265,5 +262,26 @@ public class AuthController {
     @SecurityRequirement(name = "access-token")
     public void logout(@CurrentUser User user) {
         authService.logout(user);
+    }
+
+    @DeleteMapping("/withdraw")
+    @Operation(summary = "회원 탈퇴", description = """
+            # 회원 탈퇴
+                        
+            사용자를 탈퇴합니다.
+                        
+            ## 응답
+                        
+            - 탈퇴 성공 시 `200` 코드를 반환합니다.
+            """)
+    @ApiResponse(
+            responseCode = "200",
+            description = "탈퇴 성공",
+            useReturnTypeSchema = true
+    )
+    @PreAuthorize("isAuthenticated()")
+    @SecurityRequirement(name = "access-token")
+    public void withdraw(@CurrentUser User user) {
+        authService.withdraw(user);
     }
 }
