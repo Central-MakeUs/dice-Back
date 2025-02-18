@@ -50,6 +50,7 @@ public class SpaceController {
 			- `contactNumber`: 연락처
 			- `facilityInfo`: 시설 정보
 			- `notice`: 공지사항
+			- 'isActivated': 활성화 여부
 			""")
 	@PreAuthorize("isAuthenticated()")
 	@SecurityRequirement(name = "access-token")
@@ -60,7 +61,7 @@ public class SpaceController {
 		spaceService.createSpace(user, request);
 	}
 
-	@PutMapping("/{id}")
+	@PostMapping("/update/{id}")
 	@Operation(summary = "공간 수정", description = """
             # 공간 수정
             공간 정보를 수정합니다.
@@ -84,6 +85,7 @@ public class SpaceController {
             - `contactNumber`: 연락처
             - `facilityInfo`: 시설 정보
             - `notice`: 공지사항
+            - 'isActivated': 활성화 여부
             """)
 	@PreAuthorize("isAuthenticated()")
 	@SecurityRequirement(name = "access-token")

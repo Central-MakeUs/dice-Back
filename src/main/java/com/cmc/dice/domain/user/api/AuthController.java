@@ -241,7 +241,7 @@ public class AuthController {
         authService.logout(user);
     }
 
-    @DeleteMapping("/withdraw")
+    @PostMapping("/withdraw")
     @Operation(summary = "회원 탈퇴", description = """
             # 회원 탈퇴
                         
