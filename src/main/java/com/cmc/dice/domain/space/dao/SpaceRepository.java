@@ -14,5 +14,5 @@ public interface SpaceRepository extends JpaRepository<Space, Long>, SpaceReposi
 
     Collection<Space> findByIdIn(List<Long> spaceIdList);
 
-    Collection<Space> findByHost(User user);
+    Collection<Space> findByAdmin(User user);
 }

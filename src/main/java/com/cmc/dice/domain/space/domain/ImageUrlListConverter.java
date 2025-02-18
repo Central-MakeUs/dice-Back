@@ -26,11 +26,12 @@ public class ImageUrlListConverter implements AttributeConverter<List<String>, S
 
     @Override
     public List<String> convertToEntityAttribute(String dbData) {
+        if (dbData == null || dbData.isEmpty()) {
+            return new ArrayList<>(); // 혹은 `null` 반환 가능
+        }
         try {
-            // JSON 문자열을 리스트로 변환
             return objectMapper.readValue(dbData, new TypeReference<List<String>>() {});
         } catch (IOException e) {
-            // 예외 발생 시 빈 리스트 반환
             return new ArrayList<>();
         }
     }

@@ -42,7 +42,7 @@ public class HostService {
      * 호스트의 공간 목록 조회
      */
     public List<SpaceSimpleInfoDto> getHostSpace(User user) {
-        return spaceRepository.findByHost(user).stream()
+        return spaceRepository.findByAdmin(user).stream()
                 .map(SpaceSimpleInfoDto::of)
                 .toList();
     }
