@@ -98,6 +98,7 @@ public class SpaceController {
 	@Operation(summary = "공간 필터링 조회", description = """
 			# 공간 필터링 조회
 			공간을 필터링하여 조회합니다.
+			활성화된 공간 중 조회합니다.
 			
 			## 요청
 			- `spaceFilterDto`: 공간 필터 DTO

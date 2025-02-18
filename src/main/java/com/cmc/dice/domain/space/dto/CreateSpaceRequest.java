@@ -102,4 +102,7 @@ public class CreateSpaceRequest {
 	@NotBlank
 	@Schema(description = "공지사항", example = "공지사항")
 	private String notice;
+
+	@Schema(description = "활성화 여부", example = "true")
+	private Boolean isActivated;
 }
