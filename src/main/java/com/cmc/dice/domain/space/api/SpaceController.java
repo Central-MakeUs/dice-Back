@@ -60,22 +60,6 @@ public class SpaceController {
 		spaceService.createSpace(user, request);
 	}
 
-
-	@GetMapping("/latest")
-	@Operation(summary = "최신 공간 조회", description = """
-			# 최신 공간 조회
-			최신 등록된 공간을 조회합니다.
-			
-			## 요청
-			- `page`: 페이지 번호
-			- `size`: 페이지 크기
-			""")
-	public Page<SpaceSimpleInfoDto> getSpacesByLatest(
-			@RequestParam(value = "page", defaultValue = "0") int page,
-			@RequestParam(value = "size", defaultValue = "10") int size) {
-		return spaceService.getSpacesByLatest(PageRequest.of(page, size));
-	}
-
 	@PutMapping("/{id}")
 	@Operation(summary = "공간 수정", description = """
             # 공간 수정
