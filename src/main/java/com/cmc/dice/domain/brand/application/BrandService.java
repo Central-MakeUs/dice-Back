@@ -19,9 +19,13 @@ public class BrandService {
 	 * 로그인 된 사용자의 브랜드 정보를 조회한다.
 	 */
 	public List<SimpleBrandInfoDto> getBrandInfo(User user) {
-		return brandRepository.findByAdmin(user).stream()
-			.map(SimpleBrandInfoDto::of)
-			.toList();
+		List<Brand> brands = brandRepository.findByAdminId(user.getId());
+		if (brands == null) {
+			return null; // 혹은 Collections.emptyList() 반환 가능
+		}
+		return brands.stream()
+				.map(SimpleBrandInfoDto::of)
+				.toList();
 	}
 
 	/**

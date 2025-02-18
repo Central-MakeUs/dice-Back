@@ -2,6 +2,7 @@ package com.cmc.dice.domain.brand.api;
 
 import com.cmc.dice.domain.brand.application.BrandService;
 import com.cmc.dice.domain.brand.dto.CreateBrandRequest;
+import com.cmc.dice.domain.brand.dto.SimpleBrandInfoDto;
 import com.cmc.dice.domain.user.domain.User;
 import com.cmc.dice.global.jwt.CurrentUser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/brand")
 @RequiredArgsConstructor
@@ -20,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class BrandController {
 	private final BrandService brandService;
 
-	@GetMapping("/my")
+	@GetMapping("/list")
 	@Operation(summary = "자신의 브랜드 조회", description = """
             # 자신의 브랜드 조회
             
@@ -37,8 +40,8 @@ public class BrandController {
 	)
 	@PreAuthorize("isAuthenticated()")
 	@SecurityRequirement(name = "access-token")
-	public void logout(@CurrentUser User user) {
-		brandService.getBrandInfo(user);
+	public List<SimpleBrandInfoDto> logout(@CurrentUser User user) {
+		return brandService.getBrandInfo(user);
 	}
 
 	@PostMapping("/create")
