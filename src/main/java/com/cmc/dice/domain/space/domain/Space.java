@@ -157,4 +157,11 @@ public class Space extends BaseEntity {
     public void increaseLikeCount() {
         this.likeCount++;
     }
+
+    public void addSpaceTag(SpaceTag spaceTag) {
+        if (tags == null) {
+            tags = new ArrayList<>();
+        }
+        tags.add(spaceTag);
+    }
 }
