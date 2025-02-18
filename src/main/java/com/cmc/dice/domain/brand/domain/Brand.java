@@ -41,6 +41,7 @@ public class Brand {
 		this.name = request.getName();
 		this.description = request.getDescription();
 		this.logoUrl = request.getLogoUrl();
+		this.imageUrls = request.getImageUrls();
 		this.homepageUrl = request.getHomepageUrl();
 	}
 }

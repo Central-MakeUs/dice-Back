@@ -4,6 +4,8 @@ import com.cmc.dice.domain.brand.dao.BrandRepository;
 import com.cmc.dice.domain.brand.domain.Brand;
 import com.cmc.dice.domain.brand.dto.CreateBrandRequest;
 import com.cmc.dice.domain.brand.dto.SimpleBrandInfoDto;
+import com.cmc.dice.domain.brand.exception.InvalidBrandAdminException;
+import com.cmc.dice.domain.brand.exception.NotFoundBrandException;
 import com.cmc.dice.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,9 +42,9 @@ public class BrandService {
 	 */
 	public SimpleBrandInfoDto updateBrand(User user, Long brandId, CreateBrandRequest request) {
 		Brand brand = brandRepository.findById(brandId)
-			.orElseThrow(() -> new IllegalArgumentException("브랜드를 찾을 수 없습니다."));
-		if (!brand.getAdmin().equals(user)) {
-			throw new IllegalArgumentException("권한이 없습니다.");
+			.orElseThrow(() -> new NotFoundBrandException());
+		if (!brand.getAdmin().getId().equals(user.getId())) {
+			throw new InvalidBrandAdminException();
 		}
 		brand.update(request);
 		return SimpleBrandInfoDto.of(brandRepository.save(brand));
