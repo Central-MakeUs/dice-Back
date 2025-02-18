@@ -14,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 
 @Service
 @RequiredArgsConstructor
@@ -92,25 +94,30 @@ public class AuthService {
         }
     }
 
-    public void sendPasswordResetEmail(PasswrodResetValidateDto passwrodResetValidateDto) {
+    public void sendPasswordResetEmail(PasswordResetValidateDto passwordResetValidateDto) {
         userRepository.findByEmailAndName(
-                passwrodResetValidateDto.getEmail(),
-                passwrodResetValidateDto.getName()
+                passwordResetValidateDto.getEmail(),
+                passwordResetValidateDto.getName()
         ).orElseThrow(NotFoundUserInfoException::new);
 
         // 이메일로 비밀번호 재설정 링크 전송
     }
 
-    public void resetPassword(PasswordResetRequest passwordResetRequest) {
-        //비밀번호 재설정 시 token 유효성 검사 추가
+    //임시 비밀번호 발급
+    public TempPasswordDto resetPassword(PasswordResetValidateDto passwordResetRequest) {
         User user = userRepository.findByEmail(passwordResetRequest.getEmail())
                 .orElseThrow(NotFoundUserInfoException::new);
 
-        user.updatePassword(passwordEncoder.encode(passwordResetRequest.getPassword()));
+        String tempPassword = UUID.randomUUID().toString().replace("-", "").substring(0, 10);
+
+        user.updatePassword(passwordEncoder.encode(tempPassword));
         userRepository.save(user);
+
+        return new TempPasswordDto(user.getEmail(), tempPassword);
     }
 
     public void withdraw(User user) {
-        userRepository.delete(user);
+        user.delete();
+        userRepository.save(user);
     }
 }

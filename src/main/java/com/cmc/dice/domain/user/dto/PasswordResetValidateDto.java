@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PasswrodResetValidateDto {
+public class PasswordResetValidateDto {
     @NotBlank
     @Schema(description = "이메일", example = "admin@admin.com")
     private String email;
