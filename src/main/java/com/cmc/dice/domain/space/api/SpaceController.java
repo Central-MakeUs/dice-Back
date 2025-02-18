@@ -87,7 +87,7 @@ public class SpaceController {
             """)
 	@PreAuthorize("isAuthenticated()")
 	@SecurityRequirement(name = "access-token")
-	public Space updateSpace(
+	public SpaceInfoDto updateSpace(
 			@CurrentUser User user,
 			@PathVariable Long id,
 			@RequestBody CreateSpaceRequest request) {
