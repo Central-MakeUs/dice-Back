@@ -19,6 +19,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Not Found " + email));
 
+        if (user.getDeletedAt() != null) {
+            throw new UsernameNotFoundException("Deleted User " + email);
+        }
+
         return new UserDetailsImpl(user);
     }
 }
