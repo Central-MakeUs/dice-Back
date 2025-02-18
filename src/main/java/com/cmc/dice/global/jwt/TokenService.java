@@ -73,7 +73,16 @@ public class TokenService {
                 .signWith(refreshKey, signatureAlgorithm)
                 .compact();
 
-        refreshTokenRepository.save(new RefreshToken(email, refreshToken));
+        refreshTokenRepository.findByEmail(email)
+                .ifPresentOrElse(
+                        refreshTokenEntity -> {
+                            refreshTokenEntity.updateToken(refreshToken);
+                            refreshTokenRepository.save(refreshTokenEntity);
+                        },
+                        () -> refreshTokenRepository.save(new RefreshToken(email, refreshToken))
+                );
+
+        // refreshTokenRepository.save(new RefreshToken(email, refreshToken));
 
         return refreshToken;
     }
