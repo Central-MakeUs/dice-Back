@@ -50,6 +50,7 @@ public class SpaceController {
 			- `contactNumber`: 연락처
 			- `facilityInfo`: 시설 정보
 			- `notice`: 공지사항
+			- 'isActivated': 활성화 여부
 			""")
 	@PreAuthorize("isAuthenticated()")
 	@SecurityRequirement(name = "access-token")
@@ -60,23 +61,7 @@ public class SpaceController {
 		spaceService.createSpace(user, request);
 	}
 
-
-	@GetMapping("/latest")
-	@Operation(summary = "최신 공간 조회", description = """
-			# 최신 공간 조회
-			최신 등록된 공간을 조회합니다.
-			
-			## 요청
-			- `page`: 페이지 번호
-			- `size`: 페이지 크기
-			""")
-	public Page<SpaceSimpleInfoDto> getSpacesByLatest(
-			@RequestParam(value = "page", defaultValue = "0") int page,
-			@RequestParam(value = "size", defaultValue = "10") int size) {
-		return spaceService.getSpacesByLatest(PageRequest.of(page, size));
-	}
-
-	@PutMapping("/{id}")
+	@PostMapping("/update/{id}")
 	@Operation(summary = "공간 수정", description = """
             # 공간 수정
             공간 정보를 수정합니다.
@@ -100,10 +85,11 @@ public class SpaceController {
             - `contactNumber`: 연락처
             - `facilityInfo`: 시설 정보
             - `notice`: 공지사항
+            - 'isActivated': 활성화 여부
             """)
 	@PreAuthorize("isAuthenticated()")
 	@SecurityRequirement(name = "access-token")
-	public Space updateSpace(
+	public SpaceInfoDto updateSpace(
 			@CurrentUser User user,
 			@PathVariable Long id,
 			@RequestBody CreateSpaceRequest request) {
@@ -114,6 +100,7 @@ public class SpaceController {
 	@Operation(summary = "공간 필터링 조회", description = """
 			# 공간 필터링 조회
 			공간을 필터링하여 조회합니다.
+			활성화된 공간 중 조회합니다.
 			
 			## 요청
 			- `spaceFilterDto`: 공간 필터 DTO

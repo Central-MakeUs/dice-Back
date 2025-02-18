@@ -1,7 +1,11 @@
 package com.cmc.dice.domain.space.application;
 
 import com.cmc.dice.domain.space.dao.SpaceRepository;
+import com.cmc.dice.domain.space.dao.SpaceTagRepository;
+import com.cmc.dice.domain.space.dao.TagRepository;
 import com.cmc.dice.domain.space.domain.Space;
+import com.cmc.dice.domain.space.domain.SpaceTag;
+import com.cmc.dice.domain.space.domain.Tag;
 import com.cmc.dice.domain.space.dto.CreateSpaceRequest;
 import com.cmc.dice.domain.space.dto.SpaceFilterDto;
 import com.cmc.dice.domain.space.dto.SpaceInfoDto;
@@ -22,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class SpaceService {
 	private final SpaceRepository spaceRepository;
+	private final TagRepository tagRepository;
+	private final SpaceTagRepository spaceTagRepository;
 	private static final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
 
 	@Transactional
@@ -29,8 +35,24 @@ public class SpaceService {
 		Space space = new Space(user, request);
 		space.updateLocation(geometryFactory.createPoint(new Coordinate(request.getLongitude(), request.getLatitude())));
 
-		Space space2 = spaceRepository.save(space);
+		spaceRepository.save(space);
 
+		request.getTags().forEach(tag -> {
+			SpaceTag spaceTag = addTag(space, tag);
+			spaceTagRepository.save(spaceTag);
+			space.addSpaceTag(spaceTag);
+		});
+
+		spaceRepository.save(space);
+	}
+
+	public SpaceTag addTag(Space space, String tag) {
+		Tag newTag = tagRepository.findByName(tag)
+				.orElseGet(() -> tagRepository.save(Tag.builder().name(tag).build()));
+        return SpaceTag.builder()
+				.tag(newTag)
+				.space(space)
+				.build();
 	}
 
 	@Transactional(readOnly = true)
@@ -39,7 +61,7 @@ public class SpaceService {
 				.map(SpaceSimpleInfoDto::of);
 	}
 
-	public Space updateSpaceInfo(User user, Long id, CreateSpaceRequest request) {
+	public SpaceInfoDto updateSpaceInfo(User user, Long id, CreateSpaceRequest request) {
 		Space space = spaceRepository.findById(id)
 				.orElseThrow(SpaceNotFoundException::new);
 
@@ -48,7 +70,7 @@ public class SpaceService {
 		}
 
 		space.update(request);
-		return space;
+		return SpaceInfoDto.of(space);
 	}
 
 	/**

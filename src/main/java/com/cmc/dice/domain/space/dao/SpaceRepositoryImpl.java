@@ -51,6 +51,8 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 				))
 				.from(space);
 
+		query.where(space.isActivated.isTrue()); // 활성화된 공간만 조회
+
 		if (filter != null) {
 				query.where(
 					getCapacity(filter.getMinCapacity(), filter.getMaxCapacity()), // 수용 인원 조건

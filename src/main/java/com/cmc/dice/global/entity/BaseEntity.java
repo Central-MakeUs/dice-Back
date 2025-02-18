@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 public abstract class BaseEntity {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private LocalDateTime deletedAt;
 
     @PrePersist
     public void prePersist() {
@@ -24,5 +25,9 @@ public abstract class BaseEntity {
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public void delete() {
+        this.deletedAt = LocalDateTime.now();
     }
 }

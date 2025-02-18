@@ -6,6 +6,7 @@ import com.cmc.dice.domain.user.dto.UpdateHostInfoRequest;
 import com.cmc.dice.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name = "users")

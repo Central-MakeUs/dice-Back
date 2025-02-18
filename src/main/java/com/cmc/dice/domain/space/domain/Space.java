@@ -88,6 +88,9 @@ public class Space extends BaseEntity {
     @Builder.Default
     private int likeCount = 0; // 좋아요 수
 
+    @Builder.Default
+    private boolean isActivated = true; // 활성화 여부
+
     public Space(User user, CreateSpaceRequest request) {
         this.admin = user;
         this.name = request.getName();
@@ -113,6 +116,8 @@ public class Space extends BaseEntity {
         this.contactNumber = request.getContactNumber();
         this.facilityInfo = request.getFacilityInfo();
         this.notice = request.getNotice();
+
+        this.isActivated = true;
     }
 
     public boolean isOwner(User user) {
@@ -144,6 +149,8 @@ public class Space extends BaseEntity {
         this.contactNumber = request.getContactNumber();
         this.facilityInfo = request.getFacilityInfo();
         this.notice = request.getNotice();
+
+        this.isActivated = request.getIsActivated();
     }
 
     public void updateLocation(Point point) {
@@ -156,5 +163,12 @@ public class Space extends BaseEntity {
 
     public void increaseLikeCount() {
         this.likeCount++;
+    }
+
+    public void addSpaceTag(SpaceTag spaceTag) {
+        if (tags == null) {
+            tags = new ArrayList<>();
+        }
+        tags.add(spaceTag);
     }
 }

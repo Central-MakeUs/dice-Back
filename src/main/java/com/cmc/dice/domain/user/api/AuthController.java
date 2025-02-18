@@ -17,10 +17,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -156,34 +153,6 @@ public class AuthController {
         return authService.login(loginRequest);
     }
 
-    @PostMapping("/password-reset/request")
-    @Operation(summary = "비밀번호 재설정 이메일 전송", description = """
-            # 비밀번호 재설정 이메일 전송
-                        
-            사용자의 이메일로 비밀번호 재설정 이메일을 전송합니다.
-                        
-            ## 응답
-                        
-            - 이메일 전송 성공 시 `200` 코드를 반환합니다.
-            """)
-    @ApiResponse(
-            responseCode = "404",
-            description = "해당 유저 정보를 찾을 수 없습니다.",
-            content = @Content(
-                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    schema = @Schema(implementation = ApiErrorResponse.class),
-                    examples = @ExampleObject(value = """
-                            {
-                                "status": "NOT_FOUND",
-                                "message": "해당 유저 정보를 찾을 수 없습니다."
-                            }
-                            """)
-            )
-    )
-    public void sendPasswordResetEmail(@Valid @RequestBody PasswrodResetValidateDto passwrodResetValidateDto) {
-        authService.sendPasswordResetEmail(passwrodResetValidateDto);
-    }
-
     @PostMapping("/password-reset/reset")
     @Operation(summary = "비밀번호 재설정", description = """
             # 비밀번호 재설정
@@ -208,8 +177,13 @@ public class AuthController {
                             """)
             )
     )
-    public void resetPassword(@Valid @RequestBody PasswordResetRequest passwordResetRequest) {
-        authService.resetPassword(passwordResetRequest);
+    @ApiResponse(
+            responseCode = "200",
+            description = "비밀번호 재설정 성공",
+            useReturnTypeSchema = true
+    )
+    public TempPasswordDto resetPassword(@Valid @RequestBody PasswordResetValidateDto passwordResetRequest) {
+        return authService.resetPassword(passwordResetRequest);
     }
 
     @PostMapping("/reissue")
@@ -265,5 +239,26 @@ public class AuthController {
     @SecurityRequirement(name = "access-token")
     public void logout(@CurrentUser User user) {
         authService.logout(user);
+    }
+
+    @PostMapping("/withdraw")
+    @Operation(summary = "회원 탈퇴", description = """
+            # 회원 탈퇴
+                        
+            사용자를 탈퇴합니다.
+                        
+            ## 응답
+                        
+            - 탈퇴 성공 시 `200` 코드를 반환합니다.
+            """)
+    @ApiResponse(
+            responseCode = "200",
+            description = "탈퇴 성공",
+            useReturnTypeSchema = true
+    )
+    @PreAuthorize("isAuthenticated()")
+    @SecurityRequirement(name = "access-token")
+    public void withdraw(@CurrentUser User user) {
+        authService.withdraw(user);
     }
 }
