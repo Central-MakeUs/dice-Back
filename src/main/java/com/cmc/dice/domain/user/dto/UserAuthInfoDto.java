@@ -24,6 +24,7 @@ public class UserAuthInfoDto {
         return UserAuthInfoDto.builder()
                 .email(user.getEmail())
                 .name(user.getName())
+                .userRole(user.getUserRole())
                 .build();
     }
 }
