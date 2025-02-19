@@ -120,4 +120,15 @@ public class AuthService {
         user.delete();
         userRepository.save(user);
     }
+
+    public UserAuthInfoDto updatePassword(User user, PasswordUpdateRequest passwordUpdateRequest) {
+        if (!passwordEncoder.matches(passwordUpdateRequest.getPassword(), user.getPassword())) {
+            throw new PasswordNotMatchException();
+        }
+
+        user.updatePassword(passwordEncoder.encode(passwordUpdateRequest.getNewPassword()));
+        userRepository.save(user);
+
+        return UserAuthInfoDto.fromEntity(user);
+    }
 }

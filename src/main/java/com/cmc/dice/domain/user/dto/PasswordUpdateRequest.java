@@ -9,20 +9,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PasswordResetRequest {
+public class PasswordUpdateRequest {
     @NotBlank
-    @Schema(description = "이메일", example = "admin@admin.com")
-    private String email;
-
-    @NotBlank
-    @Schema(description = "비밀번호", example = "password123!")
+    @Schema(description = "기존 비밀번호", example = "password123!")
     private String password;
 
     @NotBlank
     @Schema(description = "새 비밀번호", example = "newPassword123!")
     private String newPassword;
-
-    @NotBlank
-    @Schema(description = "토큰", example = "d3d3LGkvdjEvYXV0aC9wYXNz")
-    private String token;
 }
