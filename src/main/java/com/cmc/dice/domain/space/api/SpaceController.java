@@ -96,7 +96,7 @@ public class SpaceController {
 		return spaceService.updateSpaceInfo(user, id, request);
 	}
 
-	@PostMapping("/list")
+	@PostMapping("/list/{keyword}")
 	@Operation(summary = "공간 필터링 조회", description = """
 			# 공간 필터링 조회
 			공간을 필터링하여 조회합니다.
@@ -111,10 +111,11 @@ public class SpaceController {
 	@SecurityRequirement(name = "access-token")
 	public Page<SpaceSimpleInfoDto> getSpacesByFilter(
 			@CurrentUser User user,
+			@PathVariable(required = false) String keyword,
 			@RequestBody(required = false) SpaceFilterDto spaceFilterDto,
 			@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "size", defaultValue = "10") int size) {
-		return spaceService.getSpacesByFilter(spaceFilterDto, user, PageRequest.of(page, size));
+		return spaceService.getSpacesByFilter(spaceFilterDto, keyword, user, PageRequest.of(page, size));
 	}
 
 	@GetMapping("/{id}")

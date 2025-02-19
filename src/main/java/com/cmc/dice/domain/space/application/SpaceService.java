@@ -18,6 +18,7 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,8 +77,8 @@ public class SpaceService {
 	/**
 	 * 공간 필터링 조회
 	 */
-	public Page<SpaceSimpleInfoDto> getSpacesByFilter(SpaceFilterDto spaceFilterDto,User user, Pageable pageable) {
-		return spaceRepository.findSpaces(spaceFilterDto, user, pageable);
+	public Page<SpaceSimpleInfoDto> getSpacesByFilter(SpaceFilterDto spaceFilterDto, String keyword, User user, Pageable pageable) {
+		return spaceRepository.findSpaces(spaceFilterDto, keyword, user, pageable);
 	}
 
 	/**

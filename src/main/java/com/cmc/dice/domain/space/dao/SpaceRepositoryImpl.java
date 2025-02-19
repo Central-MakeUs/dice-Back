@@ -42,7 +42,7 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public Page<SpaceSimpleInfoDto> findSpaces(SpaceFilterDto filter, User user, Pageable pageable) {
+	public Page<SpaceSimpleInfoDto> findSpaces(SpaceFilterDto filter, String keyword, User user, Pageable pageable) {
 		// 기본 쿼리 작성
 		var query = queryFactory
 				.select(Projections.constructor(SpaceSimpleInfoDto.class,
@@ -55,6 +55,7 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 
 		if (filter != null) {
 				query.where(
+						getKeywordsBooleanExpression(keyword), // 키워드 조건
 					getCapacity(filter.getMinCapacity(), filter.getMaxCapacity()), // 수용 인원 조건
 					getPricePerDayBetween(filter.getMinPrice(), filter.getMaxPrice()), // 가격 조건
 					getCitiesAndDistrictsBooleanExpression(filter) // 도시, 구 조건
@@ -114,6 +115,15 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 		return Optional.ofNullable(query.fetchOne());
 	}
 
+	private static BooleanExpression getKeywordsBooleanExpression(String keyword) {
+		if (keyword == null) {
+			return null;
+		}
+
+		return space.name.contains(keyword)
+				.or(space.city.contains(keyword))
+				.or(space.district.contains(keyword));
+	}
 
 	private static BooleanExpression getPricePerDayBetween(Integer minPrice, Integer maxPrice) {
 		if (minPrice == null) {
