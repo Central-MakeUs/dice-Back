@@ -6,6 +6,7 @@ import com.cmc.dice.domain.user.dao.UserRepository;
 import com.cmc.dice.domain.user.domain.User;
 import com.cmc.dice.domain.user.dto.HostInfoDto;
 import com.cmc.dice.domain.user.dto.UpdateHostInfoRequest;
+import com.cmc.dice.domain.user.exception.InvalidDataException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,12 @@ public class HostService {
     public HostInfoDto updateHostInfo(User user, UpdateHostInfoRequest request) {
         request.setPassword(passwordEncoder.encode(request.getPassword()));
         user.updateHostInfo(request);
-        userRepository.save(user);
+
+        try{
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new InvalidDataException("호스트 정보 수정에 실패했습니다. (중복, 유효하지 않은 값, 권한 없음 등의 이유)");
+        }
 
         return HostInfoDto.of(user);
     }
@@ -41,8 +47,14 @@ public class HostService {
     /**
      * 호스트의 공간 목록 조회
      */
-    public List<SpaceSimpleInfoDto> getHostSpace(User user) {
-        return spaceRepository.findByAdmin(user).stream()
+    public List<SpaceSimpleInfoDto> getHostSpace(User user, String keyword) {
+        if (keyword == null) {
+            return spaceRepository.findByAdmin(user).stream()
+                    .map(SpaceSimpleInfoDto::of)
+                    .toList();
+        }
+
+        return spaceRepository.findByAdminAndNameContaining(user, keyword).stream()
                 .map(SpaceSimpleInfoDto::of)
                 .toList();
     }

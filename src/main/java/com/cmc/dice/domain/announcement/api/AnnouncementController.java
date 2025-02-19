@@ -40,9 +40,10 @@ public class AnnouncementController {
     public Page<AnnouncementSimpleInfoDto> getAnnouncements(
             @CurrentUser User user,
             @RequestBody(required = false) AnnouncementFilterRequest request,
+            @RequestParam(required = false) String keyword,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
-        return announcementService.getAnnouncements(request,user, PageRequest.of(page, size));
+        return announcementService.getAnnouncements(request, keyword, user, PageRequest.of(page, size));
     }
 
     @GetMapping("/{id}")

@@ -1,8 +1,10 @@
 package com.cmc.dice.domain.space.dao;
 
 import com.cmc.dice.domain.space.domain.Space;
+import com.cmc.dice.domain.space.dto.SpaceSimpleInfoDto;
 import com.cmc.dice.domain.user.domain.User;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -15,4 +17,6 @@ public interface SpaceRepository extends JpaRepository<Space, Long>, SpaceReposi
     Collection<Space> findByIdIn(List<Long> spaceIdList);
 
     Collection<Space> findByAdmin(User user);
+
+    Collection<Space> findByAdminAndNameContaining(User user, String keyword);
 }

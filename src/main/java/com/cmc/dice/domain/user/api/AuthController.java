@@ -186,6 +186,29 @@ public class AuthController {
         return authService.resetPassword(passwordResetRequest);
     }
 
+    @PostMapping("/password-update")
+    @Operation(summary = "비밀번호 변경", description = """
+            # 비밀번호 변경
+                        
+            사용자의 비밀번호를 변경합니다.
+                        
+            ## 응답
+                        
+            - 비밀번호 변경 성공 시 `200` 코드를 반환합니다.
+            """)
+    @ApiResponse(
+            responseCode = "200",
+            description = "비밀번호 변경 성공",
+            useReturnTypeSchema = true
+    )
+    @PreAuthorize("isAuthenticated()")
+    @SecurityRequirement(name = "access-token")
+    public UserAuthInfoDto updatePassword(
+            @CurrentUser User user,
+            @Valid @RequestBody PasswordUpdateRequest passwordUpdateRequest) {
+        return authService.updatePassword(user, passwordUpdateRequest);
+    }
+
     @PostMapping("/reissue")
     @Operation(summary = "토큰 재발급", description = """
             # 토큰 재발급

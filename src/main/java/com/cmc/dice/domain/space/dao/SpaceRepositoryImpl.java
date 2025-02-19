@@ -42,7 +42,7 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public Page<SpaceSimpleInfoDto> findSpaces(SpaceFilterDto filter, User user, Pageable pageable) {
+	public Page<SpaceSimpleInfoDto> findSpaces(SpaceFilterDto filter, String keyword, User user, Pageable pageable) {
 		// 기본 쿼리 작성
 		var query = queryFactory
 				.select(Projections.constructor(SpaceSimpleInfoDto.class,
@@ -52,6 +52,10 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 				.from(space);
 
 		query.where(space.isActivated.isTrue()); // 활성화된 공간만 조회
+
+		if (keyword != null) {
+			query.where(getKeywordsBooleanExpression(keyword));
+		}
 
 		if (filter != null) {
 				query.where(
@@ -114,6 +118,15 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 		return Optional.ofNullable(query.fetchOne());
 	}
 
+	private static BooleanExpression getKeywordsBooleanExpression(String keyword) {
+		if (keyword == null) {
+			return null;
+		}
+
+		return space.name.contains(keyword)
+				.or(space.city.contains(keyword))
+				.or(space.district.contains(keyword));
+	}
 
 	private static BooleanExpression getPricePerDayBetween(Integer minPrice, Integer maxPrice) {
 		if (minPrice == null) {

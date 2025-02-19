@@ -112,9 +112,10 @@ public class SpaceController {
 	public Page<SpaceSimpleInfoDto> getSpacesByFilter(
 			@CurrentUser User user,
 			@RequestBody(required = false) SpaceFilterDto spaceFilterDto,
+			@RequestParam(required = false) String keyword,
 			@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "size", defaultValue = "10") int size) {
-		return spaceService.getSpacesByFilter(spaceFilterDto, user, PageRequest.of(page, size));
+		return spaceService.getSpacesByFilter(spaceFilterDto, keyword, user, PageRequest.of(page, size));
 	}
 
 	@GetMapping("/{id}")
