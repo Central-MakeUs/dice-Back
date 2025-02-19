@@ -47,8 +47,14 @@ public class HostService {
     /**
      * 호스트의 공간 목록 조회
      */
-    public List<SpaceSimpleInfoDto> getHostSpace(User user) {
-        return spaceRepository.findByAdmin(user).stream()
+    public List<SpaceSimpleInfoDto> getHostSpace(User user, String keyword) {
+        if (keyword == null) {
+            return spaceRepository.findByAdmin(user).stream()
+                    .map(SpaceSimpleInfoDto::of)
+                    .toList();
+        }
+
+        return spaceRepository.findByAdminAndNameContaining(user, keyword).stream()
                 .map(SpaceSimpleInfoDto::of)
                 .toList();
     }

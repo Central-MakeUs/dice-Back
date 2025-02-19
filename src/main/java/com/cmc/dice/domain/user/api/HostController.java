@@ -89,7 +89,9 @@ public class HostController {
 	)
 	@PreAuthorize("isAuthenticated()")
 	@SecurityRequirement(name = "access-token")
-	public List<SpaceSimpleInfoDto> getHostSpace(@CurrentUser User user) {
-		return hostService.getHostSpace(user);
+	public List<SpaceSimpleInfoDto> getHostSpace(
+			@CurrentUser User user,
+			@RequestParam(required = false) String keyword) {
+		return hostService.getHostSpace(user, keyword);
 	}
 }
