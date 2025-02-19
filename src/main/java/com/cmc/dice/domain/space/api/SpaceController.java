@@ -111,8 +111,8 @@ public class SpaceController {
 	@SecurityRequirement(name = "access-token")
 	public Page<SpaceSimpleInfoDto> getSpacesByFilter(
 			@CurrentUser User user,
-			@PathVariable(required = false) String keyword,
 			@RequestBody(required = false) SpaceFilterDto spaceFilterDto,
+			@RequestParam String keyword,
 			@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "size", defaultValue = "10") int size) {
 		return spaceService.getSpacesByFilter(spaceFilterDto, keyword, user, PageRequest.of(page, size));
