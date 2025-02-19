@@ -37,7 +37,7 @@ public class AnnouncementRepositoryImpl implements AnnouncementRepositoryCustom 
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public Page<AnnouncementSimpleInfoDto> findAnnouncements(AnnouncementFilterRequest request, User user, Pageable pageable) {
+	public Page<AnnouncementSimpleInfoDto> findAnnouncements(AnnouncementFilterRequest request, String keyword, User user, Pageable pageable) {
 		// 기본 쿼리 작성
 		var query = queryFactory
 				.select(Projections.constructor(AnnouncementSimpleInfoDto.class,
@@ -48,6 +48,7 @@ public class AnnouncementRepositoryImpl implements AnnouncementRepositoryCustom 
 
 		if (request != null) {
 			query.where(
+					getKeywordsBooleanExpression(keyword), // 키워드 조건
 					getCitiesAndDistrictsBooleanExpression(request), // 도시, 구 조건
 					getStatus(request),
 					getTarget(request)
@@ -88,6 +89,15 @@ public class AnnouncementRepositoryImpl implements AnnouncementRepositoryCustom 
 				.where(announcement.id.eq(id));
 
 		return Optional.ofNullable(query.fetchOne());
+	}
+
+	private static BooleanExpression getKeywordsBooleanExpression(String keyword) {
+		if (keyword == null) {
+			return null;
+		}
+
+		return	announcement.name.contains(keyword)
+				.or(announcement.district.contains(keyword));
 	}
 
 	private static BooleanExpression getTarget(AnnouncementFilterRequest request) {

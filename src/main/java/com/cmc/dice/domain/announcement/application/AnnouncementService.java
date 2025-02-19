@@ -19,8 +19,8 @@ public class AnnouncementService {
 	private final AnnouncementRepository announcementRepository;
 
 	// 모집 공고 리스트 조회
-	public Page<AnnouncementSimpleInfoDto> getAnnouncements(AnnouncementFilterRequest request, User user, Pageable pageable) {
-		return announcementRepository.findAnnouncements(request, user, pageable);
+	public Page<AnnouncementSimpleInfoDto> getAnnouncements(AnnouncementFilterRequest request, String keyword, User user, Pageable pageable) {
+		return announcementRepository.findAnnouncements(request, keyword, user, pageable);
 	}
 
 

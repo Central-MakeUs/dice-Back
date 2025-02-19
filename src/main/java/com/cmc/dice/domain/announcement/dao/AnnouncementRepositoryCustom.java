@@ -14,7 +14,7 @@ import org.springframework.data.geo.Point;
 import java.util.Optional;
 
 public interface AnnouncementRepositoryCustom {
-	Page<AnnouncementSimpleInfoDto> findAnnouncements(AnnouncementFilterRequest request, User user, Pageable pageable);
+	Page<AnnouncementSimpleInfoDto> findAnnouncements(AnnouncementFilterRequest request, String keyword, User user, Pageable pageable);
 
 	Optional<AnnouncementInfoDto> findAnnouncementDetail(User user, Long id);
 }
