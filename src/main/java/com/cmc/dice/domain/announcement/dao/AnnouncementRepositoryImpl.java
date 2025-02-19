@@ -46,6 +46,10 @@ public class AnnouncementRepositoryImpl implements AnnouncementRepositoryCustom 
 				))
 				.from(announcement);
 
+		if (keyword != null) {
+			query.where(getKeywordsBooleanExpression(keyword));
+		}
+
 		if (request != null) {
 			query.where(
 					getKeywordsBooleanExpression(keyword), // 키워드 조건

@@ -53,9 +53,12 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 
 		query.where(space.isActivated.isTrue()); // 활성화된 공간만 조회
 
+		if (keyword != null) {
+			query.where(getKeywordsBooleanExpression(keyword));
+		}
+
 		if (filter != null) {
 				query.where(
-						getKeywordsBooleanExpression(keyword), // 키워드 조건
 					getCapacity(filter.getMinCapacity(), filter.getMaxCapacity()), // 수용 인원 조건
 					getPricePerDayBetween(filter.getMinPrice(), filter.getMaxPrice()), // 가격 조건
 					getCitiesAndDistrictsBooleanExpression(filter) // 도시, 구 조건
