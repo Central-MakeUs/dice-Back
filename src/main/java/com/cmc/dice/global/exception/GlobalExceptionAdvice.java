@@ -75,7 +75,7 @@ public class GlobalExceptionAdvice {
     public ResponseEntity<?> handleException(Exception ex) {
         log.warn("handleException: " + ex);
         ex.printStackTrace();
-        return ApiErrorResponse.toResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+        return ApiErrorResponse.toResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     }
 
 }
