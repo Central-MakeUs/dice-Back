@@ -152,8 +152,45 @@ public class AuthController {
     public LoginResponseDto login(@Valid @RequestBody LoginRequest loginRequest) {
         return authService.login(loginRequest);
     }
+    @PostMapping("/verify")
+    @Operation(summary = "이메일 인증 전송", description = """
+            # 이메일 인증 전송
+            
+            사용자의 이메일로 인증 이메일을 전송합니다.
+            
+            ## 응답
+            
+            - 이메일 전송 성공 시 `200` 코드를 반환합니다.
+            """)
+    @ApiResponse(
+            responseCode = "200",
+            description = "비밀번호 재설정 이메일 전송 성공",
+            useReturnTypeSchema = true
+    )
+    public void sendPasswordResetEmail(@Valid @RequestBody EmailValidateDto email) {
+        authService.sendPasswordResetEmail(email);
+    }
 
-    @PostMapping("/password-reset/reset")
+    @PostMapping("/verify/code")
+    @Operation(summary = "이메일 인증 확인", description = """
+            # 이메일 인증 확인
+
+            사용자의 이메일로 전송된 인증 코드를 확인합니다.
+            
+            ## 응답
+            
+            - 인증 코드 확인 성공 시 `200` 코드를 반환합니다.
+        """)
+    @ApiResponse(
+            responseCode = "200",
+            description = "비밀번호 재설정 이메일 전송 성공",
+            useReturnTypeSchema = true
+    )
+    public VerifyCodeDto verifyCode(@Valid @RequestBody PasswordResetValidateDto passwordResetRequest) {
+        return authService.verifyCode(passwordResetRequest);
+    }
+
+    @PostMapping("/password-reset")
     @Operation(summary = "비밀번호 재설정", description = """
             # 비밀번호 재설정
                         
