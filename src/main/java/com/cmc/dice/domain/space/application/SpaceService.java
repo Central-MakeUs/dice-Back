@@ -23,6 +23,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+
 @Service
 @RequiredArgsConstructor
 public class SpaceService {
@@ -50,10 +52,12 @@ public class SpaceService {
 	public SpaceTag addTag(Space space, String tag) {
 		Tag newTag = tagRepository.findByName(tag)
 				.orElseGet(() -> tagRepository.save(Tag.builder().name(tag).build()));
-        return SpaceTag.builder()
+		SpaceTag spaceTag = SpaceTag.builder()
 				.tag(newTag)
 				.space(space)
 				.build();
+		spaceTagRepository.save(spaceTag);
+		return spaceTag;
 	}
 
 	@Transactional(readOnly = true)
@@ -66,12 +70,39 @@ public class SpaceService {
 		Space space = spaceRepository.findById(id)
 				.orElseThrow(SpaceNotFoundException::new);
 
-		if (!space.isOwner(user)) {
+		if (!space.getAdmin().getId().equals(user.getId())) {
 			throw new SpaceNotOwnerException();
 		}
 
 		space.update(request);
+		space.updateLocation(geometryFactory.createPoint(new Coordinate(request.getLongitude(), request.getLatitude())));
+
+		ArrayList<String> tags = space.getTags().stream()
+				.map(spaceTag -> spaceTag.getTag().getName())
+				.collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+
+		for (String tag : tags) {
+			if (!request.getTags().contains(tag)) {
+				removeTag(space, tag);
+			}
+		}
+
+		for (String tag : request.getTags()) {
+			if (!tags.contains(tag)) {
+				space.addSpaceTag(addTag(space, tag));
+			}
+		}
+
+		spaceRepository.save(space);
+
 		return SpaceInfoDto.of(space);
+	}
+
+	private void removeTag(Space space, String tag) {
+		SpaceTag spaceTag = spaceTagRepository.findBySpaceIdAndTagName(space.getId(), tag)
+				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 태그입니다."));
+		space.removeSpaceTag(spaceTag);
+		spaceTagRepository.delete(spaceTag);
 	}
 
 	/**
