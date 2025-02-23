@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 
@@ -117,6 +118,10 @@ public class AuthService {
             throw new InvalidAuthCodeException();
         }
 
+        if(mail.getUpdatedAt().plusMinutes(10).isBefore(LocalDateTime.now())) {
+            throw new AuthCodeExpiredException();
+        }
+
         String tempPassword = UUID.randomUUID().toString().replace("-", "").substring(0, 10);
 
         User user = userRepository.findByEmail(passwordResetRequest.getEmail())
@@ -150,6 +155,10 @@ public class AuthService {
 
         if (!mail.getCode().equals(passwordResetRequest.getCode())) {
             throw new InvalidAuthCodeException();
+        }
+
+        if(mail.getUpdatedAt().plusMinutes(10).isBefore(LocalDateTime.now())) {
+            throw new AuthCodeExpiredException();
         }
 
         return new VerifyCodeDto(true);
