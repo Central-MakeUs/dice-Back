@@ -51,7 +51,7 @@ public class SpaceSimpleInfoDto {
 	public SpaceSimpleInfoDto(Space space, Boolean isLiked){
 		this.id = space.getId();
 		this.name = space.getName();
-		this.address = space.getAddress();
+		this.address = space.getCity() + " " + space.getDistrict() + " " + space.getAddress();
 		this.imageUrl = space.getImageUrls().get(0);
 		this.pricePerDay = space.getPricePerDay();
 		this.discountRate = space.getDiscountRate();

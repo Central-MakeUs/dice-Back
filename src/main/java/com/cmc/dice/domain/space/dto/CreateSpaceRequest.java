@@ -85,8 +85,11 @@ public class CreateSpaceRequest {
 	private String district;
 
 	@NotBlank
-	@Schema(description = "상세 주소", example = "강남대로 123")
+	@Schema(description = "주소", example = "강남대로 123")
 	private String address;
+
+	@Schema(description = "상세 주소", example = "101동 101호")
+	private String detailAddress;
 
 	@Schema(description = "웹사이트 URL", example = "www.example.com")
 	private String websiteUrl;

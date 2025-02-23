@@ -75,6 +75,7 @@ public class Space extends BaseEntity {
     private String city;
     private String district;
     private String address;
+    private String detailAddress;
 
     private String websiteUrl; // 웹사이트 URL
     private String contactNumber; // 연락처
@@ -111,6 +112,7 @@ public class Space extends BaseEntity {
         this.city = request.getCity();
         this.district = request.getDistrict();
         this.address = request.getAddress();
+        this.detailAddress = request.getDetailAddress();
 
         this.websiteUrl = request.getWebsiteUrl();
         this.contactNumber = request.getContactNumber();
@@ -121,7 +123,7 @@ public class Space extends BaseEntity {
     }
 
     public boolean isOwner(User user) {
-        return this.admin.equals(user);
+        return this.admin.equals(user.getId());
     }
 
     public void update(CreateSpaceRequest request) {
@@ -144,13 +146,14 @@ public class Space extends BaseEntity {
         this.city = request.getCity();
         this.district = request.getDistrict();
         this.address = request.getAddress();
+        this.detailAddress = request.getDetailAddress() == null ? "" : request.getDetailAddress();
 
-        this.websiteUrl = request.getWebsiteUrl();
+        this.websiteUrl = request.getWebsiteUrl() == null ? "" : request.getWebsiteUrl();
         this.contactNumber = request.getContactNumber();
         this.facilityInfo = request.getFacilityInfo();
         this.notice = request.getNotice();
 
-        this.isActivated = request.getIsActivated();
+        this.isActivated = request.getIsActivated() == null || request.getIsActivated();
     }
 
     public void updateLocation(Point point) {
@@ -170,5 +173,9 @@ public class Space extends BaseEntity {
             tags = new ArrayList<>();
         }
         tags.add(spaceTag);
+    }
+
+    public void removeSpaceTag(SpaceTag spaceTag) {
+        tags.remove(spaceTag);
     }
 }

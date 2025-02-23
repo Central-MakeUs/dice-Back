@@ -67,8 +67,10 @@ public class SpaceInfoDto {
 	private String city;
 	@Schema(description = "구", example = "강남구")
 	private String district;
-	@Schema(description = "상세 주소", example = "강남대로 123")
+	@Schema(description = "주소", example = "강남대로 123")
 	private String address;
+	@Schema(description = "상세 주소", example = "123동 123호")
+	private String detailAddress;
 
 	@Schema(description = "웹사이트 URL", example = "https://example.com")
 	private String websiteUrl; // 웹사이트 URL
@@ -117,6 +119,7 @@ public class SpaceInfoDto {
 		this.city = space.getCity();
 		this.district = space.getDistrict();
 		this.address = space.getAddress();
+		this.detailAddress = space.getDetailAddress();
 		this.websiteUrl = space.getWebsiteUrl();
 		this.contactNumber = space.getContactNumber();
 		this.facilityInfo = space.getFacilityInfo();
@@ -130,6 +133,9 @@ public class SpaceInfoDto {
 	public static SpaceInfoDto of(Space space) {
 		List<String> tags = new ArrayList<>();
 		for (SpaceTag spaceTag : space.getTags()) {
+			if (spaceTag.getTag() == null) {
+				continue;
+			}
 			tags.add(spaceTag.getTag().getName());
 		}
 
