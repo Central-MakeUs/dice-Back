@@ -45,18 +45,25 @@ public class MailService {
                     .email(email)
                     .code(randomNumber)
                     .build();
+            mail.preUpdate();
             mailRepository.save(mail);
         });
 
         String setFrom = "dice.minipop@gmail.com"; // email-config에 설정한 자신의 이메일 주소를 입력
         String toMail = email;
-        String title = "DICE 인증 번호 이메일 입니다."; // 이메일 제목
+        String title = "[DICE] 이메일 인증번호를 확인해주세요."; // 이메일 제목
         String content =
-                "나의 APP을 방문해주셔서 감사합니다." + 	//html 형식으로 작성 !
+                "안녕하세요, DICE를 이용해 주셔서 감사합니다." + // 더 자연스럽게 수정
                         "<br><br>" +
-                        "인증 번호는 " + randomNumber + "입니다." +
-                        "<br>" +
-                        "인증번호를 제대로 입력해주세요"; //이메일 내용 삽입
+                        "아래 인증번호를 입력하여 이메일 인증을 완료해주세요." +
+                        "<br><br>" +
+                        "<strong>인증번호: " + randomNumber + "</strong>" + // 인증번호 강조
+                        "<br><br>" +
+                        "인증번호는 <strong>10분 동안</strong>만 유효합니다. 기한 내에 입력해주세요." + // 유효 시간 안내
+                        "<br><br>" +
+                        "감사합니다.<br>" +
+                        "DICE 팀 드림"; // 깔끔한 마무리
+
         mailSend(setFrom, toMail, title, content);
         return randomNumber;
     }
