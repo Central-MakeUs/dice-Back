@@ -31,9 +31,16 @@ public class AnnouncementController {
         - 모집 공고 리스트를 조회합니다.
         
         ## 요청
-        
+        - `request`: 필터링 조건
+        - `keyword`: 검색어
         - `page`: 페이지 번호
         - `size`: 페이지 크기
+        
+        ### 필터링 조건
+        - `city`: 도시
+        - `district`: 구
+        - `targets`: 대상 (소상공인, 중소기업)
+        - `status`: 상태 (RECRUITING, COMPLETED, CLOSED, CANCELLED)
         """)
     @PreAuthorize("isAuthenticated()")
     @SecurityRequirement(name = "access-token")
