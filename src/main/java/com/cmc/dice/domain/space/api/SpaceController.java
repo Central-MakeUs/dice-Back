@@ -107,6 +107,16 @@ public class SpaceController {
 			- `spaceFilterDto`: 공간 필터 DTO
 			- `page`: 페이지 번호
 			- `size`: 페이지 크기
+			
+		    ### 필터링 정보 상세
+		    - `keyword`: 검색어 (공간 이름 기반 검색)
+		    - `city`: 도시 (서울, 부산 ...)
+		    - `district`: 구 (강남구, 강동구 ...)
+		    - `minPrice`: 최소 가격
+		    - `maxPrice`: 최대 가격
+		    - `minCapacity`: 최소 수용 인원
+		    - `maxCapacity`: 최대 수용 인원
+		    - `sort`: 정렬 방식 (latest, likeCount, priceAsc, priceDesc)
 			""")
 	@PreAuthorize("isAuthenticated()")
 	@SecurityRequirement(name = "access-token")

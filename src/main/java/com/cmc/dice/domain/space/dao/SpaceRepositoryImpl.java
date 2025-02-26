@@ -69,8 +69,10 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 				query.orderBy(space.likeCount.desc());
 			} else if ("latest".equals(filter.getSortBy())) {
 				query.orderBy(space.createdAt.desc());
-			} else if ("price".equals(filter.getSortBy())) {
+			} else if ("priceAsc".equals(filter.getSortBy())) {
 				query.orderBy(space.pricePerDay.asc());
+			} else if ("priceDesc".equals(filter.getSortBy())) {
+				query.orderBy(space.pricePerDay.desc());
 			}
 		} else {
 			query.orderBy(space.createdAt.desc());
