@@ -9,6 +9,7 @@ import com.cmc.dice.domain.message.dto.MessageDto;
 import com.cmc.dice.domain.message.dto.MessageRoomDto;
 import com.cmc.dice.domain.message.dto.MessageSendRequest;
 import com.cmc.dice.domain.space.dao.SpaceRepository;
+import com.cmc.dice.domain.space.domain.Space;
 import com.cmc.dice.domain.user.dao.UserRepository;
 import com.cmc.dice.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -84,10 +85,13 @@ public class MessageService {
     }
 
 	public MessageRoomDto createMessageRoom(User user, MessageCreateRequest request) {
+        Space space = spaceRepository.findById(request.getSpaceId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 공간입니다."));
+
         MessageRoom room = MessageRoom.builder()
                 .guest(user)
-                .host(userRepository.getReferenceById(request.getHostId()))
-                .space(spaceRepository.getReferenceById(request.getSpaceId()))
+                .host(space.getAdmin())
+                .space(space)
                 .lastMessage("")
                 .lastMessageSender("")
                 .lastMessageAt(null)
