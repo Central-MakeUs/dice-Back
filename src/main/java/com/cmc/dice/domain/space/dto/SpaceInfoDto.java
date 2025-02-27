@@ -42,6 +42,9 @@ public class SpaceInfoDto {
 	@Schema(description = "수용 인원", example = "100")
 	private int capacity; // 수용 인원
 
+	@Schema(description = "공간 크기", example = "30")
+	private int size; //공간 크기
+
 	@Schema(description = "태그 리스트", example = "[\"태그1\", \"태그2\"]")
 	private List<String> tags;
 
@@ -104,6 +107,7 @@ public class SpaceInfoDto {
 		this.openingTime = space.getOpeningTime();
 		this.closingTime = space.getClosingTime();
 		this.capacity = space.getCapacity();
+		this.size = space.getSize();
 
 		List<String> tags = new ArrayList<>();
 		for (SpaceTag spaceTag : space.getTags()) {
@@ -148,6 +152,7 @@ public class SpaceInfoDto {
 				.openingTime(space.getOpeningTime())
 				.closingTime(space.getClosingTime())
 				.capacity(space.getCapacity())
+				.size(space.getSize())
 				.tags(tags)
 				.pricePerDay(space.getPricePerDay())
 				.discountRate(space.getDiscountRate())

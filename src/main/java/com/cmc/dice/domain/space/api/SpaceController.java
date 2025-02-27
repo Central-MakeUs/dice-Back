@@ -40,13 +40,17 @@ public class SpaceController {
 			- `openingTime`: 오픈 시간
 			- `closingTime`: 마감 시간
 			- `capacity`: 수용 인원
+			- `size`: 공간 크기
 			- `tags`: 태그 리스트
 			- `pricePerDay`: 일일 가격
 			- `discountRate`: 할인율
 			- `details`: 상세 정보
-			- `location`: 위치 정보
+			- `longitude`: 경도
+			- `latitude`: 위도
 			- `city`: 도시
 			- `district`: 구
+			- `address`: 주소
+			- `detailAddress`: 상세 주소
 			- `websiteUrl`: 웹사이트 URL
 			- `contactNumber`: 연락처
 			- `facilityInfo`: 시설 정보
@@ -69,24 +73,28 @@ public class SpaceController {
             
             ## 요청
             - `name`: 공간 이름
-            - `description`: 공간 설명
-            - `imageUrls`: 이미지 URL 리스트
-            - `category`: 공간 카테고리
-            - `openingTime`: 오픈 시간
-            - `closingTime`: 마감 시간
-            - `capacity`: 수용 인원
-            - `tags`: 태그 리스트
-            - `pricePerDay`: 일일 가격
-            - `discountRate`: 할인율
-            - `details`: 상세 정보
-            - `location`: 위치 정보
-            - `city`: 도시
-            - `district`: 구
-            - `websiteUrl`: 웹사이트 URL
-            - `contactNumber`: 연락처
-            - `facilityInfo`: 시설 정보
-            - `notice`: 공지사항
-            - 'isActivated': 활성화 여부
+			- `description`: 공간 설명
+			- `imageUrls`: 이미지 URL 리스트
+			- `category`: 공간 카테고리
+			- `openingTime`: 오픈 시간
+			- `closingTime`: 마감 시간
+			- `capacity`: 수용 인원
+			- `size`: 공간 크기
+			- `tags`: 태그 리스트
+			- `pricePerDay`: 일일 가격
+			- `discountRate`: 할인율
+			- `details`: 상세 정보
+			- `longitude`: 경도
+			- `latitude`: 위도
+			- `city`: 도시
+			- `district`: 구
+			- `address`: 주소
+			- `detailAddress`: 상세 주소
+			- `websiteUrl`: 웹사이트 URL
+			- `contactNumber`: 연락처
+			- `facilityInfo`: 시설 정보
+			- `notice`: 공지사항
+			- 'isActivated': 활성화 여부
             """)
 	@PreAuthorize("isAuthenticated()")
 	@SecurityRequirement(name = "access-token")
