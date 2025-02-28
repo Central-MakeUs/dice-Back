@@ -48,6 +48,9 @@ public class SpaceSimpleInfoDto {
 	@Builder.Default
 	private boolean isLiked = false;
 
+	@Schema(description = "활성화 여부", example = "true")
+	private boolean isActivated;
+
 	public SpaceSimpleInfoDto(Space space, Boolean isLiked){
 		this.id = space.getId();
 		this.name = space.getName();
@@ -61,6 +64,8 @@ public class SpaceSimpleInfoDto {
 		this.likeCount = space.getLikeCount();
 
 		this.isLiked = isLiked;
+
+		this.isActivated = space.isActivated();
 	}
 
 	public static SpaceSimpleInfoDto of(Space space) {
@@ -75,6 +80,7 @@ public class SpaceSimpleInfoDto {
 				.capacity(space.getCapacity())
 				.size(space.getSize())
 				.likeCount(space.getLikeCount())
+				.isActivated(space.isActivated())
 				.build();
 	}
 }

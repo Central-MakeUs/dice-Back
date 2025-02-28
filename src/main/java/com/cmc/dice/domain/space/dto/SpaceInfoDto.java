@@ -98,6 +98,9 @@ public class SpaceInfoDto {
 	@Schema(description = "메시지방 ID", example = "1")
 	private Long messageRoomId;
 
+	@Schema(description = "활성화 여부", example = "true")
+	private Boolean isActivated;
+
 	public SpaceInfoDto(Space space, Boolean isLiked, Object messageRoomId) {
 		this.id = space.getId();
 		this.name = space.getName();
@@ -132,6 +135,8 @@ public class SpaceInfoDto {
 
 		this.isLiked = isLiked != null ? isLiked : false;
 		this.messageRoomId = (Long) messageRoomId;
+
+		this.isActivated = space.isActivated();
 	}
 
 	public static SpaceInfoDto of(Space space) {
@@ -167,6 +172,7 @@ public class SpaceInfoDto {
 				.facilityInfo(space.getFacilityInfo())
 				.notice(space.getNotice())
 				.likeCount(space.getLikeCount())
+				.isActivated(space.isActivated())
 				.build();
 	}
 }
