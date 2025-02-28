@@ -58,7 +58,7 @@ public class MessageService {
 
         Page<Message> messagePage = messageRepository.findByRoomId(roomId, pageable);
         List<MessageDto> messages = messagePage.stream()
-                .map(MessageDto::of)
+                .map(message -> MessageDto.of(message, user))
                 .toList();
 
         return new PageImpl<>(messages, pageable, messagePage.getTotalElements());
