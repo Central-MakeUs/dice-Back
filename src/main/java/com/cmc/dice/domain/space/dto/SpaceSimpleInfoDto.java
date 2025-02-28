@@ -23,6 +23,12 @@ public class SpaceSimpleInfoDto {
 	@Schema(description = "공간 주소", example = "서울시 강남구 테헤란로 123")
 	private String address;
 
+	@Schema(description = "시", example = "서울")
+	private String city;
+
+	@Schema(description = "구", example = "강남구")
+	private String district;
+
 	@Schema(description = "공간 이미지 URL", example = "www.example.com")
 	private String imageUrl;
 
@@ -55,6 +61,9 @@ public class SpaceSimpleInfoDto {
 		this.id = space.getId();
 		this.name = space.getName();
 		this.address = space.getCity() + " " + space.getDistrict() + " " + space.getAddress();
+		this.city = space.getCity();
+		this.district = space.getDistrict();
+
 		this.imageUrl = space.getImageUrls().get(0);
 		this.pricePerDay = space.getPricePerDay();
 		this.discountRate = space.getDiscountRate();
@@ -73,6 +82,9 @@ public class SpaceSimpleInfoDto {
 				.id(space.getId())
 				.name(space.getName())
 				.address(space.getAddress())
+				.city(space.getCity())
+				.district(space.getDistrict())
+				
 				.imageUrl(space.getImageUrls().get(0))
 				.pricePerDay(space.getPricePerDay())
 				.discountRate(space.getDiscountRate())
