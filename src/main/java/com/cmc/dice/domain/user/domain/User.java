@@ -32,7 +32,6 @@ public class User extends BaseEntity {
     @Convert(converter = UserRoleConverter.class)
     private UserRole userRole;
 
-    @Column(unique = true, nullable = false)
     private String phone;
 
     private String bankName;
