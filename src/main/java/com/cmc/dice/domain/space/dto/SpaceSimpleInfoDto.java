@@ -52,10 +52,10 @@ public class SpaceSimpleInfoDto {
 
 	@Schema(description = "좋아요 여부", example = "true")
 	@Builder.Default
-	private boolean isLiked = false;
+	private Boolean isLiked = false;
 
 	@Schema(description = "활성화 여부", example = "true")
-	private boolean isActivated;
+	private Boolean isActivated;
 
 	public SpaceSimpleInfoDto(Space space, Boolean isLiked){
 		this.id = space.getId();
@@ -84,7 +84,7 @@ public class SpaceSimpleInfoDto {
 				.address(space.getAddress())
 				.city(space.getCity())
 				.district(space.getDistrict())
-				
+
 				.imageUrl(space.getImageUrls().get(0))
 				.pricePerDay(space.getPricePerDay())
 				.discountRate(space.getDiscountRate())
