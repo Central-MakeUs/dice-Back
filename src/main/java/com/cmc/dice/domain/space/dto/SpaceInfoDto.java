@@ -121,8 +121,8 @@ public class SpaceInfoDto {
 		this.pricePerDay = space.getPricePerDay();
 		this.discountRate = space.getDiscountRate();
 		this.details = space.getDetails();
-		this.latitude = space.getLocation().getX();
-		this.longitude = space.getLocation().getY();
+		this.latitude = space.getLocation().getY();
+		this.longitude = space.getLocation().getX();
 		this.city = space.getCity();
 		this.district = space.getDistrict();
 		this.address = space.getAddress();
@@ -162,8 +162,8 @@ public class SpaceInfoDto {
 				.pricePerDay(space.getPricePerDay())
 				.discountRate(space.getDiscountRate())
 				.details(space.getDetails())
-				.latitude(space.getLocation().getX())
-				.longitude(space.getLocation().getY())
+				.latitude(space.getLocation().getY())
+				.longitude(space.getLocation().getX())
 				.city(space.getCity())
 				.district(space.getDistrict())
 				.address(space.getAddress())
