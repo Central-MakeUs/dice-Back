@@ -5,6 +5,7 @@ import com.cmc.dice.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -27,14 +28,10 @@ public class Reservation {
     private Space space;
 
     @Column(nullable = false)
-    private LocalDateTime startTime;
+    private LocalDate startDate;
 
     @Column(nullable = false)
-    private LocalDateTime endTime;
+    private LocalDate endDate;
 
-    @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = false)
-    private String description;
+    private String message;
 }
