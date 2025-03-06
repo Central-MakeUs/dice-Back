@@ -1,6 +1,7 @@
 package com.cmc.dice.domain.message.dto;
 
 import com.cmc.dice.domain.message.domain.MessageRoom;
+import com.cmc.dice.domain.user.domain.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,6 +42,28 @@ public class MessageRoomDto {
                 .lastMessage(room.getLastMessage())
                 .lastMessageAt(room.getLastMessageAt())
                 .unreadCount(room.getUnreadCount())
+                .build();
+    }
+
+    public static MessageRoomDto of(MessageRoom r, User user) {
+        if (r.getLastMessageSender().equals(user.getName())) {
+            return MessageRoomDto.builder()
+                    .id(r.getId())
+                    .spaceName(r.getSpace().getName())
+                    .spaceImage(r.getSpace().getImageUrls().get(0))
+                    .lastMessage(r.getLastMessage())
+                    .lastMessageAt(r.getLastMessageAt())
+                    .unreadCount(0)
+                    .build();
+        }
+
+        return MessageRoomDto.builder()
+                .id(r.getId())
+                .spaceName(r.getSpace().getName())
+                .spaceImage(r.getSpace().getImageUrls().get(0))
+                .lastMessage(r.getLastMessage())
+                .lastMessageAt(r.getLastMessageAt())
+                .unreadCount(r.getUnreadCount())
                 .build();
     }
 }

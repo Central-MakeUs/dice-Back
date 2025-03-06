@@ -49,7 +49,7 @@ public class MessageRoom {
     public void updateLastMessage(Message message) {
         this.lastMessage = message.getContent();
         this.lastMessageSender = message.getSender().getName();
-        this.lastMessageAt = message.getCreatedAt();
+        this.lastMessageAt = LocalDateTime.now();
         this.isRead = false;
         this.unreadCount++;
     }

@@ -31,8 +31,9 @@ public class MessageService {
     // 메시지 방 목록 조회 (게스트)
     public List<MessageRoomDto> getMessageRoomListByGuest(User user) {
         List<MessageRoom> rooms = messageRoomRepository.findByGuestId(user.getId());
+
         return rooms.stream()
-                .map(MessageRoomDto::of)
+                .map(room -> MessageRoomDto.of(room, user))
                 .toList();
     }
 
@@ -40,7 +41,7 @@ public class MessageService {
     public List<MessageRoomDto> getMessageRoomListByHost(User user) {
         List<MessageRoom> rooms = messageRoomRepository.findByHostId(user.getId());
         return rooms.stream()
-                .map(MessageRoomDto::of)
+                .map(room -> MessageRoomDto.of(room, user))
                 .toList();
     }
 

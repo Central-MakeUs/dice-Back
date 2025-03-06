@@ -1,6 +1,7 @@
 package com.cmc.dice.domain.message.dto;
 
 import com.cmc.dice.domain.message.domain.Message;
+import com.cmc.dice.domain.message.domain.MessageRoom;
 import com.cmc.dice.domain.user.domain.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
