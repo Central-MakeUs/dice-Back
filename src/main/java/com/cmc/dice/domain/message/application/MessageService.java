@@ -33,7 +33,7 @@ public class MessageService {
         List<MessageRoom> rooms = messageRoomRepository.findByGuestId(user.getId());
 
         return rooms.stream()
-                .map(room -> MessageRoomDto.of(room, user))
+                .map(room -> MessageRoomDto.of(room, user, room.getHost().getName()))
                 .toList();
     }
 
@@ -41,7 +41,7 @@ public class MessageService {
     public List<MessageRoomDto> getMessageRoomListByHost(User user) {
         List<MessageRoom> rooms = messageRoomRepository.findByHostId(user.getId());
         return rooms.stream()
-                .map(room -> MessageRoomDto.of(room, user))
+                .map(room -> MessageRoomDto.of(room, user, room.getGuest().getName()))
                 .toList();
     }
 
