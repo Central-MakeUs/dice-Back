@@ -1,10 +1,8 @@
 package com.cmc.dice.domain.message.api;
 
 import com.cmc.dice.domain.message.application.MessageService;
-import com.cmc.dice.domain.message.dto.MessageCreateRequest;
-import com.cmc.dice.domain.message.dto.MessageDto;
-import com.cmc.dice.domain.message.dto.MessageRoomDto;
-import com.cmc.dice.domain.message.dto.MessageSendRequest;
+import com.cmc.dice.domain.message.application.ReportService;
+import com.cmc.dice.domain.message.dto.*;
 import com.cmc.dice.domain.user.domain.User;
 import com.cmc.dice.global.jwt.CurrentUser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,6 +23,7 @@ import java.util.List;
 @Tag(name = "Message")
 public class MessageController {
     private final MessageService messageService;
+    private final ReportService reportService;
 
     @GetMapping("/guest-list")
     @Operation(summary = "메시지 목록 조회", description = """
@@ -145,5 +144,29 @@ public class MessageController {
             @CurrentUser User user,
             @RequestBody MessageCreateRequest request) {
         return messageService.createMessageRoom(user, request);
+    }
+
+    // 신고 기능
+    @PostMapping("/report")
+    @Operation(summary = "메시지 신고", description = """
+            # 메시지방 신고
+            - 메시지방을 신고합니다.
+            - 사용자가 호스트를 신고할 때 사용합니다.
+            
+            ## 요청
+            - `messageRoomId`: 메시지 ID
+            - `reason`: 신고 사유
+            """)
+    @ApiResponse(
+            responseCode = "200",
+            description = "신고 성공",
+            useReturnTypeSchema = true
+    )
+    @PreAuthorize("isAuthenticated()")
+    @SecurityRequirement(name = "access-token")
+    public void report(
+            @CurrentUser User user,
+            @RequestBody ReportRequest request) {
+        reportService.reportMessage(user, request);
     }
 }
