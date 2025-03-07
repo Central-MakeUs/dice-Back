@@ -3,6 +3,7 @@ package com.cmc.dice.domain.reservation.dao;
 import com.cmc.dice.domain.reservation.domain.Reservation;
 import com.cmc.dice.domain.reservation.dto.DateDto;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -32,4 +33,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<DateDto> findReservedDatesBySpaceId(@Param("spaceId") Long spaceId);
 
     Page<Reservation> findByUserId(Long id, Pageable pageable);
+
+    Page<Reservation> findByUserIdAndStatus(Long id, String status, PageRequest of);
 }

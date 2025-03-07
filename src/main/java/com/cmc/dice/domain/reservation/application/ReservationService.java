@@ -50,8 +50,8 @@ public class ReservationService {
     }
 
     //자신의 예약 조회
-    public Page<ReservationInfoDto> getMyReservations(User user, int page, int size) {
-        Page<Reservation> reservations = reservationRepository.findByUserId(user.getId(), PageRequest.of(page, size));
+    public Page<ReservationInfoDto> getMyReservations(User user,String status, int page, int size) {
+        Page<Reservation> reservations = reservationRepository.findByUserIdAndStatus(user.getId(), status, PageRequest.of(page, size));
         return reservations.map(this::getReservationInfoDto);
     }
 
@@ -83,7 +83,9 @@ public class ReservationService {
             throw new IllegalArgumentException("예약자만 예약을 취소할 수 있습니다.");
         }
 
-        reservationRepository.delete(reservation);
+        reservation.cancel();
+
+        reservationRepository.save(reservation);
     }
 
     public void declineReservation(User user, Long reservationId) {

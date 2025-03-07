@@ -34,6 +34,7 @@ public class ReservationController {
             # 예약 목록 조회
             - 사용자의 예약 목록을 조회합니다.
             - 사용자가 자신의 예약 목록을 조회할 때 사용합니다.
+            - `status`에 따라 조회할 수 있습니다. (PENDING, ACCEPT, DECLINE, CANCEL)
             
             ## 응답
             - `id`: 예약 ID
@@ -51,9 +52,10 @@ public class ReservationController {
     @SecurityRequirement(name = "access-token")
     public Page<ReservationInfoDto> getReservationList(
             @CurrentUser User user,
+            @RequestParam String status,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return reservationService.getMyReservations(user, page, size);
+        return reservationService.getMyReservations(user, status, page, size);
     }
 
     @PostMapping("/reserve")
