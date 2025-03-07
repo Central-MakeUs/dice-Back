@@ -9,6 +9,8 @@ import com.cmc.dice.domain.space.exception.SpaceNotFoundException;
 import com.cmc.dice.domain.user.dao.UserRepository;
 import com.cmc.dice.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,21 +50,65 @@ public class ReservationService {
     }
 
     //자신의 예약 조회
-    public List<ReservationInfoDto> getMyReservations(User user) {
-        List<Reservation> reservations = reservationRepository.findByUserId(user.getId());
-
-        return reservations.stream()
-                .map(this::getReservationInfoDto)
-                .toList();
+    public Page<ReservationInfoDto> getMyReservations(User user, int page, int size) {
+        Page<Reservation> reservations = reservationRepository.findByUserId(user.getId(), PageRequest.of(page, size));
+        return reservations.map(this::getReservationInfoDto);
     }
 
     private ReservationInfoDto getReservationInfoDto(Reservation reservation) {
+        Space space = reservation.getSpace();
+        int totalPrice = (reservation.getEndDate().getDayOfYear() - reservation.getStartDate().getDayOfYear()) * space.getDiscountPrice();
+
         return ReservationInfoDto.builder()
                 .reservationId(reservation.getId())
-                .spaceName(reservation.getSpace().getName())
+                .spaceName(space.getName())
                 .startDate(reservation.getStartDate())
                 .endDate(reservation.getEndDate())
                 .message(reservation.getMessage())
+                .status(reservation.getStatus())
+                .city(space.getCity())
+                .district(space.getDistrict())
+                .capacity(space.getCapacity())
+                .size(space.getSize())
+                .totalPrice(totalPrice)
+                .spaceImage(space.getImageUrls().get(0))
                 .build();
+    }
+
+    public void cancelReservation(User user, Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
+
+        if (!reservation.getUser().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("예약자만 예약을 취소할 수 있습니다.");
+        }
+
+        reservationRepository.delete(reservation);
+    }
+
+    public void declineReservation(User user, Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
+
+        if (!reservation.getSpace().getAdmin().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("호스트만 예약을 거절할 수 있습니다.");
+        };
+
+        reservation.decline();
+
+        reservationRepository.save(reservation);
+    }
+
+    public void acceptReservation(User user, Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
+
+        if (!reservation.getSpace().getAdmin().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("호스트만 예약을 거절할 수 있습니다.");
+        };
+
+        reservation.accept();
+
+        reservationRepository.save(reservation);
     }
 }

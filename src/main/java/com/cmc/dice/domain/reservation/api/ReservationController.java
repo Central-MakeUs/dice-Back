@@ -49,9 +49,11 @@ public class ReservationController {
             useReturnTypeSchema = true)
     @PreAuthorize("isAuthenticated()")
     @SecurityRequirement(name = "access-token")
-    public List<ReservationInfoDto> getReservationList(
-            @CurrentUser User user) {
-        return reservationService.getMyReservations(user);
+    public Page<ReservationInfoDto> getReservationList(
+            @CurrentUser User user,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return reservationService.getMyReservations(user, page, size);
     }
 
     @PostMapping("/reserve")
@@ -99,6 +101,72 @@ public class ReservationController {
     public ReservationAvailableDto getAvailableDates(
             @RequestParam Long spaceId) {
         return reservationService.getAvailableDates(spaceId);
+    }
+
+    // 게스트가 자신의 예약 취소
+    @PostMapping("/cancel")
+    @Operation(summary = "예약 취소", description = """
+            # 예약 취소
+            - 게스트가 자신의 예약을 취소합니다.
+            - 사용자가 자신의 예약을 취소할 때 사용합니다.
+            
+            ## 요청
+            - `reservationId`: 예약 ID
+            """)
+    @ApiResponse(
+            responseCode = "200",
+            description = "취소 성공",
+            useReturnTypeSchema = true)
+    @PreAuthorize("isAuthenticated()")
+    @SecurityRequirement(name = "access-token")
+    public void cancelReservation(
+            @CurrentUser User user,
+            @RequestParam Long reservationId) {
+        reservationService.cancelReservation(user, reservationId);
+    }
+
+    // 호스트가 예약을 거절
+    @PostMapping("/decline")
+    @Operation(summary = "예약 거절", description = """
+            # 예약 거절
+            - 호스트가 예약을 거절합니다.
+            - 사용자가 예약을 거절할 때 사용합니다.
+            
+            ## 요청
+            - `reservationId`: 예약 ID
+            """)
+    @ApiResponse(
+            responseCode = "200",
+            description = "거절 성공",
+            useReturnTypeSchema = true)
+    @PreAuthorize("isAuthenticated()")
+    @SecurityRequirement(name = "access-token")
+    public void declineReservation(
+            @CurrentUser User user,
+            @RequestParam Long reservationId) {
+        reservationService.declineReservation(user, reservationId);
+    }
+
+    // 호스트가 예약을 수락
+    @PostMapping("/accept")
+    @Operation(summary = "예약 수락", description = """
+            # 예약 수락
+            - 호스트가 예약을 수락합니다.
+            - 사용자가 예약을 수락할 때 사용합니다.
+            
+            ## 요청
+            - `reservationId`: 예약 ID
+            """)
+    @ApiResponse(
+            responseCode = "200",
+            description = "수락 성공",
+            useReturnTypeSchema = true)
+    @PreAuthorize("isAuthenticated()")
+    @SecurityRequirement(name = "access-token")
+    public void acceptReservation(
+            @CurrentUser User user,
+            @RequestParam Long reservationId) {
+        reservationService.acceptReservation(user, reservationId);
     }
 
 }

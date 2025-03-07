@@ -27,4 +27,25 @@ public class ReservationInfoDto {
 
     @Schema(description = "예약 메시지", example = "안녕하세요")
     private String message;
+
+    @Schema(description = "예약 상태", example = "COMPLETE")
+    private String status;
+
+    @Schema(description = "도시", example = "서울")
+    private String city;
+
+    @Schema(description = "구", example = "강남구")
+    private String district;
+
+    @Schema(description = "수용 인원", example = "10")
+    private Integer capacity;
+
+    @Schema(description = "공간 크기", example = "10")
+    private Integer size;
+
+    @Schema(description = "총 가격", example = "100000")
+    private Integer totalPrice;
+
+    @Schema(description = "공간 이미지", example = "www.example.com/image.jpg")
+    private String spaceImage;
 }

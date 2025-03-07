@@ -34,4 +34,18 @@ public class Reservation {
     private LocalDate endDate;
 
     private String message;
+
+    private String status;
+
+    public void cancel() {
+        this.status = "CANCEL";
+    }
+
+    public void decline() {
+        this.status = "DECLINE";
+    }
+
+    public void accept() {
+        this.status = "ACCEPT";
+    }
 }

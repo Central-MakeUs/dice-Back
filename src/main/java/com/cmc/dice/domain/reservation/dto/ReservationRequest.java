@@ -33,6 +33,7 @@ public class ReservationRequest {
                 .startDate(startDate)
                 .endDate(endDate)
                 .message(message)
+                .status("PENDING")
                 .build();
     }
 }
