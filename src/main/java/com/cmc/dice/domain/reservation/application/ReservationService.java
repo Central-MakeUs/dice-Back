@@ -1,5 +1,7 @@
 package com.cmc.dice.domain.reservation.application;
 
+import com.cmc.dice.domain.brand.dao.BrandRepository;
+import com.cmc.dice.domain.brand.domain.Brand;
 import com.cmc.dice.domain.reservation.dao.ReservationRepository;
 import com.cmc.dice.domain.reservation.domain.Reservation;
 import com.cmc.dice.domain.reservation.dto.*;
@@ -20,6 +22,7 @@ import java.util.List;
 public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final SpaceRepository spaceRepository;
+    private final BrandRepository brandRepository;
 
     // 예약
     public ReservationDto reserve(User user, ReservationRequest reservationRequest) {
@@ -75,6 +78,27 @@ public class ReservationService {
                 .build();
     }
 
+    private ReservationInfoHostDto getReservationInfoHostDto(Reservation reservation, String brandName) {
+        Space space = reservation.getSpace();
+        int totalPrice = (reservation.getEndDate().getDayOfYear() - reservation.getStartDate().getDayOfYear()) * space.getDiscountPrice();
+
+        return ReservationInfoHostDto.builder()
+                .reservationId(reservation.getId())
+                .spaceName(space.getName())
+                .brandName(brandName)
+                .startDate(reservation.getStartDate())
+                .endDate(reservation.getEndDate())
+                .message(reservation.getMessage())
+                .status(reservation.getStatus())
+                .city(space.getCity())
+                .district(space.getDistrict())
+                .capacity(space.getCapacity())
+                .size(space.getSize())
+                .totalPrice(totalPrice)
+                .spaceImage(space.getImageUrls().get(0))
+                .build();
+    }
+
     public void cancelReservation(User user, Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
@@ -114,8 +138,18 @@ public class ReservationService {
         reservationRepository.save(reservation);
     }
 
-	public Page<ReservationInfoDto> getHostReservations(User user, String status, int page, int size) {
+	public Page<ReservationInfoHostDto> getHostReservations(User user, String status, int page, int size) {
         Page<Reservation> reservations = reservationRepository.findBySpaceAdminIdAndStatus(user.getId(), status, PageRequest.of(page, size));
-        return reservations.map(this::getReservationInfoDto);
+        return reservations.map(reservation -> {
+                    User reservedUser = reservation.getUser();
+                    List<Brand> brand = brandRepository.findByAdminId(user.getId());
+                    if (brand.isEmpty()) {
+                        throw new IllegalArgumentException("브랜드가 존재하지 않습니다.");
+                    }
+
+
+                    return getReservationInfoHostDto(reservation, brand.get(0).getName());
+                }
+        );
 	}
 }

@@ -4,10 +4,7 @@ import com.cmc.dice.domain.message.application.MessageService;
 import com.cmc.dice.domain.message.application.ReportService;
 import com.cmc.dice.domain.message.dto.*;
 import com.cmc.dice.domain.reservation.application.ReservationService;
-import com.cmc.dice.domain.reservation.dto.ReservationAvailableDto;
-import com.cmc.dice.domain.reservation.dto.ReservationDto;
-import com.cmc.dice.domain.reservation.dto.ReservationInfoDto;
-import com.cmc.dice.domain.reservation.dto.ReservationRequest;
+import com.cmc.dice.domain.reservation.dto.*;
 import com.cmc.dice.domain.user.domain.User;
 import com.cmc.dice.global.jwt.CurrentUser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -80,7 +77,7 @@ public class ReservationController {
             useReturnTypeSchema = true)
     @PreAuthorize("isAuthenticated()")
     @SecurityRequirement(name = "access-token")
-    public Page<ReservationInfoDto> getHostReservationList(
+    public Page<ReservationInfoHostDto> getHostReservationList(
             @CurrentUser User user,
             @RequestParam String status,
             @RequestParam(defaultValue = "0") int page,
