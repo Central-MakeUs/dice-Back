@@ -143,11 +143,11 @@ public class ReservationService {
         return reservations.map(reservation -> {
                     User reservedUser = reservation.getUser();
                     List<Brand> brand = brandRepository.findByAdminId(user.getId());
+
                     if (brand.isEmpty()) {
-                        throw new IllegalArgumentException("브랜드가 존재하지 않습니다.");
+                        return getReservationInfoHostDto(reservation, "");
                     }
-
-
+                    
                     return getReservationInfoHostDto(reservation, brand.get(0).getName());
                 }
         );
