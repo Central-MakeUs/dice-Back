@@ -142,12 +142,12 @@ public class ReservationService {
         Page<Reservation> reservations = reservationRepository.findBySpaceAdminIdAndStatus(user.getId(), status, PageRequest.of(page, size));
         return reservations.map(reservation -> {
                     User reservedUser = reservation.getUser();
-                    List<Brand> brand = brandRepository.findByAdminId(user.getId());
+                    List<Brand> brand = brandRepository.findByAdminId(reservedUser.getId());
 
                     if (brand.isEmpty()) {
                         return getReservationInfoHostDto(reservation, "");
                     }
-                    
+
                     return getReservationInfoHostDto(reservation, brand.get(0).getName());
                 }
         );
