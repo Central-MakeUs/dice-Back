@@ -58,6 +58,37 @@ public class ReservationController {
         return reservationService.getMyReservations(user, status, page, size);
     }
 
+    // 호스트의 자신의 공간 예약 조회
+    @GetMapping("/host-list")
+    @Operation(summary = "호스트 예약 목록 조회", description = """
+            # 호스트 예약 목록 조회
+            - 호스트의 예약 목록을 조회합니다.
+            - 호스트가 자신의 예약 목록을 조회할 때 사용합니다.
+            - `status`에 따라 조회할 수 있습니다. (PENDING, ACCEPT, DECLINE, CANCEL)
+            
+            ## 응답
+            - `id`: 예약 ID
+            - `name`: 예약자 이름
+            - `email`: 예약자 이메일
+            - `startDate`: 예약 시작 날짜
+            - `endDate`: 예약 종료 날짜
+            - `message`: 예약 메시지
+            """)
+    @ApiResponse(
+            responseCode = "200",
+            description = "조회 성공",
+            useReturnTypeSchema = true)
+    @PreAuthorize("isAuthenticated()")
+    @SecurityRequirement(name = "access-token")
+    public Page<ReservationInfoDto> getHostReservationList(
+            @CurrentUser User user,
+            @RequestParam String status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return reservationService.getHostReservations(user, status, page, size);
+    }
+
+
     @PostMapping("/reserve")
     @Operation(summary = "예약", description = """
             # 예약

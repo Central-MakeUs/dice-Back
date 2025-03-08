@@ -113,4 +113,9 @@ public class ReservationService {
 
         reservationRepository.save(reservation);
     }
+
+	public Page<ReservationInfoDto> getHostReservations(User user, String status, int page, int size) {
+        Page<Reservation> reservations = reservationRepository.findBySpaceAdminIdAndStatus(user.getId(), status, PageRequest.of(page, size));
+        return reservations.map(this::getReservationInfoDto);
+	}
 }
