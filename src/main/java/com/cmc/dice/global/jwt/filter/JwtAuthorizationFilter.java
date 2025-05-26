@@ -1,5 +1,6 @@
-package com.cmc.dice.global.jwt;
+package com.cmc.dice.global.jwt.filter;
 
+import com.cmc.dice.global.jwt.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.cmc.dice.domain.user.application.UserDetailsServiceImpl;
 import com.cmc.dice.global.exception.ApiErrorResponse;

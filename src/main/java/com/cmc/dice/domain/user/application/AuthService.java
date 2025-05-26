@@ -52,7 +52,27 @@ public class AuthService {
     }
 
     @Transactional
-    public UserAuthInfoDto createUser(CreateUserRequest createUserRequest) {
+    public UserAuthInfoDto createUserV1(CreateUserRequestV1 createUserRequest) {
+        try {
+            User createdUser = userRepository.save(
+                    new User(createUserRequest, passwordEncoder.encode(createUserRequest.getPassword()))
+            );
+
+            return UserAuthInfoDto.builder()
+                    .email(createdUser.getEmail())
+                    .name(createdUser.getName())
+                    .userRole(createdUser.getUserRole())
+                    .build();
+
+        } catch (DataIntegrityViolationException e) {
+            throw new UserCreateValidationException();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Transactional
+    public UserAuthInfoDto createUserV2(CreateUserRequestV2 createUserRequest) {
         try {
             User createdUser = userRepository.save(
                     new User(createUserRequest, passwordEncoder.encode(createUserRequest.getPassword()))

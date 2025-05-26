@@ -1,7 +1,7 @@
 package com.cmc.dice.global.config;
 
 import com.cmc.dice.domain.user.application.UserDetailsServiceImpl;
-import com.cmc.dice.global.jwt.JwtAuthorizationFilter;
+import com.cmc.dice.global.jwt.filter.JwtAuthorizationFilter;
 import com.cmc.dice.global.jwt.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

@@ -1,5 +1,6 @@
 package com.cmc.dice.domain.user.dto;
 
+import com.cmc.dice.domain.user.domain.UserRole;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -8,8 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class CreateUserRequest {
-
+public class CreateUserRequestV1 {
     @NotBlank
     @Email
     @Schema(description = "사용자 이메일", example = "user01@email.com")

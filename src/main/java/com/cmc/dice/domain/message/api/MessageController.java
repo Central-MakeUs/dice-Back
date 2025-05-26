@@ -1,6 +1,7 @@
 package com.cmc.dice.domain.message.api;
 
 import com.cmc.dice.domain.message.application.MessageService;
+import com.cmc.dice.domain.message.application.MessageSocketService;
 import com.cmc.dice.domain.message.application.ReportService;
 import com.cmc.dice.domain.message.dto.*;
 import com.cmc.dice.domain.user.domain.User;
@@ -12,6 +13,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 

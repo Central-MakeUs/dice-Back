@@ -1,12 +1,12 @@
 package com.cmc.dice.domain.user.domain;
 
-import com.cmc.dice.domain.user.dto.CreateUserRequest;
+import com.cmc.dice.domain.user.dto.CreateUserRequestV1;
+import com.cmc.dice.domain.user.dto.CreateUserRequestV2;
 import com.cmc.dice.domain.user.dto.UpdateGuestInfoRequest;
 import com.cmc.dice.domain.user.dto.UpdateHostInfoRequest;
 import com.cmc.dice.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name = "users")
@@ -38,13 +38,29 @@ public class User extends BaseEntity {
 
     private String accountNumber;
 
+    private String fcmToken;
+
+    private boolean alarmOn = false;
+
     // 이메일로 회원가입
-    public User(CreateUserRequest dto, String encodedPassword) {
+    public User(CreateUserRequestV1 dto, String encodedPassword) {
         this.email = dto.getEmail();
         this.name = dto.getName();
         this.password = encodedPassword;
         this.phone = dto.getPhone();
         this.userRole = UserRole.USER;
+    }
+
+    public User(CreateUserRequestV2 dto, String encodedPassword) {
+        this.email = dto.getEmail();
+        this.name = dto.getName();
+        this.password = encodedPassword;
+        this.phone = dto.getPhone();
+        this.userRole = dto.getUserRole();
+    }
+
+    public void updateFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 
     public void updatePassword(String encode) {
