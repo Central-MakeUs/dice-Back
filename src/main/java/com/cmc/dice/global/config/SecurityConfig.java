@@ -53,6 +53,7 @@ public class SecurityConfig {
                 "/swagger-resources/**",
 
                 "/api/v1/auth/**",
+                "/api/v2/**",
                 "/api/v1/**",
 
                 "/ws/**"
