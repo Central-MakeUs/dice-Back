@@ -54,6 +54,8 @@ public class SpaceInfoDto {
 	@Schema(description = "할인율 (%)", example = "10")
 	private int discountRate; // 할인율 (%)
 
+	@Schema(description = "할인 가격", example = "9000")
+	private int discountPrice;
 	// 공간 상세 소개 작성
 	@Lob
 	@Schema(description = "공간 상세 소개", example = "공간 상세 소개")
@@ -81,12 +83,14 @@ public class SpaceInfoDto {
 	private String contactNumber; // 연락처
 
 	@Lob
-	@Schema(description = "시설 이용 안내", example = "시설 이용 안내")
-	private String facilityInfo; // 시설 이용 안내
+	@Schema(description = "시설 이용 안내",
+			example = "[\"공간별 조명 밝기 조절 가능\", \"빔 프로젝터\", \"스피커\"]")
+	private List<String> facilityInfos; // 시설 이용 안내
 
 	@Lob
-	@Schema(description = "공지사항", example = "공지사항")
-	private String notice; // 공지사항
+	@Schema(description = "공지사항",
+			example = "[\"채팅 상담을 추천드려요\", \"설치 및 철수는 계약 기간 내 포함이에요\"]")
+	private List<String> notices; // 공지사항
 
 	@Schema(description = "좋아요 수", example = "10")
 	private int likeCount = 0; // 좋아요 수
@@ -129,8 +133,8 @@ public class SpaceInfoDto {
 		this.detailAddress = space.getDetailAddress();
 		this.websiteUrl = space.getWebsiteUrl();
 		this.contactNumber = space.getContactNumber();
-		this.facilityInfo = space.getFacilityInfo();
-		this.notice = space.getNotice();
+		this.facilityInfos = space.getFacilityInfos();
+		this.notices = space.getNotices();
 		this.likeCount = space.getLikeCount();
 
 		this.isLiked = isLiked != null ? isLiked : false;
@@ -169,8 +173,8 @@ public class SpaceInfoDto {
 				.address(space.getAddress())
 				.websiteUrl(space.getWebsiteUrl())
 				.contactNumber(space.getContactNumber())
-				.facilityInfo(space.getFacilityInfo())
-				.notice(space.getNotice())
+				.facilityInfos(space.getFacilityInfos())
+				.notices(space.getNotices())
 				.likeCount(space.getLikeCount())
 				.isActivated(space.isActivated())
 				.build();

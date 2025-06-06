@@ -23,6 +23,7 @@ public class Space extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name = "space_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -81,10 +82,13 @@ public class Space extends BaseEntity {
     private String contactNumber; // 연락처
 
     // 시설 이용 및 공지사항 안내 작성
-    @Lob
-    private String facilityInfo; // 시설 이용 안내
-    @Lob
-    private String notice; // 공지사항
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "facilityInfos", joinColumns = @JoinColumn(name = "space_id"))
+    private List<String> facilityInfos; // 시설 이용 안내
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "notices", joinColumns = @JoinColumn(name = "space_id"))
+    private List<String> notices; // 공지사항
 
     @Builder.Default
     private int likeCount = 0; // 좋아요 수
@@ -116,8 +120,8 @@ public class Space extends BaseEntity {
 
         this.websiteUrl = request.getWebsiteUrl();
         this.contactNumber = request.getContactNumber();
-        this.facilityInfo = request.getFacilityInfo();
-        this.notice = request.getNotice();
+        this.facilityInfos = request.getFacilityInfos();
+        this.notices = request.getNotices();
 
         this.isActivated = true;
     }
@@ -150,8 +154,8 @@ public class Space extends BaseEntity {
 
         this.websiteUrl = request.getWebsiteUrl() == null ? "" : request.getWebsiteUrl();
         this.contactNumber = request.getContactNumber();
-        this.facilityInfo = request.getFacilityInfo();
-        this.notice = request.getNotice();
+        this.facilityInfos = request.getFacilityInfos();
+        this.notices = request.getNotices();
 
         this.isActivated = request.getIsActivated() == null || request.getIsActivated();
     }

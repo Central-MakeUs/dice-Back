@@ -99,12 +99,14 @@ public class CreateSpaceRequest {
 	private String contactNumber;
 
 	@NotBlank
-	@Schema(description = "시설 정보", example = "시설 정보")
-	private String facilityInfo;
+	@Schema(description = "시설 이용 안내",
+			example = "[\"공간별 조명 밝기 조절 가능\", \"빔 프로젝터\", \"스피커\"]")
+	private List<String> facilityInfos;
 
 	@NotBlank
-	@Schema(description = "공지사항", example = "공지사항")
-	private String notice;
+	@Schema(description = "공지사항",
+			example = "[\"채팅 상담을 추천드려요\", \"설치 및 철수는 계약 기간 내 포함이에요\"]")
+	private List<String> notices;
 
 	@Schema(description = "활성화 여부", example = "true")
 	private Boolean isActivated;

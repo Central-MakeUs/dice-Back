@@ -1,16 +1,9 @@
 package com.cmc.dice.domain.space.dao;
 
-import com.cmc.dice.domain.announcement.dto.AnnouncementFilterRequest;
-import com.cmc.dice.domain.announcement.dto.AnnouncementInfoDto;
-import com.cmc.dice.domain.like.domain.QLikeSpace;
-import com.cmc.dice.domain.message.domain.QMessageRoom;
-import com.cmc.dice.domain.space.domain.QSpace;
-import com.cmc.dice.domain.space.domain.Space;
 import com.cmc.dice.domain.space.dto.SpaceFilterDto;
 import com.cmc.dice.domain.space.dto.SpaceInfoDto;
 import com.cmc.dice.domain.space.dto.SpaceSimpleInfoDto;
 import com.cmc.dice.domain.user.domain.User;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.BooleanTemplate;
@@ -22,14 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-import static com.cmc.dice.domain.announcement.domain.QAnnouncement.announcement;
-import static com.cmc.dice.domain.like.domain.QLikeAnnouncement.likeAnnouncement;
 import static com.cmc.dice.domain.message.domain.QMessageRoom.messageRoom;
 import static com.cmc.dice.domain.space.domain.QSpace.space;
 import static com.cmc.dice.domain.like.domain.QLikeSpace.likeSpace;
