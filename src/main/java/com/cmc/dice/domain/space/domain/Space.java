@@ -47,6 +47,8 @@ public class Space extends BaseEntity {
     private LocalTime openingTime; // 공간 운영 시작 시간
     private LocalTime closingTime; // 공간 운영 마감 시간
 
+    // TODO: 수용인원 관리 x
+    // 면적 계산해서 저장.
     @Column(nullable = false)
     private int capacity; // 수용 인원
 
