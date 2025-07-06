@@ -99,9 +99,8 @@ public class CreateSpaceRequest {
 	private String contactNumber;
 
 	@NotBlank
-	@Schema(description = "시설 이용 안내",
-			example = "[\"공간별 조명 밝기 조절 가능\", \"빔 프로젝터\", \"스피커\"]")
-	private List<String> facilityInfos;
+	@Schema(description = "시설 이용 안내")
+	private List<FacilityInfoDto> facilityInfos;
 
 	@NotBlank
 	@Schema(description = "공지사항",

@@ -17,4 +17,6 @@ public class AnnouncementFilterRequest {
 	private List<String> targets;
 
 	private AnnouncementStatus status;
+
+	private String sortBy;
 }

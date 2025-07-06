@@ -1,6 +1,7 @@
 package com.cmc.dice.domain.announcement.dao;
 
 import com.cmc.dice.domain.announcement.domain.Announcement;
+import com.cmc.dice.domain.announcement.domain.AnnouncementStatus;
 import com.cmc.dice.domain.announcement.dto.AnnouncementFilterRequest;
 import com.cmc.dice.domain.announcement.dto.AnnouncementInfoDto;
 import com.cmc.dice.domain.announcement.dto.AnnouncementSimpleInfoDto;
@@ -9,9 +10,7 @@ import com.cmc.dice.domain.space.dto.SpaceFilterDto;
 import com.cmc.dice.domain.space.dto.SpaceSimpleInfoDto;
 import com.cmc.dice.domain.user.domain.User;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.BooleanTemplate;
-import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -57,6 +56,21 @@ public class AnnouncementRepositoryImpl implements AnnouncementRepositoryCustom 
 					getStatus(request),
 					getTarget(request)
 			);
+
+			// 정렬 옵션 추가
+			if ("likeCount".equals(request.getSortBy())) {
+				query.orderBy(announcement.likeCount.desc());
+			} else if ("latest".equals(request.getSortBy())) {
+				query.orderBy(announcement.createdAt.desc());
+			} else if ("closing".equals(request.getSortBy())) {
+				NumberExpression<Integer> statusOrder = new CaseBuilder()
+						.when(announcement.status.eq(AnnouncementStatus.CLOSED)).then(0)
+						.otherwise(1);
+
+				query.orderBy(statusOrder.asc(), announcement.createdAt.desc()); // 마감 먼저 + 최신순
+			}
+		} else {
+			query.orderBy(space.createdAt.desc());
 		}
 
 		if (user != null) {

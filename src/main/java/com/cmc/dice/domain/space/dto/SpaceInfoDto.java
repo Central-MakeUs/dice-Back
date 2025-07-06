@@ -12,6 +12,7 @@ import org.locationtech.jts.geom.Point;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -24,8 +25,9 @@ public class SpaceInfoDto {
 	@Schema(description = "공간 이름", example = "공간 이름")
 	private String name; // 공간 이름
 
-	@Schema(description = "공간 한줄 소개", example = "공간 한줄 소개")
-	private String description; // 공간 한줄 소개
+	private NearestSubwayDto nearestSubway;
+
+	private AnalysisPersonDto analysis;
 
 	@Schema(description = "이미지 URL 리스트", example = "[\"https://example.com/image1.jpg\", \"https://example.com/image2.jpg\"]")
 	private List<String> imageUrls;
@@ -77,15 +79,8 @@ public class SpaceInfoDto {
 	@Schema(description = "상세 주소", example = "123동 123호")
 	private String detailAddress;
 
-	@Schema(description = "웹사이트 URL", example = "https://example.com")
-	private String websiteUrl; // 웹사이트 URL
 	@Schema(description = "연락처", example = "010-1234-5678")
 	private String contactNumber; // 연락처
-
-	@Lob
-	@Schema(description = "시설 이용 안내",
-			example = "[\"공간별 조명 밝기 조절 가능\", \"빔 프로젝터\", \"스피커\"]")
-	private List<String> facilityInfos; // 시설 이용 안내
 
 	@Lob
 	@Schema(description = "공지사항",
@@ -105,10 +100,15 @@ public class SpaceInfoDto {
 	@Schema(description = "활성화 여부", example = "true")
 	private Boolean isActivated;
 
+	private List<FacilityInfoDto> facilityInfos;
+
 	public SpaceInfoDto(Space space, Boolean isLiked, Object messageRoomId) {
 		this.id = space.getId();
 		this.name = space.getName();
-		this.description = space.getDescription();
+
+		private NearestSubwayDto nearestSubway;
+		private AnalysisPersonDto analysis;
+
 		this.imageUrls = space.getImageUrls();
 		this.category = space.getCategory();
 		this.openingTime = space.getOpeningTime();
@@ -131,9 +131,10 @@ public class SpaceInfoDto {
 		this.district = space.getDistrict();
 		this.address = space.getAddress();
 		this.detailAddress = space.getDetailAddress();
-		this.websiteUrl = space.getWebsiteUrl();
 		this.contactNumber = space.getContactNumber();
-		this.facilityInfos = space.getFacilityInfos();
+		this.facilityInfos = space.getFacilityInfos()
+				.stream()
+				.map(facilityInfo -> FacilityInfoDto.of(facilityInfo)).toList();
 		this.notices = space.getNotices();
 		this.likeCount = space.getLikeCount();
 
@@ -155,7 +156,6 @@ public class SpaceInfoDto {
 		return SpaceInfoDto.builder()
 				.id(space.getId())
 				.name(space.getName())
-				.description(space.getDescription())
 				.imageUrls(space.getImageUrls())
 				.category(space.getCategory())
 				.openingTime(space.getOpeningTime())

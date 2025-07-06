@@ -2,6 +2,7 @@ package com.cmc.dice.domain.space.domain;
 
 
 import com.cmc.dice.domain.space.dto.CreateSpaceRequest;
+import com.cmc.dice.domain.space.dto.FacilityInfoDto;
 import com.cmc.dice.domain.user.domain.User;
 import com.cmc.dice.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -82,11 +83,11 @@ public class Space extends BaseEntity {
 
     private String websiteUrl; // 웹사이트 URL
     private String contactNumber; // 연락처
+    private String badge; // 뱃지 내용 (20대 여성 방문 상위 10%)
 
     // 시설 이용 및 공지사항 안내 작성
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "facilityInfos", joinColumns = @JoinColumn(name = "space_id"))
-    private List<String> facilityInfos; // 시설 이용 안내
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<SpaceFacility> facilityInfos; // 시설 이용 안내
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "notices", joinColumns = @JoinColumn(name = "space_id"))

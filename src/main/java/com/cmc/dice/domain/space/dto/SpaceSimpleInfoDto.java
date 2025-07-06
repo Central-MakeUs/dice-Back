@@ -41,14 +41,14 @@ public class SpaceSimpleInfoDto {
 	@Schema(description = "할인 가격", example = "9000")
 	private int discountPrice;
 
-	@Schema(description = "수용 인원", example = "10")
-	private int capacity;
-
 	@Schema(description = "공간 크기", example = "30")
 	private int size;
 
 	@Schema(description = "좋아요 수", example = "10")
 	private int likeCount;
+
+	@Schema(description = "평수", example = "50")
+	private int square;
 
 	@Schema(description = "좋아요 여부", example = "true")
 	@Builder.Default
@@ -56,6 +56,9 @@ public class SpaceSimpleInfoDto {
 
 	@Schema(description = "활성화 여부", example = "true")
 	private Boolean isActivated;
+
+	@Schema(description = "뱃지 내용", example = "20대 여성 방문 상위 10%")
+	private String badge;
 
 	public SpaceSimpleInfoDto(Space space, Boolean isLiked){
 		this.id = space.getId();
@@ -68,11 +71,11 @@ public class SpaceSimpleInfoDto {
 		this.pricePerDay = space.getPricePerDay();
 		this.discountRate = space.getDiscountRate();
 		this.discountPrice = space.getDiscountPrice();
-		this.capacity = space.getCapacity();
 		this.size = space.getSize();
 		this.likeCount = space.getLikeCount();
-
+		this.square = (int) Math.round(space.getSize() / 3.305785);
 		this.isLiked = isLiked;
+		this.badge = space.getBadge();
 
 		this.isActivated = space.isActivated();
 	}
@@ -89,7 +92,7 @@ public class SpaceSimpleInfoDto {
 				.pricePerDay(space.getPricePerDay())
 				.discountRate(space.getDiscountRate())
 				.discountPrice(space.getDiscountPrice())
-				.capacity(space.getCapacity())
+				.square((int) Math.round(space.getSize() / 3.305785))
 				.size(space.getSize())
 				.likeCount(space.getLikeCount())
 				.isActivated(space.isActivated())
