@@ -35,13 +35,18 @@ public class Brand {
 	@Column(columnDefinition = "TEXT")
 	private List<String> imageUrls;
 
-	private String homepageUrl;
+	@Column(columnDefinition = "TEXT")
+	private List<String> targetGender;
+
+	@Column(columnDefinition = "TEXT")
+	private List<String> targetAgeGroup;
 
 	public void update(CreateBrandRequest request) {
 		this.name = request.getName();
 		this.description = request.getDescription();
 		this.logoUrl = request.getLogoUrl();
 		this.imageUrls = request.getImageUrls();
-		this.homepageUrl = request.getHomepageUrl();
+		this.targetGender = request.getTargetGender();
+		this.targetAgeGroup = request.getTargetAgeGroup();
 	}
 }

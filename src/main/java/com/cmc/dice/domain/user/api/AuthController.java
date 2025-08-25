@@ -115,7 +115,7 @@ public class AuthController {
     }
 
     @PostMapping("/v2/auth/signup")
-    @Operation(summary = "회원 가입", description = """
+    @Operation(summary = "회원 가입 ver2", description = """
             # 회원가입
                         
             회원을 생성합니다.

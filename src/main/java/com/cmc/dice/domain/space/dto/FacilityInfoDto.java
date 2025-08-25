@@ -1,4 +1,4 @@
-package com.cmc.dice.domain.space.dto.v2;
+package com.cmc.dice.domain.space.dto;
 
 import com.cmc.dice.domain.space.domain.Facility;
 import com.cmc.dice.domain.space.domain.SpaceFacility;

@@ -2,6 +2,7 @@ package com.cmc.dice.domain.space.dao;
 
 import com.cmc.dice.domain.space.dto.SpaceFilterDto;
 import com.cmc.dice.domain.space.dto.SpaceInfoDto;
+import com.cmc.dice.domain.space.dto.SpaceInfoDtoV2;
 import com.cmc.dice.domain.space.dto.SpaceSimpleInfoDto;
 import com.cmc.dice.domain.user.domain.User;
 import com.querydsl.core.types.Projections;
@@ -103,6 +104,32 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 								.where(messageRoom.space.id.eq(id)
 										.and(messageRoom.guest.id.eq(user.getId())))
 								: Expressions.nullExpression() // 채팅방 id가 없으면 null 반환
+				))
+				.from(space)
+				.where(space.id.eq(id));
+
+		return Optional.ofNullable(query.fetchOne());
+	}
+
+	@Override
+	public Optional<SpaceInfoDtoV2> findSpaceDetailV2(User user, Long id) {
+		var query = queryFactory
+				.select(Projections.constructor(SpaceInfoDtoV2.class,
+						space,
+						user != null
+								? JPAExpressions
+								.select(Expressions.booleanTemplate("COALESCE({0}, false)", likeSpace.id.isNotNull()))
+								.from(likeSpace)
+								.where(likeSpace.space.id.eq(id)
+										.and(likeSpace.user.id.eq(user.getId())))
+								: Expressions.constant(false),
+						user != null
+								? JPAExpressions
+								.select(messageRoom.id.castToNum(Long.class))
+								.from(messageRoom)
+								.where(messageRoom.space.id.eq(id)
+										.and(messageRoom.guest.id.eq(user.getId())))
+								: Expressions.nullExpression()
 				))
 				.from(space)
 				.where(space.id.eq(id));

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "nearest_subway")
 @NoArgsConstructor
 @Getter
-public class NearestSubway {
+public class SpaceNearestSubway {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "space_subway_id")
     private Long id;
@@ -21,7 +21,7 @@ public class NearestSubway {
     private int distance;
 
     @Builder
-    public NearestSubway(int lineNumber, String stationName, int distance) {
+    public SpaceNearestSubway(int lineNumber, String stationName, int distance) {
         this.lineNumber = lineNumber;
         this.stationName = stationName;
         this.distance = distance;

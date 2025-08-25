@@ -16,16 +16,17 @@ public class CreateBrandRequest {
 	private String description;
 	private String logoUrl;
 	private List<String> imageUrls;
-	private String homepageUrl;
-
+	private List<String> targetGender;
+	private List<String> targetAgeGroup;
 	static public Brand toEntity(User user, CreateBrandRequest request) {
 		return Brand.builder()
-			.admin(user)
-			.name(request.getName())
-			.description(request.getDescription())
-			.logoUrl(request.getLogoUrl())
-			.imageUrls(request.getImageUrls())
-			.homepageUrl(request.getHomepageUrl())
-			.build();
+				.admin(user)
+				.name(request.getName())
+				.description(request.getDescription())
+				.logoUrl(request.getLogoUrl())
+				.imageUrls(request.getImageUrls())
+				.targetGender(request.getTargetGender())
+				.targetAgeGroup(request.getTargetAgeGroup())
+				.build();
 	}
 }

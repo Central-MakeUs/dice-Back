@@ -67,7 +67,6 @@ public class ReservationService {
                 .spaceName(space.getName())
                 .startDate(reservation.getStartDate())
                 .endDate(reservation.getEndDate())
-                .message(reservation.getMessage())
                 .status(reservation.getStatus())
                 .city(space.getCity())
                 .district(space.getDistrict())

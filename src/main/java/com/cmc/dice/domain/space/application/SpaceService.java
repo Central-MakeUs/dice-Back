@@ -1,15 +1,15 @@
 package com.cmc.dice.domain.space.application;
 
+import com.cmc.dice.domain.space.dao.SpaceNearestSubwayRepository;
 import com.cmc.dice.domain.space.dao.SpaceRepository;
 import com.cmc.dice.domain.space.dao.SpaceTagRepository;
 import com.cmc.dice.domain.space.dao.TagRepository;
 import com.cmc.dice.domain.space.domain.Space;
+import com.cmc.dice.domain.space.domain.SpaceNearestSubway;
 import com.cmc.dice.domain.space.domain.SpaceTag;
 import com.cmc.dice.domain.space.domain.Tag;
-import com.cmc.dice.domain.space.dto.CreateSpaceRequest;
-import com.cmc.dice.domain.space.dto.SpaceFilterDto;
-import com.cmc.dice.domain.space.dto.SpaceInfoDto;
-import com.cmc.dice.domain.space.dto.SpaceSimpleInfoDto;
+import com.cmc.dice.domain.space.dto.*;
+import com.cmc.dice.domain.space.dto.SpaceInfoDtoV2;
 import com.cmc.dice.domain.space.exception.SpaceNotFoundException;
 import com.cmc.dice.domain.space.exception.SpaceNotOwnerException;
 import com.cmc.dice.domain.user.domain.User;
@@ -18,7 +18,6 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +30,7 @@ public class SpaceService {
 	private final SpaceRepository spaceRepository;
 	private final TagRepository tagRepository;
 	private final SpaceTagRepository spaceTagRepository;
+	private final SpaceNearestSubwayRepository nearestSubwayRepository;
 	private static final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
 
 	@Transactional
@@ -47,6 +47,35 @@ public class SpaceService {
 		});
 
 		spaceRepository.save(space);
+	}
+
+	@Transactional
+	public void createSpaceV2(User user, CreateSpaceRequestV2 request) {
+		Space space = new Space(user, request);
+		space.updateLocation(geometryFactory.createPoint(new Coordinate(request.getLongitude(), request.getLatitude())));
+
+		spaceRepository.save(space);
+
+		request.getTags().forEach(tag -> {
+			SpaceTag spaceTag = addTag(space, tag);
+			spaceTagRepository.save(spaceTag);
+			space.addSpaceTag(spaceTag);
+		});
+		addSubway(space, request.getNearestSubway());
+
+		spaceRepository.save(space);
+	}
+
+	public SpaceNearestSubway addSubway(Space space, NearestSubwayDto nearestSubway) {
+		SpaceNearestSubway subway = nearestSubwayRepository.save(
+				SpaceNearestSubway.builder()
+						.lineNumber(nearestSubway.lineNumber())
+						.stationName(nearestSubway.stationName())
+						.distance(nearestSubway.distance())
+						.build()
+		);
+		space.addSpaceNearestSubway(subway);
+		return subway;
 	}
 
 	public SpaceTag addTag(Space space, String tag) {
@@ -66,7 +95,7 @@ public class SpaceService {
 				.map(SpaceSimpleInfoDto::of);
 	}
 
-	public SpaceInfoDto updateSpaceInfo(User user, Long id, CreateSpaceRequest request) {
+	public SpaceInfoDtoV2 updateSpaceInfo(User user, Long id, CreateSpaceRequest request) {
 		Space space = spaceRepository.findById(id)
 				.orElseThrow(SpaceNotFoundException::new);
 
@@ -95,7 +124,7 @@ public class SpaceService {
 
 		spaceRepository.save(space);
 
-		return SpaceInfoDto.of(space);
+		return SpaceInfoDtoV2.of(space);
 	}
 
 	private void removeTag(Space space, String tag) {
@@ -117,6 +146,11 @@ public class SpaceService {
 	 */
 	public SpaceInfoDto getSpaceInfo(User user, Long id) {
 		return spaceRepository.findSpaceDetail(user, id)
+				.orElseThrow(SpaceNotFoundException::new);
+	}
+
+	public SpaceInfoDtoV2 getSpaceInfoV2(User user, Long id) {
+		return spaceRepository.findSpaceDetailV2(user, id)
 				.orElseThrow(SpaceNotFoundException::new);
 	}
 }

@@ -41,6 +41,7 @@ public class AnnouncementController {
         - `district`: 구
         - `targets`: 대상 (소상공인, 중소기업)
         - `status`: 상태 (RECRUITING, COMPLETED, CLOSED, CANCELLED)
+        - `sortBy`: 정렬 기준
         """)
     @PreAuthorize("isAuthenticated()")
     @SecurityRequirement(name = "access-token")

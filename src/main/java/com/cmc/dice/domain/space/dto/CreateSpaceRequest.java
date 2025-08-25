@@ -1,7 +1,6 @@
 package com.cmc.dice.domain.space.dto;
 
 import com.cmc.dice.domain.space.domain.SpaceCategory;
-import com.cmc.dice.domain.space.domain.SpaceTag;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,9 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.locationtech.jts.geom.Point;
 
-import java.time.LocalTime;
 import java.util.List;
 
 @Getter

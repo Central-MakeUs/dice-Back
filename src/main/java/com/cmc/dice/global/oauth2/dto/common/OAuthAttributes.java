@@ -4,6 +4,7 @@ import com.cmc.dice.domain.user.domain.User;
 import com.cmc.dice.domain.user.domain.UserRole;
 import com.cmc.dice.global.oauth2.dto.AppleOAuth2UserInfo;
 import com.cmc.dice.global.oauth2.dto.GoogleOAuth2UserInfo;
+import com.cmc.dice.global.oauth2.dto.KakaoOAuth2UserInfo;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -63,7 +64,7 @@ public class OAuthAttributes {
                                             Map<String, Object> attributes) {
         return OAuthAttributes.builder()
                 .nameAttributeKey(usernameAttributeName)
-                .oAuth2UserInfo(new GoogleOAuth2UserInfo(attributes))
+                .oAuth2UserInfo(new KakaoOAuth2UserInfo(attributes))
                 .build();
     }
 
@@ -80,9 +81,7 @@ public class OAuthAttributes {
     public User toUser(SocialType socialType, OAuth2UserInfo oAuth2UserInfo) {
         return User.builder()
                 .email(oAuth2UserInfo.getEmail())
-                .name(Optional.ofNullable(oAuth2UserInfo.attributes.get("name"))
-                        .map(Object::toString)
-                        .orElse(null))
+                .name(Optional.ofNullable(oAuth2UserInfo.getName()).orElse(null))
                 .userRole(UserRole.USER)
                 .socialType(socialType)
                 .build();

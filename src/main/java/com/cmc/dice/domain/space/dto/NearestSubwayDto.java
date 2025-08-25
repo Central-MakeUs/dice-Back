@@ -1,4 +1,4 @@
-package com.cmc.dice.domain.space.dto.v2;
+package com.cmc.dice.domain.space.dto;
 
 import com.cmc.dice.domain.space.domain.SpaceNearestSubway;
 import io.swagger.v3.oas.annotations.media.Schema;

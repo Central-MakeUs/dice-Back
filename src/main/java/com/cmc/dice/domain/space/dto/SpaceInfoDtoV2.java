@@ -1,9 +1,8 @@
-package com.cmc.dice.domain.space.dto.v2;
+package com.cmc.dice.domain.space.dto;
 
 import com.cmc.dice.domain.space.domain.Space;
 import com.cmc.dice.domain.space.domain.SpaceCategory;
 import com.cmc.dice.domain.space.domain.SpaceTag;
-import com.cmc.dice.domain.space.dto.AnalysisPersonDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
@@ -108,7 +107,7 @@ public class SpaceInfoDtoV2 {
 		this.id = space.getId();
 		this.name = space.getName();
 		this.nearestSubway = NearestSubwayDto.of(space.getNearestSubway());
-		this.analysis = space.get
+		this.analysis = AnalysisPersonDto.of(space.getAnalysisPeople());
 
 		this.imageUrls = space.getImageUrls();
 		this.category = space.getCategory();

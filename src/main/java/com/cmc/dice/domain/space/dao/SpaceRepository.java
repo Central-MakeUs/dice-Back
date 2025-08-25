@@ -19,4 +19,5 @@ public interface SpaceRepository extends JpaRepository<Space, Long>, SpaceReposi
     Collection<Space> findByAdmin(User user);
 
     Collection<Space> findByAdminAndNameContaining(User user, String keyword);
+
 }

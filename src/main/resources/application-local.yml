@@ -22,10 +22,10 @@ spring:
     activate:
       on-profile: local
   datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:13306/dice?serverTimezone=UTC&characterEncoding=UTF-8
     username: dice
     password: backend
-    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
@@ -67,6 +67,23 @@ spring:
             scope:
               - email
               - profile
+            authorization-grant-type: authorization_code
+          kakao:
+            client-id: ${KAKAO_CLIENT_ID}
+            client-secret: ${KAKAO_CLIENT_SECRET}
+            redirect-uri: ${KAKAO_REDIRECT_URI}
+            scope:
+              - account_email
+              - profile_nickname
+            authorization-grant-type: authorization_code
+            client-name: kakao
+            client-authentication-method: client_secret_post
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
 
 cloud:
   aws:

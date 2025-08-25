@@ -12,8 +12,8 @@ public class SpaceFacility {
     @Column(name = "facility_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "space_id")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Facility facility;
 
     private int number;

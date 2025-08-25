@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "reservations")
@@ -33,9 +34,17 @@ public class Reservation {
     @Column(nullable = false)
     private LocalDate endDate;
 
-    private String message;
+    private String eventName;
+
+    private String eventContent;
+
+    private List<String> fileList;
+
+    private String etcRequest;
 
     private String status;
+
+    private String message;
 
     public void cancel() {
         this.status = "CANCEL";

@@ -28,8 +28,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Value("${spring.security.oauth2.client.registration.apple.clientSecret}")
-    private String appleSecretKey;
+//    @Value("${spring.security.oauth2.client.registration.apple.clientSecret}")
+//    private String appleSecretKey;
 
     private final TokenService tokenService;
     private final UserDetailsServiceImpl userDetailsService;
@@ -47,13 +47,13 @@ public class SecurityConfig {
         return new JwtAuthorizationFilter(tokenService, userDetailsService);
     }
 
-    @Bean
-    public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient(){
-        DefaultAuthorizationCodeTokenResponseClient accessTokenResponseClient =
-                new DefaultAuthorizationCodeTokenResponseClient();
-        accessTokenResponseClient.setRequestEntityConverter(new CustomRequestEntityConverter(appleSecretKey));
-        return accessTokenResponseClient;
-    }
+//    @Bean
+//    public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient(){
+//        DefaultAuthorizationCodeTokenResponseClient accessTokenResponseClient =
+//                new DefaultAuthorizationCodeTokenResponseClient();
+//        accessTokenResponseClient.setRequestEntityConverter(new CustomRequestEntityConverter(appleSecretKey));
+//        return accessTokenResponseClient;
+//    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -87,7 +87,7 @@ public class SecurityConfig {
 
         http.oauth2Login(oauth2 -> oauth2
                 .userInfoEndpoint(endpoint -> endpoint.userService(customOAuth2MemberService))
-                .tokenEndpoint(token -> token.accessTokenResponseClient(accessTokenResponseClient()))
+//                .tokenEndpoint(token -> token.accessTokenResponseClient(accessTokenResponseClient()))
                 .successHandler(oAuth2LoginSuccessHandler)
                 .failureHandler(oAuth2LoginFailureHandler)
         );

@@ -1,6 +1,7 @@
-package com.cmc.dice.domain.space.dto.v2;
+package com.cmc.dice.domain.space.dto;
 
 import com.cmc.dice.domain.space.domain.SpaceCategory;
+import com.cmc.dice.domain.space.domain.SpaceNearestSubway;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,10 +24,8 @@ public class CreateSpaceRequestV2 {
 	private String name;
 
 	@NotBlank
-	@Schema(description = "가까운 지하철 정보", example = "공간 설명")
-	private NearestSubwayDto nearestSubwayDto;
-
-	// 유동인구 분석을 어떻게할지?
+	@Schema(description = "가까운 지하철 정보")
+	private NearestSubwayDto nearestSubway;
 
 	@NotBlank
 	@Schema(description = "이미지 URL 리스트", example = "[\"www.example.com\"]")
@@ -105,4 +104,5 @@ public class CreateSpaceRequestV2 {
 
 	@Schema(description = "활성화 여부", example = "true")
 	private Boolean isActivated;
+
 }
