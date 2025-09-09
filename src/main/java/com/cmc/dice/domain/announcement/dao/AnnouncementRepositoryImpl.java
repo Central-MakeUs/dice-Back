@@ -70,7 +70,7 @@ public class AnnouncementRepositoryImpl implements AnnouncementRepositoryCustom 
 				query.orderBy(statusOrder.asc(), announcement.createdAt.desc()); // 마감 먼저 + 최신순
 			}
 		} else {
-			query.orderBy(space.createdAt.desc());
+			query.orderBy(announcement.createdAt.desc());
 		}
 
 		if (user != null) {

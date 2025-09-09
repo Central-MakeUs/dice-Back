@@ -33,17 +33,11 @@ public class SpaceInfoDtoV2 {
 			example = "[\"https://example.com/image1.jpg\", \"https://example.com/image2.jpg\"]")
 	private List<String> imageUrls;
 
-	@Schema(description = "공간 카테고리", example = "갤러리")
-	private SpaceCategory category; // 공간 카테고리 (예: 갤러리, 카페 등)
-
 	@Schema(description = "공간 운영 시작 시간", example = "09:00:00")
 	private LocalTime openingTime; // 공간 운영 시작 시간
 
 	@Schema(description = "공간 운영 마감 시간", example = "18:00:00")
 	private LocalTime closingTime; // 공간 운영 마감 시간
-
-	@Schema(description = "수용 인원", example = "100")
-	private int capacity; // 수용 인원
 
 	@Schema(description = "공간 크기", example = "30")
 	private int size; //공간 크기
@@ -106,14 +100,16 @@ public class SpaceInfoDtoV2 {
 	public SpaceInfoDtoV2(Space space, Boolean isLiked, Object messageRoomId) {
 		this.id = space.getId();
 		this.name = space.getName();
-		this.nearestSubway = NearestSubwayDto.of(space.getNearestSubway());
-		this.analysis = AnalysisPersonDto.of(space.getAnalysisPeople());
+
+		// TODO: null관련 수정해야함.
+		this.nearestSubway = (space.getNearestSubway() == null) ? null
+				: NearestSubwayDto.of(space.getNearestSubway());
+		this.analysis = (space.getAnalysisPeople() == null) ? null
+				: AnalysisPersonDto.of(space.getAnalysisPeople());
 
 		this.imageUrls = space.getImageUrls();
-		this.category = space.getCategory();
 		this.openingTime = space.getOpeningTime();
 		this.closingTime = space.getClosingTime();
-		this.capacity = space.getCapacity();
 		this.size = space.getSize();
 
 		List<String> tags = new ArrayList<>();
@@ -157,10 +153,8 @@ public class SpaceInfoDtoV2 {
 				.id(space.getId())
 				.name(space.getName())
 				.imageUrls(space.getImageUrls())
-				.category(space.getCategory())
 				.openingTime(space.getOpeningTime())
 				.closingTime(space.getClosingTime())
-				.capacity(space.getCapacity())
 				.size(space.getSize())
 				.tags(tags)
 				.pricePerDay(space.getPricePerDay())

@@ -41,7 +41,6 @@ public class Space extends BaseEntity {
     private List<String> imageUrls = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private SpaceCategory category; // 공간 카테고리 (예: 갤러리, 카페 등)
 
     private LocalTime openingTime; // 공간 운영 시작 시간
@@ -49,11 +48,10 @@ public class Space extends BaseEntity {
 
     // TODO: 수용인원 관리 x
     // 면적 계산해서 저장.
-    @Column(nullable = false)
     private int capacity; // 수용 인원
 
     @Column(nullable = false)
-    private int size; //공간 크기
+    private int size; // 공간 크기
 
     @OneToMany(mappedBy = "space")
     private List<SpaceTag> tags;
@@ -141,11 +139,9 @@ public class Space extends BaseEntity {
         this.admin = user;
         this.name = request.getName();
         this.imageUrls = request.getImageUrls();
-        this.category = request.getCategory();
         this.openingTime = LocalTime.parse(request.getOpeningTime(), DateTimeFormatter.ofPattern("HH:mm"));
         this.closingTime = LocalTime.parse(request.getClosingTime(), DateTimeFormatter.ofPattern("HH:mm"));
 
-        this.capacity = request.getCapacity();
         this.size = request.getSize();
 
         this.pricePerDay = request.getPricePerDay();

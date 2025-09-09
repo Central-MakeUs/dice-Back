@@ -35,9 +35,11 @@ public class Brand {
 	@Column(columnDefinition = "TEXT")
 	private List<String> imageUrls;
 
+	@Convert(converter = ImageUrlListConverter.class)
 	@Column(columnDefinition = "TEXT")
 	private List<String> targetGender;
 
+	@Convert(converter = ImageUrlListConverter.class)
 	@Column(columnDefinition = "TEXT")
 	private List<String> targetAgeGroup;
 

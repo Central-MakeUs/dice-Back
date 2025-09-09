@@ -173,6 +173,43 @@ public class SpaceController {
 		return spaceService.getSpacesByFilter(spaceFilterDto, keyword, user, PageRequest.of(page, size));
 	}
 
+	@PostMapping("/v2/space/list")
+	@Operation(summary = "공간 필터링 조회 ver2", description = """
+   			**현재 내부 로직에서는 v1과 동일하게 동작합니다. api 전달이 잘되는지만 확인해주시길 바랍니다.**
+   			
+			# 공간 필터링 조회
+			공간을 필터링하여 조회합니다.
+			활성화된 공간 중 조회합니다.
+			
+			## 요청
+			- `spaceFilterDto`: 공간 필터 DTO
+			- `page`: 페이지 번호
+			- `size`: 페이지 크기
+			
+		    ### 필터링 정보 상세
+		    - `keyword`: 검색어 (공간 이름 기반 검색)
+		    - `city`: 도시 (서울, 부산 ...)
+		    - `district`: 구 (강남구, 강동구 ...)
+		    - `gender`: 성별
+		    - `ageGroup`: 연령대
+		    - `dayOfWeek`: 요일 
+		    - `minPrice`: 최소 가격 (0~100만)
+		    - `maxPrice`: 최대 가격 (0~100만)
+		    - `minSize`: 최소 평수 (0~150)
+		    - `maxSize`: 최대 평수 (0~150)
+		    - `sort`: 정렬 방식 (latest, likeCount, priceAsc, priceDesc)
+			""")
+	@PreAuthorize("isAuthenticated()")
+	@SecurityRequirement(name = "access-token")
+	public Page<SpaceSimpleInfoDto> getSpacesByFilterV2(
+			@CurrentUser User user,
+			@RequestBody(required = false) SpaceFilterDtoV2 spaceFilterDtoV2,
+			@RequestParam(required = false) String keyword,
+			@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "size", defaultValue = "10") int size) {
+		return spaceService.getSpacesByFilterV2(spaceFilterDtoV2, keyword, user, PageRequest.of(page, size));
+	}
+
 	@GetMapping("/v2/space/{id}")
 	@Operation(summary = "공간 상세 조회 ver2", description = """
 			# 공간 상세 조회

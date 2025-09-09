@@ -142,6 +142,13 @@ public class SpaceService {
 	}
 
 	/**
+	 * 공간 필터링 조회
+	 */
+	public Page<SpaceSimpleInfoDto> getSpacesByFilterV2(SpaceFilterDtoV2 spaceFilterDtoV2, String keyword, User user, Pageable pageable) {
+		return spaceRepository.findSpacesV2(spaceFilterDtoV2, keyword, user, pageable);
+	}
+
+	/**
 	 * 공간 상세 조회
 	 */
 	public SpaceInfoDto getSpaceInfo(User user, Long id) {

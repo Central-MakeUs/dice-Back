@@ -18,6 +18,8 @@ public class SpaceAnalysisPeople {
 
     private String description;
 
+
+
     @Builder
     public SpaceAnalysisPeople(String title, String description) {
         this.title = title;

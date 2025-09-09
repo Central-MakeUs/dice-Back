@@ -1,7 +1,5 @@
 package com.cmc.dice.domain.space.dto;
 
-import com.cmc.dice.domain.space.domain.SpaceCategory;
-import com.cmc.dice.domain.space.domain.SpaceNearestSubway;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -32,20 +30,12 @@ public class CreateSpaceRequestV2 {
 	private List<String> imageUrls;
 
 	@NotNull
-	@Schema(description = "공간 카테고리", example = "CAFE")
-	private SpaceCategory category;
-
-	@NotNull
 	@Schema(description = "오픈 시간", example = "09:00")
 	private String openingTime;
 
 	@NotNull
 	@Schema(description = "마감 시간", example = "18:00")
 	private String closingTime;
-
-	@PositiveOrZero
-	@Schema(description = "수용 인원", example = "10")
-	private int capacity;
 
 	@PositiveOrZero
 	@Schema(description = "공간 크기", example = "30")
