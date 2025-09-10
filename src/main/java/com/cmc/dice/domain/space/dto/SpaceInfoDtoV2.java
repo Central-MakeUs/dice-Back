@@ -120,6 +120,7 @@ public class SpaceInfoDtoV2 {
 
 		this.pricePerDay = space.getPricePerDay();
 		this.discountRate = space.getDiscountRate();
+		this.discountPrice = space.getDiscountPrice();
 		this.details = space.getDetails();
 		this.latitude = space.getLocation().getY();
 		this.longitude = space.getLocation().getX();
@@ -159,6 +160,7 @@ public class SpaceInfoDtoV2 {
 				.tags(tags)
 				.pricePerDay(space.getPricePerDay())
 				.discountRate(space.getDiscountRate())
+				.discountPrice(space.getDiscountPrice())
 				.details(space.getDetails())
 				.latitude(space.getLocation().getY())
 				.longitude(space.getLocation().getX())

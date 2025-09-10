@@ -20,6 +20,7 @@ public record FacilityInfoDto (
                         .number(spaceFacility.getNumber())
                         .build();
         }
+        
         public static SpaceFacility toEntity(FacilityInfoDto facilityInfoDto) {
                 return SpaceFacility.builder()
                         .facility(Facility.valueOf(facilityInfoDto.key()))

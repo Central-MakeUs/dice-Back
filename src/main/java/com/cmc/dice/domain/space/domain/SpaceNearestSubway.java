@@ -14,14 +14,14 @@ public class SpaceNearestSubway {
     @Column(name = "space_subway_id")
     private Long id;
 
-    private int lineNumber;
+    private String lineNumber;
 
     private String stationName;
 
     private int distance;
 
     @Builder
-    public SpaceNearestSubway(int lineNumber, String stationName, int distance) {
+    public SpaceNearestSubway(String lineNumber, String stationName, int distance) {
         this.lineNumber = lineNumber;
         this.stationName = stationName;
         this.distance = distance;

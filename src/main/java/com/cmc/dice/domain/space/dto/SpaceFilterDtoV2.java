@@ -3,12 +3,12 @@ package com.cmc.dice.domain.space.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.DayOfWeek;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -23,8 +23,8 @@ public class SpaceFilterDtoV2 {
     @Schema(description = "성별", example = "female")
     private String gender;
 
-    @Schema(description = "연령대", example = "10")
-    private int ageGroup;
+    @Schema(description = "연령대", example = "[\"20, 30\"]")
+    private List<Integer> ageGroups;
 
     @Schema(description = "요일", example = "WEDNESDAY",
             allowableValues = {"MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"})

@@ -40,8 +40,7 @@ public class Brand {
 	private List<String> targetGender;
 
 	@Convert(converter = ImageUrlListConverter.class)
-	@Column(columnDefinition = "TEXT")
-	private List<String> targetAgeGroup;
+	private List<Integer> targetAgeGroup;
 
 	public void update(CreateBrandRequest request) {
 		this.name = request.getName();

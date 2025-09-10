@@ -101,7 +101,7 @@ public class SpaceRepositoryImpl implements SpaceRepositoryCustom {
 		}
 
 		if (filter != null) {
-			if (filter.getGender() != null || filter.getAgeGroup() > 0) {
+			if (filter.getGender() != null) {
 				query.join(space.analysisPeople, spaceAnalysisPeople);
 			}
 			query.where(

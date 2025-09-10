@@ -41,7 +41,7 @@ public class CreateSpaceRequestV2 {
 	@Schema(description = "공간 크기", example = "30")
 	private int size;
 
-	@Schema(description = "태그 리스트", example = "[\"카페\"]")
+	@Schema(description = "태그 리스트", example = "[\"전시회가 자주 열리는 동네\"]")
 	private List<String> tags;
 
 	@Positive
