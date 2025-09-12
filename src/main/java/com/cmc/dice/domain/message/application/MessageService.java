@@ -9,6 +9,7 @@ import com.cmc.dice.domain.message.dto.MessageDto;
 import com.cmc.dice.domain.message.dto.MessageRoomDto;
 import com.cmc.dice.domain.message.dto.MessageSendRequest;
 import com.cmc.dice.domain.space.dao.SpaceRepository;
+import com.cmc.dice.domain.space.domain.Space;
 import com.cmc.dice.domain.user.dao.UserRepository;
 import com.cmc.dice.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +31,9 @@ public class MessageService {
     // 메시지 방 목록 조회 (게스트)
     public List<MessageRoomDto> getMessageRoomListByGuest(User user) {
         List<MessageRoom> rooms = messageRoomRepository.findByGuestId(user.getId());
+
         return rooms.stream()
-                .map(MessageRoomDto::of)
+                .map(room -> MessageRoomDto.of(room, user, room.getHost().getName()))
                 .toList();
     }
 
@@ -39,7 +41,7 @@ public class MessageService {
     public List<MessageRoomDto> getMessageRoomListByHost(User user) {
         List<MessageRoom> rooms = messageRoomRepository.findByHostId(user.getId());
         return rooms.stream()
-                .map(MessageRoomDto::of)
+                .map(room -> MessageRoomDto.of(room, user, room.getGuest().getName()))
                 .toList();
     }
 
@@ -57,7 +59,7 @@ public class MessageService {
 
         Page<Message> messagePage = messageRepository.findByRoomId(roomId, pageable);
         List<MessageDto> messages = messagePage.stream()
-                .map(MessageDto::of)
+                .map(message -> MessageDto.of(message, user))
                 .toList();
 
         return new PageImpl<>(messages, pageable, messagePage.getTotalElements());
@@ -84,10 +86,13 @@ public class MessageService {
     }
 
 	public MessageRoomDto createMessageRoom(User user, MessageCreateRequest request) {
+        Space space = spaceRepository.findById(request.getSpaceId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 공간입니다."));
+
         MessageRoom room = MessageRoom.builder()
                 .guest(user)
-                .host(userRepository.getReferenceById(request.getHostId()))
-                .space(spaceRepository.getReferenceById(request.getSpaceId()))
+                .host(space.getAdmin())
+                .space(space)
                 .lastMessage("")
                 .lastMessageSender("")
                 .lastMessageAt(null)

@@ -36,3 +36,4 @@ out/
 ### VS Code ###
 .vscode/
 .env
+src/main/resources/dice-915cd-firebase-adminsdk-fbsvc-795d76ad68.json

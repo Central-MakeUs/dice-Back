@@ -5,7 +5,9 @@ import com.cmc.dice.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "reservations")
@@ -27,14 +29,32 @@ public class Reservation {
     private Space space;
 
     @Column(nullable = false)
-    private LocalDateTime startTime;
+    private LocalDate startDate;
 
     @Column(nullable = false)
-    private LocalDateTime endTime;
+    private LocalDate endDate;
 
-    @Column(nullable = false)
-    private String title;
+    private String eventName;
 
-    @Column(nullable = false)
-    private String description;
+    private String eventContent;
+
+    private List<String> fileList;
+
+    private String etcRequest;
+
+    private String status;
+
+    private String message;
+
+    public void cancel() {
+        this.status = "CANCEL";
+    }
+
+    public void decline() {
+        this.status = "DECLINE";
+    }
+
+    public void accept() {
+        this.status = "ACCEPT";
+    }
 }

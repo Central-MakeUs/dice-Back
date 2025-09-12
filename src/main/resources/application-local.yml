@@ -22,10 +22,10 @@ spring:
     activate:
       on-profile: local
   datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:13306/dice?serverTimezone=UTC&characterEncoding=UTF-8
     username: dice
     password: backend
-    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
@@ -40,3 +40,66 @@ spring:
   sql:
     init:
       mode: never
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: dice.minipop@gmail.com
+    password: pche cfpt iibx fkuv
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
+
+---
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-uri: ${GOOGLE_REDIRECT_URI}
+            scope:
+              - email
+              - profile
+            authorization-grant-type: authorization_code
+          kakao:
+            client-id: ${KAKAO_CLIENT_ID}
+            client-secret: ${KAKAO_CLIENT_SECRET}
+            redirect-uri: ${KAKAO_REDIRECT_URI}
+            scope:
+              - account_email
+              - profile_nickname
+            authorization-grant-type: authorization_code
+            client-name: kakao
+            client-authentication-method: client_secret_post
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+
+cloud:
+  aws:
+    s3:
+      bucket: cmc-dice-bucket
+    credentials:
+      access-key: ${CLOUD_ACCESS_KEY}
+      secret-key: ${CLOUD_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+
+fcm:
+  certification: ${FCM_CERTIFICATION}
+  file-path: ${FCM_PATH}
+  url: ${FCM_URL}
+  google_api: ${FCM_GOOGLE_API}
+  project_id: ${FCM_PROJECT_ID}

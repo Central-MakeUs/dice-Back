@@ -1,5 +1,6 @@
 package com.cmc.dice.domain.user.dto;
 
+import com.cmc.dice.domain.user.domain.UserRole;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -8,8 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class CreateUserRequest {
-
+public class CreateUserRequestV1 {
     @NotBlank
     @Email
     @Schema(description = "사용자 이메일", example = "user01@email.com")
@@ -26,7 +26,6 @@ public class CreateUserRequest {
     @Schema(description = "사용자 비밀번호", example = "password123")
     private String password;
 
-    @NotBlank
     @Size(min = 11, max = 11)
     @Pattern(regexp = "^[0-9]{11}$", message = "휴대폰 번호는 숫자 11자리여야 합니다.")
     private String phone;

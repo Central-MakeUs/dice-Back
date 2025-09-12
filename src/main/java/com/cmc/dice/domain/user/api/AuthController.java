@@ -21,13 +21,13 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/")
 @RequiredArgsConstructor
 @Tag(name = "Auth")
 public class AuthController {
     private final AuthService authService;
 
-    @PostMapping("/validate/email")
+    @PostMapping("/v1/auth/validate/email")
     @Operation(summary = "이메일 중복 확인", description = """
             # 이메일 중복 확인
                         
@@ -51,7 +51,7 @@ public class AuthController {
         authService.validateDuplicateEmail(email);
     }
 
-    @PostMapping("/validate/phone")
+    @PostMapping("/v1/auth/validate/phone")
     @Operation(summary = "휴대폰 번호 중복 확인", description = """
             # 휴대폰 번호 중복 확인
                         
@@ -75,7 +75,8 @@ public class AuthController {
         authService.validateDuplicatePhone(phone);
     }
 
-    @PostMapping("/signup")
+    @Deprecated
+    @PostMapping("/v1/auth/signup")
     @Operation(summary = "회원 가입", description = """
             # 회원가입
                         
@@ -87,8 +88,6 @@ public class AuthController {
             | email | 사용자의 이메일 | 이메일 형식 | Y | email01@email.com |
             | name | 사용자의 이름 | 2~20자 | N | name01 |
             | password | 사용자의 비밀번호 | 영문(대소문자), 숫자, 특수문자를 포함한 8~32자 | N | password01! |
-            | phone | 사용자의 휴대폰 번호 | 숫자 11자 | Y | 01012345678 |
-            
                          
             ## 응답
                         
@@ -111,12 +110,51 @@ public class AuthController {
                     examples = @ExampleObject(value = "{\n  \"status\": \"CONFLICT\",\n  \"message\": \"데이터 중복\"\n}")
             )
     )
-    public UserAuthInfoDto createUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
-        return authService.createUser(createUserRequest);
+    public UserAuthInfoDto createUserV1(@Valid @RequestBody CreateUserRequestV1 createUserRequest) {
+        return authService.createUserV1(createUserRequest);
+    }
+
+    @PostMapping("/v2/auth/signup")
+    @Operation(summary = "회원 가입 ver2", description = """
+            # 회원가입
+                        
+            회원을 생성합니다.
+            각 필드의 제약 조건은 다음과 같습니다.
+
+            | 필드명 | 설명 | 제약조건 | 중복확인 | 예시 |
+            |--------|------|----------|----------|------|
+            | email | 사용자의 이메일 | 이메일 형식 | Y | email01@email.com |
+            | name | 사용자의 이름 | 2~20자 | N | name01 |
+            | password | 사용자의 비밀번호 | 영문(대소문자), 숫자, 특수문자를 포함한 8~32자 | N | password01! |
+            | role | 사용자의 권한 | 1: 게스트 / 0: 호스트	 | Y | 0 |
+                         
+            ## 응답
+                        
+            - 회원 가입 성공 시 `200` 코드와 함께 회원 기본 정보를 반환합니다.
+            - 입력 양식에 오류가 있을 경우 `400` 에러를 반환합니다.
+            - 중복된 값이 있을 경우 `409` 에러를 반환합니다.
+             
+            """)
+    @ApiResponse(
+            responseCode = "200",
+            description = "생성한 계정 고유 번호를 반환합니다.",
+            useReturnTypeSchema = true
+    )
+    @ApiResponse(
+            responseCode = "409",
+            description = "입력 값 중 중복된 값이 있습니다.",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = ApiErrorResponse.class),
+                    examples = @ExampleObject(value = "{\n  \"status\": \"CONFLICT\",\n  \"message\": \"데이터 중복\"\n}")
+            )
+    )
+    public UserAuthInfoDto createUserV2(@Valid @RequestBody CreateUserRequestV2 createUserRequest) {
+        return authService.createUserV2(createUserRequest);
     }
 
 
-    @PostMapping("/login")
+    @PostMapping("/v1/auth/login")
     @Operation(summary = "이메일 로그인", description = """
             # 로그인
                         
@@ -152,8 +190,45 @@ public class AuthController {
     public LoginResponseDto login(@Valid @RequestBody LoginRequest loginRequest) {
         return authService.login(loginRequest);
     }
+    @PostMapping("/v1/auth/verify")
+    @Operation(summary = "이메일 인증 전송", description = """
+            # 이메일 인증 전송
+            
+            사용자의 이메일로 인증 이메일을 전송합니다.
+            
+            ## 응답
+            
+            - 이메일 전송 성공 시 `200` 코드를 반환합니다.
+            """)
+    @ApiResponse(
+            responseCode = "200",
+            description = "비밀번호 재설정 이메일 전송 성공",
+            useReturnTypeSchema = true
+    )
+    public void sendPasswordResetEmail(@Valid @RequestBody EmailValidateDto email) {
+        authService.sendPasswordResetEmail(email);
+    }
 
-    @PostMapping("/password-reset/reset")
+    @PostMapping("/v1/auth/verify/code")
+    @Operation(summary = "이메일 인증 확인", description = """
+            # 이메일 인증 확인
+
+            사용자의 이메일로 전송된 인증 코드를 확인합니다.
+            
+            ## 응답
+            
+            - 인증 코드 확인 성공 시 `200` 코드를 반환합니다.
+        """)
+    @ApiResponse(
+            responseCode = "200",
+            description = "비밀번호 재설정 이메일 전송 성공",
+            useReturnTypeSchema = true
+    )
+    public VerifyCodeDto verifyCode(@Valid @RequestBody PasswordResetValidateDto passwordResetRequest) {
+        return authService.verifyCode(passwordResetRequest);
+    }
+
+    @PostMapping("/v1/auth/password-reset")
     @Operation(summary = "비밀번호 재설정", description = """
             # 비밀번호 재설정
                         
@@ -186,7 +261,7 @@ public class AuthController {
         return authService.resetPassword(passwordResetRequest);
     }
 
-    @PostMapping("/password-update")
+    @PostMapping("/v1/auth/password-update")
     @Operation(summary = "비밀번호 변경", description = """
             # 비밀번호 변경
                         
@@ -209,7 +284,7 @@ public class AuthController {
         return authService.updatePassword(user, passwordUpdateRequest);
     }
 
-    @PostMapping("/reissue")
+    @PostMapping("/v1/auth/reissue")
     @Operation(summary = "토큰 재발급", description = """
             # 토큰 재발급
                         
@@ -243,7 +318,7 @@ public class AuthController {
         return authService.reissue(reissueRequest);
     }
 
-    @PostMapping("/logout")
+    @PostMapping("/v1/auth/logout")
     @Operation(summary = "로그아웃", description = """
             # 로그아웃
                         
@@ -264,7 +339,7 @@ public class AuthController {
         authService.logout(user);
     }
 
-    @PostMapping("/withdraw")
+    @PostMapping("/v1/auth/withdraw")
     @Operation(summary = "회원 탈퇴", description = """
             # 회원 탈퇴
                         

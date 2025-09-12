@@ -2,6 +2,8 @@ package com.cmc.dice.domain.space.domain;
 
 
 import com.cmc.dice.domain.space.dto.CreateSpaceRequest;
+import com.cmc.dice.domain.space.dto.CreateSpaceRequestV2;
+import com.cmc.dice.domain.space.dto.FacilityInfoDto;
 import com.cmc.dice.domain.user.domain.User;
 import com.cmc.dice.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -12,6 +14,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "spaces")
@@ -23,6 +26,7 @@ public class Space extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name = "space_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -31,26 +35,23 @@ public class Space extends BaseEntity {
     @Column(nullable = false)
     private String name; // 공간 이름
 
-    @Column(nullable = false, length = 1000)
-    private String description; // 공간 한줄 소개
-
     @Convert(converter = ImageUrlListConverter.class)
     @Column(columnDefinition = "TEXT") // MySQL에서 JSON 타입 또는 TEXT 타입으로 저장
     @Builder.Default
     private List<String> imageUrls = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private SpaceCategory category; // 공간 카테고리 (예: 갤러리, 카페 등)
 
     private LocalTime openingTime; // 공간 운영 시작 시간
     private LocalTime closingTime; // 공간 운영 마감 시간
 
-    @Column(nullable = false)
+    // TODO: 수용인원 관리 x
+    // 면적 계산해서 저장.
     private int capacity; // 수용 인원
 
     @Column(nullable = false)
-    private int size; //공간 크기
+    private int size; // 공간 크기
 
     @OneToMany(mappedBy = "space")
     private List<SpaceTag> tags;
@@ -75,15 +76,27 @@ public class Space extends BaseEntity {
     private String city;
     private String district;
     private String address;
+    private String detailAddress;
 
     private String websiteUrl; // 웹사이트 URL
     private String contactNumber; // 연락처
+    private String badge; // 뱃지 내용 (20대 여성 방문 상위 10%)
 
     // 시설 이용 및 공지사항 안내 작성
-    @Lob
-    private String facilityInfo; // 시설 이용 안내
-    @Lob
-    private String notice; // 공지사항
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SpaceFacility> facilityInfos; // 시설 이용 안내
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "nearest_subway_id")
+    private SpaceNearestSubway nearestSubway;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "analysis_people_id")
+    private SpaceAnalysisPeople analysisPeople;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "notices", joinColumns = @JoinColumn(name = "space_id"))
+    private List<String> notices; // 공지사항
 
     @Builder.Default
     private int likeCount = 0; // 좋아요 수
@@ -94,7 +107,6 @@ public class Space extends BaseEntity {
     public Space(User user, CreateSpaceRequest request) {
         this.admin = user;
         this.name = request.getName();
-        this.description = request.getDescription();
         this.imageUrls = request.getImageUrls();
         this.category = request.getCategory();
         this.openingTime = LocalTime.parse(request.getOpeningTime(), DateTimeFormatter.ofPattern("HH:mm"));
@@ -111,22 +123,52 @@ public class Space extends BaseEntity {
         this.city = request.getCity();
         this.district = request.getDistrict();
         this.address = request.getAddress();
+        this.detailAddress = request.getDetailAddress();
 
         this.websiteUrl = request.getWebsiteUrl();
         this.contactNumber = request.getContactNumber();
-        this.facilityInfo = request.getFacilityInfo();
-        this.notice = request.getNotice();
+        this.facilityInfos = request.getFacilityInfos()
+                .stream()
+                .map(FacilityInfoDto::toEntity)
+                .toList();
+        this.notices = request.getNotices().stream().toList();
+        this.isActivated = true;
+    }
 
+    public Space(User user, CreateSpaceRequestV2 request) {
+        this.admin = user;
+        this.name = request.getName();
+        this.imageUrls = request.getImageUrls();
+        this.openingTime = LocalTime.parse(request.getOpeningTime(), DateTimeFormatter.ofPattern("HH:mm"));
+        this.closingTime = LocalTime.parse(request.getClosingTime(), DateTimeFormatter.ofPattern("HH:mm"));
+
+        this.size = request.getSize();
+
+        this.pricePerDay = request.getPricePerDay();
+        this.discountRate = request.getDiscountRate();
+        this.discountPrice = this.pricePerDay * (100 - this.discountRate) / 100;
+        this.details = request.getDetails();
+
+        this.city = request.getCity();
+        this.district = request.getDistrict();
+        this.address = request.getAddress();
+        this.detailAddress = request.getDetailAddress();
+
+        this.contactNumber = request.getContactNumber();
+        this.facilityInfos = request.getFacilityInfos()
+                .stream()
+                .map(FacilityInfoDto::toEntity)
+                .collect(Collectors.toCollection(ArrayList::new));
+        this.notices = new ArrayList<>(request.getNotices());
         this.isActivated = true;
     }
 
     public boolean isOwner(User user) {
-        return this.admin.equals(user);
+        return this.admin.equals(user.getId());
     }
 
     public void update(CreateSpaceRequest request) {
         this.name = request.getName();
-        this.description = request.getDescription();
         this.imageUrls = request.getImageUrls();
         this.category = request.getCategory();
 
@@ -144,17 +186,25 @@ public class Space extends BaseEntity {
         this.city = request.getCity();
         this.district = request.getDistrict();
         this.address = request.getAddress();
+        this.detailAddress = request.getDetailAddress() == null ? "" : request.getDetailAddress();
 
-        this.websiteUrl = request.getWebsiteUrl();
+        this.websiteUrl = request.getWebsiteUrl() == null ? "" : request.getWebsiteUrl();
         this.contactNumber = request.getContactNumber();
-        this.facilityInfo = request.getFacilityInfo();
-        this.notice = request.getNotice();
+        this.facilityInfos = request.getFacilityInfos()
+                .stream()
+                .map(FacilityInfoDto::toEntity)
+                .toList();
+        this.notices = request.getNotices().stream().toList();
 
-        this.isActivated = request.getIsActivated();
+        this.isActivated = request.getIsActivated() == null || request.getIsActivated();
     }
 
     public void updateLocation(Point point) {
         this.location = point;
+    }
+
+    public void addSpaceNearestSubway(SpaceNearestSubway nearestSubway) {
+        this.nearestSubway = nearestSubway;
     }
 
     public void decreaseLikeCount() {
@@ -170,5 +220,9 @@ public class Space extends BaseEntity {
             tags = new ArrayList<>();
         }
         tags.add(spaceTag);
+    }
+
+    public void removeSpaceTag(SpaceTag spaceTag) {
+        tags.remove(spaceTag);
     }
 }

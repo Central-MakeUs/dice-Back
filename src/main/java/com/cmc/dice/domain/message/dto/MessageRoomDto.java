@@ -1,6 +1,7 @@
 package com.cmc.dice.domain.message.dto;
 
 import com.cmc.dice.domain.message.domain.MessageRoom;
+import com.cmc.dice.domain.user.domain.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +25,9 @@ public class MessageRoomDto {
     @Schema(description = "공간 이미지", example = "www.example.com/image.jpg")
     private String spaceImage;
 
+    @Schema(description = "상대방 이름", example = "홍길동")
+    private String otherName;
+
     @Schema(description = "마지막 메시지", example = "안녕하세요")
     private String lastMessage;
 
@@ -43,4 +47,29 @@ public class MessageRoomDto {
                 .unreadCount(room.getUnreadCount())
                 .build();
     }
+
+    public static MessageRoomDto of(MessageRoom r, User user, String name) {
+        if (r.getLastMessageSender().equals(user.getName())) {
+            return MessageRoomDto.builder()
+                    .id(r.getId())
+                    .spaceName(r.getSpace().getName())
+                    .spaceImage(r.getSpace().getImageUrls().get(0))
+                    .otherName(name)
+                    .lastMessage(r.getLastMessage())
+                    .lastMessageAt(r.getLastMessageAt())
+                    .unreadCount(0)
+                    .build();
+        }
+
+        return MessageRoomDto.builder()
+                .id(r.getId())
+                .spaceName(r.getSpace().getName())
+                .spaceImage(r.getSpace().getImageUrls().get(0))
+                .otherName(name)
+                .lastMessage(r.getLastMessage())
+                .lastMessageAt(r.getLastMessageAt())
+                .unreadCount(r.getUnreadCount())
+                .build();
+    }
+
 }

@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PasswordResetValidateDto {
     @NotBlank
-    @Schema(description = "이메일", example = "admin@admin.com")
-    private String email;
+    @Schema(description = "인증번호", example = "123456")
+    private String code;
 
     @NotBlank
-    @Schema(description = "이름", example = "admin")
-    private String name;
+    @Schema(description = "이메일", example = "user01@email.com")
+    private String email;
 }

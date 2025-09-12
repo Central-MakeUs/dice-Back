@@ -1,7 +1,6 @@
 package com.cmc.dice.domain.space.dto;
 
 import com.cmc.dice.domain.space.domain.SpaceCategory;
-import com.cmc.dice.domain.space.domain.SpaceTag;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,9 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.locationtech.jts.geom.Point;
 
-import java.time.LocalTime;
 import java.util.List;
 
 @Getter
@@ -85,8 +82,11 @@ public class CreateSpaceRequest {
 	private String district;
 
 	@NotBlank
-	@Schema(description = "상세 주소", example = "강남대로 123")
+	@Schema(description = "주소", example = "강남대로 123")
 	private String address;
+
+	@Schema(description = "상세 주소", example = "101동 101호")
+	private String detailAddress;
 
 	@Schema(description = "웹사이트 URL", example = "www.example.com")
 	private String websiteUrl;
@@ -96,12 +96,13 @@ public class CreateSpaceRequest {
 	private String contactNumber;
 
 	@NotBlank
-	@Schema(description = "시설 정보", example = "시설 정보")
-	private String facilityInfo;
+	@Schema(description = "시설 이용 안내")
+	private List<FacilityInfoDto> facilityInfos;
 
 	@NotBlank
-	@Schema(description = "공지사항", example = "공지사항")
-	private String notice;
+	@Schema(description = "공지사항",
+			example = "[\"채팅 상담을 추천드려요\", \"설치 및 철수는 계약 기간 내 포함이에요\"]")
+	private List<String> notices;
 
 	@Schema(description = "활성화 여부", example = "true")
 	private Boolean isActivated;
