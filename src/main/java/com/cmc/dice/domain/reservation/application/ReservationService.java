@@ -13,6 +13,7 @@ import com.cmc.dice.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,6 +45,26 @@ public class ReservationService {
         return ReservationDto.of(reservation);
     }
 
+    // 예약 ver2
+    public ReservationDtoV2 reserveV2(User user, ReservationRequest reservationRequest) {
+        // 예약 확인
+        Space space = spaceRepository.findById(reservationRequest.getSpaceId())
+                .orElseThrow(SpaceNotFoundException::new);
+
+        // 예약 날짜 중복 체크
+        boolean isOverlapping = reservationRepository.existsOverlappingReservation(
+                reservationRequest.getSpaceId(), reservationRequest.getStartDate(), reservationRequest.getEndDate()
+        );
+
+        if (isOverlapping) {
+            throw new IllegalArgumentException("이미 예약된 날짜입니다.");
+        }
+
+        Reservation reservation = reservationRepository.save(reservationRequest.toEntity(user, space));
+
+        return ReservationDtoV2.of(reservation);
+    }
+
     // 공간의 예약된 날짜 확인
     public ReservationAvailableDto getAvailableDates(Long spaceId) {
         List<DateDto> reservedDates = reservationRepository.findReservedDatesBySpaceId(spaceId);
@@ -53,9 +74,20 @@ public class ReservationService {
     }
 
     //자신의 예약 조회
-    public Page<ReservationInfoDto> getMyReservations(User user,String status, int page, int size) {
+    public Page<ReservationInfoDto> getMyReservations(User user, String status, int page, int size) {
         Page<Reservation> reservations = reservationRepository.findByUserIdAndStatus(user.getId(), status, PageRequest.of(page, size));
         return reservations.map(this::getReservationInfoDto);
+    }
+
+    //자신의 예약 조회 ver2
+    public Page<ReservationInfoDtoV2> getMyReservationsV2(User user, String status, String sort, int page, int size) {
+        Sort sortOrder = sort.equals("latest")
+                ? Sort.by("id").descending()
+                : Sort.by("id").ascending();
+
+        Page<Reservation> reservations = reservationRepository.findByUserIdAndStatus(user.getId(), status, PageRequest.of(page, size, sortOrder));
+
+        return reservations.map(this::getReservationInfoDtoV2);
     }
 
     private ReservationInfoDto getReservationInfoDto(Reservation reservation) {
@@ -69,8 +101,26 @@ public class ReservationService {
                 .endDate(reservation.getEndDate())
                 .status(reservation.getStatus())
                 .city(space.getCity())
-                .district(space.getDistrict())
                 .capacity(space.getCapacity())
+                .district(space.getDistrict())
+                .size(space.getSize())
+                .totalPrice(totalPrice)
+                .spaceImage(space.getImageUrls().get(0))
+                .build();
+    }
+    private ReservationInfoDtoV2 getReservationInfoDtoV2(Reservation reservation) {
+        Space space = reservation.getSpace();
+        int totalPrice = (reservation.getEndDate().getDayOfYear() - reservation.getStartDate().getDayOfYear()) * space.getDiscountPrice();
+
+        return ReservationInfoDtoV2.builder()
+                .reservationId(reservation.getId())
+                .spaceName(space.getName())
+                .startDate(reservation.getStartDate())
+                .endDate(reservation.getEndDate())
+                .status(reservation.getStatus())
+                .city(space.getCity())
+                .district(space.getDistrict())
+                .reservationDate(reservation.getCreatedAt().toLocalDate())
                 .size(space.getSize())
                 .totalPrice(totalPrice)
                 .spaceImage(space.getImageUrls().get(0))

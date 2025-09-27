@@ -2,6 +2,7 @@ package com.cmc.dice.domain.reservation.domain;
 
 import com.cmc.dice.domain.space.domain.Space;
 import com.cmc.dice.domain.user.domain.User;
+import com.cmc.dice.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,7 +16,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Reservation {
+public class Reservation extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

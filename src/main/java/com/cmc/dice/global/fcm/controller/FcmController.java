@@ -2,7 +2,9 @@ package com.cmc.dice.global.fcm.controller;
 
 import com.cmc.dice.domain.user.domain.User;
 import com.cmc.dice.global.fcm.FcmService;
-import com.cmc.dice.global.fcm.dto.FcmTokenReq;
+import com.cmc.dice.global.fcm.dto.FcmTokenRequest;
+import com.cmc.dice.global.fcm.dto.SendAlarmRequest;
+import com.cmc.dice.global.fcm.dto.SendManyAlarmRequest;
 import com.cmc.dice.global.jwt.CurrentUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -32,23 +34,51 @@ public class FcmController {
             """)
     @PreAuthorize("isAuthenticated()")
     @SecurityRequirement(name = "access-token")
-    public void getToken(
-            @Valid @RequestBody FcmTokenReq tokenReq,
-            @CurrentUser User user) {
-        fcmService.saveToken(user, tokenReq.getToken());
+    public ResponseEntity<?> getToken(
+            @CurrentUser User user,
+            @Valid @RequestBody FcmTokenRequest tokenReq
+    ) {
+        fcmService.saveToken(user, tokenReq.fcmToken());
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/alarm")
-    @Operation(summary = "[테스트] 푸시 알림 요청하기", description = """
-            # 푸시알림 테스트
-            - 현재 요청이 기기마다 요청이 성공적으로 이루어진다면, 공간예약, 결제 시 적용.
+    @PostMapping("/one")
+    @Operation(summary = "단일 대상 푸시알림", description = """
+            # 단일 대상 푸시알림
+            - 단일 대상에게 제목과 내용을 담은 푸시알림을 전송합니다.
+            - 이때 해당 대상은 꼭 fcmtoken(`POST /api/v1/fcm/token`)을 수행해야합니다.
+            
+            ## 요청
+            - `token`: fcm에서 인증된 토큰값
+            - `title`: 알림 제목
+            - `body`: 알림 내용
             """)
     @PreAuthorize("isAuthenticated()")
     @SecurityRequirement(name = "access-token")
-    public ResponseEntity<?> pushAlarm(
-            @CurrentUser User user
+    public ResponseEntity<?> sendOneAlarm(
+            @Valid @RequestBody SendAlarmRequest request
     ) {
-        fcmService.testAlarm(user);
+        fcmService.sendOne(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/many")
+    @Operation(summary = "단일 대상 푸시알림", description = """
+            # 단일 대상 푸시알림
+            - 단일 대상에게 제목과 내용을 담은 푸시알림을 전송합니다.
+            - 이때 해당 대상은 꼭 fcmtoken(`POST /api/v1/fcm/token`)을 수행해야합니다.
+            
+            ## 요청
+            - `token`: fcm에서 인증된 토큰값
+            - `title`: 알림 제목
+            - `body`: 알림 내용
+            """)
+    @PreAuthorize("isAuthenticated()")
+    @SecurityRequirement(name = "access-token")
+    public ResponseEntity<?> sendManyAlarm(
+            @Valid @RequestBody SendManyAlarmRequest requests
+    ) {
+        fcmService.sendMany(requests);
         return ResponseEntity.ok().build();
     }
 

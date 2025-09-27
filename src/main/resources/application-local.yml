@@ -59,6 +59,7 @@ spring:
   security:
     oauth2:
       client:
+        front-uri: ${OAUTH2_FRONT_URI}
         registration:
           google:
             client-id: ${GOOGLE_CLIENT_ID}
@@ -98,8 +99,5 @@ cloud:
       auto: false
 
 fcm:
-  certification: ${FCM_CERTIFICATION}
   file-path: ${FCM_PATH}
-  url: ${FCM_URL}
-  google_api: ${FCM_GOOGLE_API}
   project_id: ${FCM_PROJECT_ID}
