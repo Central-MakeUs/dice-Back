@@ -19,8 +19,7 @@ import java.io.IOException;
 public class OAuth2Controller {
     @GetMapping("/{socialType}")
     public ResponseEntity<SocialLoginUrlResponse> socialLoginRedirect (
-            @PathVariable(name = "socialType") String socialType,
-            HttpServletResponse response) throws IOException {
+            @PathVariable(name = "socialType") String socialType) throws IOException {
         String socialLoginUrl = "https://diceminipop.site/oauth2/authorization/" + socialType;
 //        response.sendRedirect("http://localhost:8080/oauth2/authorization/" + socialType);
         return ResponseEntity.ok(new SocialLoginUrlResponse(socialLoginUrl));

@@ -10,7 +10,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +24,8 @@ import java.io.IOException;
 @Slf4j
 public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
+    @Value("${spring.security.oauth2.client.front-uri}")
+    private String frontURI;
     private final TokenService tokenService;
     private final ObjectMapper objectMapper;
 
@@ -33,20 +38,19 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 //            loginSuccess(response, oAuth2Member); // 로그인에 성공한 경우 access, refresh 토큰 생성
 
             String email = oAuth2Member.getEmail();
-            String authority = authentication.getAuthorities().iterator().next().getAuthority();
+            OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) authentication;
 
             String access = tokenService.createAccessToken(email);
             String refresh = tokenService.createRefreshToken(email);
-
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(objectMapper.writeValueAsString(new TokenDto(access, refresh)));
-//            response.sendRedirect("http://34.59.214.93:8080/auth/googleLogin");
+            response.sendRedirect(frontURI
+                    + "/oauth2/code/" + oauth2Token.getAuthorizedClientRegistrationId()
+                    + "?accessToken=" + access
+                    + "&refreshToken=" + refresh);
         } catch (Exception e) {
             throw e;
         }
-
     }
+
 
     // TODO : 소셜 로그인 시에도 무조건 토큰 생성하지 말고 JWT 인증 필터처럼 RefreshToken 유/무에 따라 다르게 처리해보기
     private void loginSuccess(HttpServletResponse response, CustomOAuth2User oAuth2Member) throws IOException {
