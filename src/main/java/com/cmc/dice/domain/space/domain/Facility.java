@@ -1,9 +1,10 @@
 package com.cmc.dice.domain.space.domain;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+
+import java.util.stream.Stream;
 
 @Getter
 @RequiredArgsConstructor
@@ -30,4 +31,15 @@ public enum Facility {
     WIFI("wifi");
 
     private final String value;
+
+    @JsonCreator
+    public static Facility fromValue(String value) {
+        if (value == null) {
+            return null;
+        }
+        return Stream.of(Facility.values())
+                .filter(facility -> facility.getValue().equalsIgnoreCase(value))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Unknown facility value: " + value));
+    }
 }
