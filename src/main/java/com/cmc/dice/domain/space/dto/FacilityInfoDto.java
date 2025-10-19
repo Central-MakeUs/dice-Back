@@ -23,7 +23,7 @@ public record FacilityInfoDto (
         
         public static SpaceFacility toEntity(FacilityInfoDto facilityInfoDto) {
                 return SpaceFacility.builder()
-                        .facility(Facility.valueOf(facilityInfoDto.key()))
+                        .facility(Facility.fromValue(facilityInfoDto.key))
                         .number(facilityInfoDto.number())
                         .build();
         }
