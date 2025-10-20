@@ -26,6 +26,7 @@ import java.util.List;
 public class ReservationController {
     private final ReservationService reservationService;
 
+    @Deprecated
     @GetMapping("/v1/reservation/list")
     @Operation(summary = "예약 목록 조회", description = """
             # 예약 목록 조회
@@ -117,6 +118,7 @@ public class ReservationController {
     }
 
 
+    @Deprecated
     @PostMapping("/v1/reservation/reserve")
     @Operation(summary = "예약", description = """
             # 예약

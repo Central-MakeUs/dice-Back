@@ -49,7 +49,7 @@ public class FcmController {
             - 이때 해당 대상은 꼭 fcmtoken(`POST /api/v1/fcm/token`)을 수행해야합니다.
             
             ## 요청
-            - `token`: fcm에서 인증된 토큰값
+            - `fcmToken`: fcm에서 인증된 토큰값
             - `title`: 알림 제목
             - `body`: 알림 내용
             """)
@@ -63,13 +63,13 @@ public class FcmController {
     }
 
     @PostMapping("/many")
-    @Operation(summary = "단일 대상 푸시알림", description = """
-            # 단일 대상 푸시알림
-            - 단일 대상에게 제목과 내용을 담은 푸시알림을 전송합니다.
+    @Operation(summary = "다중 푸시알림", description = """
+            # 다중 푸시알림
+            - 다중에게 제목과 내용을 담은 푸시알림을 한번에 전송합니다.
             - 이때 해당 대상은 꼭 fcmtoken(`POST /api/v1/fcm/token`)을 수행해야합니다.
             
             ## 요청
-            - `token`: fcm에서 인증된 토큰값
+            - `fcmTokens`: fcm에서 인증된 토큰값 리스트
             - `title`: 알림 제목
             - `body`: 알림 내용
             """)

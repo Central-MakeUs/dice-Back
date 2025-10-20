@@ -23,7 +23,7 @@ public class SpaceFilterDtoV2 {
     @Schema(description = "성별", example = "female")
     private String gender;
 
-    @Schema(description = "연령대", example = "[\"20, 30\"]")
+    @Schema(description = "연령대", example = "[20, 30]")
     private List<Integer> ageGroups;
 
     @Schema(description = "요일", example = "WEDNESDAY",
