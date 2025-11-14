@@ -111,7 +111,7 @@ public class ReservationService {
     }
     private ReservationInfoDtoV2 getReservationInfoDtoV2(Reservation reservation) {
         Space space = reservation.getSpace();
-        LocalDate localDate = reservation.getCreatedAt().toLocalDate();
+        LocalDate localDate = reservation.getCreatedAt() == null ? LocalDate.now() : reservation.getCreatedAt().toLocalDate();
         int totalPrice = (reservation.getEndDate().getDayOfYear() - reservation.getStartDate().getDayOfYear()) * space.getDiscountPrice();
 
         return ReservationInfoDtoV2.builder()
@@ -122,7 +122,7 @@ public class ReservationService {
                 .status(reservation.getStatus())
                 .city(space.getCity())
                 .district(space.getDistrict())
-                .reservationDate(localDate == null ? LocalDate.now() : localDate)
+                .reservationDate(localDate)
                 .size(space.getSize())
                 .totalPrice(totalPrice)
                 .spaceImage(space.getImageUrls().get(0))
