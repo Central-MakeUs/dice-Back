@@ -30,6 +30,13 @@ public class SimpleBrandInfoDto {
 	@Schema(description = "이미지 URL 목록", example = "[\"https://example.com/image1.jpg\", \"https://example.com/image2.jpg\"]")
 	private List<String> imageUrls;
 
+	@Schema(description = "타겟 성별", example = "[\"male\", \"female\"]")
+	private List<String> targetGender;
+
+	@Schema(description = "타겟 나이대", example = "[\"10\", \"20\"]")
+	private List<String> targetAgeGroup;
+
+
 	public static SimpleBrandInfoDto of(Brand brand) {
 		return SimpleBrandInfoDto.builder()
 				.id(brand.getId())
@@ -37,6 +44,8 @@ public class SimpleBrandInfoDto {
 				.description(brand.getDescription())
 				.logoUrl(brand.getLogoUrl())
 				.imageUrls(brand.getImageUrls())
+				.targetAgeGroup(brand.getTargetAgeGroup())
+				.targetGender(brand.getTargetGender())
 				.build();
 	}
 }

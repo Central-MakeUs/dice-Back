@@ -33,7 +33,7 @@ public class CreateBrandRequest {
 
 	@Schema(description = "브랜드 타겟 연령대",
 			example = "[\"20\", \"30\"]")
-	private List<Integer> targetAgeGroup;
+	private List<String> targetAgeGroup;
 	static public Brand toEntity(User user, CreateBrandRequest request) {
 		return Brand.builder()
 				.admin(user)
