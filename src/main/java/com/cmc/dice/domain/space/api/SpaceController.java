@@ -242,4 +242,21 @@ public class SpaceController {
 			@PathVariable Long id) {
 		return spaceService.getSpaceInfo(user, id);
 	}
+
+	@Deprecated
+	@GetMapping("/v1/space/{id}/analysis")
+	@Operation(summary = "공간 인구 분석", description = """
+			# 공간 상세 조회
+			공간의 상세 정보를 조회합니다.
+			
+			## 요청
+			- `id`: 공간 ID
+			""")
+	@PreAuthorize("isAuthenticated()")
+	@SecurityRequirement(name = "access-token")
+	public SpaceInfoDto getSpaceInfoAnalysis(
+			@CurrentUser User user,
+			@PathVariable Long id) {
+		return spaceService.getSpaceInfo(user, id);
+	}
 }

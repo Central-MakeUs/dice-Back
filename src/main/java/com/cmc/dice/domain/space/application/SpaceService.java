@@ -160,4 +160,8 @@ public class SpaceService {
 		return spaceRepository.findSpaceDetailV2(user, id)
 				.orElseThrow(SpaceNotFoundException::new);
 	}
+
+	public SpaceAnlaysis getSpaceInfoAnalysis(User user, Long id) {
+
+	}
 }

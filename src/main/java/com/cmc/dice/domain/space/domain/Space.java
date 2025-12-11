@@ -72,6 +72,8 @@ public class Space extends BaseEntity {
     @Column(columnDefinition = "POINT SRID 4326", nullable = false)
     private Point location;
 
+    private String locationCode; // 행정동 코드: 11200600
+
     // 주소
     private String city;
     private String district;
