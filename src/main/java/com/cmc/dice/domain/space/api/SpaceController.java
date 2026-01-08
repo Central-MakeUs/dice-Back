@@ -243,20 +243,20 @@ public class SpaceController {
 		return spaceService.getSpaceInfo(user, id);
 	}
 
-	@Deprecated
 	@GetMapping("/v1/space/{id}/analysis")
 	@Operation(summary = "공간 인구 분석", description = """
-			# 공간 상세 조회
-			공간의 상세 정보를 조회합니다.
+			# 공간 인구 분석
+			공간의 인구 분석 정보를 조회합니다.
+			공간의 주소를 기반으로 인구 분석 정보를 제공합니다.
 			
 			## 요청
 			- `id`: 공간 ID
 			""")
 	@PreAuthorize("isAuthenticated()")
 	@SecurityRequirement(name = "access-token")
-	public SpaceInfoDto getSpaceInfoAnalysis(
-			@CurrentUser User user,
-			@PathVariable Long id) {
-		return spaceService.getSpaceInfo(user, id);
+	public AnalysisPeopleInfoDto getSpaceInfoAnalysis(
+			@PathVariable Long id
+	) {
+		return spaceService.getSpaceInfoAnalysis(id);
 	}
 }

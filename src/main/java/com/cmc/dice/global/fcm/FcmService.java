@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 @Slf4j
 public class FcmService {
-    @Transactional(readOnly = true)
+    @Transactional
     public void saveToken(User user, String token) {
         user.updateFcmToken(token);
     }

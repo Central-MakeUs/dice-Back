@@ -1,15 +1,10 @@
 package com.cmc.dice.domain.space.application;
 
-import com.cmc.dice.domain.space.dao.SpaceNearestSubwayRepository;
-import com.cmc.dice.domain.space.dao.SpaceRepository;
-import com.cmc.dice.domain.space.dao.SpaceTagRepository;
-import com.cmc.dice.domain.space.dao.TagRepository;
-import com.cmc.dice.domain.space.domain.Space;
-import com.cmc.dice.domain.space.domain.SpaceNearestSubway;
-import com.cmc.dice.domain.space.domain.SpaceTag;
-import com.cmc.dice.domain.space.domain.Tag;
+import com.cmc.dice.domain.space.dao.*;
+import com.cmc.dice.domain.space.domain.*;
 import com.cmc.dice.domain.space.dto.*;
 import com.cmc.dice.domain.space.dto.SpaceInfoDtoV2;
+import com.cmc.dice.domain.space.exception.SpaceAnalysisNotfoundException;
 import com.cmc.dice.domain.space.exception.SpaceNotFoundException;
 import com.cmc.dice.domain.space.exception.SpaceNotOwnerException;
 import com.cmc.dice.domain.user.domain.User;
@@ -31,6 +26,7 @@ public class SpaceService {
 	private final TagRepository tagRepository;
 	private final SpaceTagRepository spaceTagRepository;
 	private final SpaceNearestSubwayRepository nearestSubwayRepository;
+	private final SpaceAnalysisRepository spaceAnalysisRepository;
 	private static final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
 
 	@Transactional
@@ -161,7 +157,13 @@ public class SpaceService {
 				.orElseThrow(SpaceNotFoundException::new);
 	}
 
-	public SpaceAnlaysis getSpaceInfoAnalysis(User user, Long id) {
+	public AnalysisPeopleInfoDto getSpaceInfoAnalysis(Long spaceId) {
+		Space space = spaceRepository.findById(spaceId)
+				.orElseThrow(SpaceNotFoundException::new);
 
+		String address = space.getAddress();
+		SpaceAnalysisPeople spaceAnalysisPeople = spaceAnalysisRepository.findByLocation(address)
+				.orElseThrow(SpaceAnalysisNotfoundException::new);
+		return AnalysisPeopleInfoDto.of(spaceAnalysisPeople);
 	}
 }
