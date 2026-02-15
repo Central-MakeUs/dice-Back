@@ -161,8 +161,8 @@ public class SpaceService {
 		Space space = spaceRepository.findById(spaceId)
 				.orElseThrow(SpaceNotFoundException::new);
 
-		String address = space.getAddress();
-		SpaceAnalysisPeople spaceAnalysisPeople = spaceAnalysisRepository.findByLocation(address)
+		String district = space.getDistrict();
+		SpaceAnalysisPeople spaceAnalysisPeople = spaceAnalysisRepository.findByLocation(district)
 				.orElseThrow(SpaceAnalysisNotfoundException::new);
 		return AnalysisPeopleInfoDto.of(spaceAnalysisPeople);
 	}
