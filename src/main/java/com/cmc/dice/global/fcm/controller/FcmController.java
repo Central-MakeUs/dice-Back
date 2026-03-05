@@ -56,6 +56,7 @@ public class FcmController {
     @PreAuthorize("isAuthenticated()")
     @SecurityRequirement(name = "access-token")
     public ResponseEntity<?> sendOneAlarm(
+            @CurrentUser User user,
             @Valid @RequestBody SendAlarmRequest request
     ) {
         fcmService.sendOne(request);
@@ -76,6 +77,7 @@ public class FcmController {
     @PreAuthorize("isAuthenticated()")
     @SecurityRequirement(name = "access-token")
     public ResponseEntity<?> sendManyAlarm(
+            @CurrentUser User user,
             @Valid @RequestBody SendManyAlarmRequest requests
     ) {
         fcmService.sendMany(requests);
