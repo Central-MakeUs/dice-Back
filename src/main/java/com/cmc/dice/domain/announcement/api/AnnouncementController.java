@@ -43,8 +43,6 @@ public class AnnouncementController {
         - `status`: 상태 (RECRUITING, COMPLETED, CLOSED, CANCELLED)
         - `sortBy`: 정렬 기준
         """)
-    @PreAuthorize("isAuthenticated()")
-    @SecurityRequirement(name = "access-token")
     public Page<AnnouncementSimpleInfoDto> getAnnouncements(
             @CurrentUser User user,
             @RequestBody(required = false) AnnouncementFilterRequest request,
@@ -64,8 +62,6 @@ public class AnnouncementController {
         
         - `id`: 모집 공고 ID
         """)
-    @PreAuthorize("isAuthenticated()")
-    @SecurityRequirement(name = "access-token")
     public AnnouncementInfoDto getAnnouncement(
             @CurrentUser User user,
             @PathVariable Long id) {

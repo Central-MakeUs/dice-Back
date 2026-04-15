@@ -162,8 +162,6 @@ public class SpaceController {
 		    - `maxCapacity`: 최대 수용 인원
 		    - `sort`: 정렬 방식 (latest, likeCount, priceAsc, priceDesc)
 			""")
-	@PreAuthorize("isAuthenticated()")
-	@SecurityRequirement(name = "access-token")
 	public Page<SpaceSimpleInfoDto> getSpacesByFilter(
 			@CurrentUser User user,
 			@RequestBody(required = false) SpaceFilterDto spaceFilterDto,
@@ -199,8 +197,6 @@ public class SpaceController {
 		    - `maxSize`: 최대 평수 (0~150)
 		    - `sort`: 정렬 방식 (latest, likeCount, priceAsc, priceDesc)
 			""")
-	@PreAuthorize("isAuthenticated()")
-	@SecurityRequirement(name = "access-token")
 	public Page<SpaceSimpleInfoDto> getSpacesByFilterV2(
 			@CurrentUser User user,
 			@RequestBody(required = false) SpaceFilterDtoV2 spaceFilterDtoV2,
@@ -218,8 +214,6 @@ public class SpaceController {
 			## 요청
 			- `id`: 공간 ID
 			""")
-	@PreAuthorize("isAuthenticated()")
-	@SecurityRequirement(name = "access-token")
 	public SpaceInfoDtoV2 getSpaceInfoV2(
 			@CurrentUser User user,
 			@PathVariable Long id) {
@@ -235,8 +229,6 @@ public class SpaceController {
 			## 요청
 			- `id`: 공간 ID
 			""")
-	@PreAuthorize("isAuthenticated()")
-	@SecurityRequirement(name = "access-token")
 	public SpaceInfoDto getSpaceInfo(
 			@CurrentUser User user,
 			@PathVariable Long id) {
